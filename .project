@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<projectDescription>
+	<name>Thermostat</name>
+	<comment></comment>
+	<projects>
+		<project>Arduino_Mega_2560_or_Mega_ADK</project>
+	</projects>
+	<buildSpec>
+		<buildCommand>
+			<name>org.eclipse.cdt.managedbuilder.core.genmakebuilder</name>
+			<triggers>clean,full,incremental,</triggers>
+			<arguments>
+			</arguments>
+		</buildCommand>
+		<buildCommand>
+			<name>org.eclipse.cdt.managedbuilder.core.ScannerConfigBuilder</name>
+			<triggers>full,incremental,</triggers>
+			<arguments>
+			</arguments>
+		</buildCommand>
+	</buildSpec>
+	<natures>
+		<nature>org.eclipse.cdt.core.cnature</nature>
+		<nature>org.eclipse.cdt.core.ccnature</nature>
+		<nature>org.eclipse.cdt.managedbuilder.core.managedBuildNature</nature>
+		<nature>org.eclipse.cdt.managedbuilder.core.ScannerConfigNature</nature>
+		<nature>it.baeyens.arduinonature</nature>
+	</natures>
+	<linkedResources>
+		<link>
+			<name>DallasTemperature</name>
+			<type>2</type>
+			<locationURI>ArduinoLibPath/DallasTemperature</locationURI>
+		</link>
+		<link>
+			<name>LiquidCrystal</name>
+			<type>2</type>
+			<locationURI>ArduinoLibPath/LiquidCrystal</locationURI>
+		</link>
+		<link>
+			<name>OneWire</name>
+			<type>2</type>
+			<locationURI>ArduinoLibPath/OneWire</locationURI>
+		</link>
+	</linkedResources>
+</projectDescription>

@@ -5,14 +5,18 @@ RelayDriver::RelayDriver(TempSensor* ts, Stats* stats) :
 }
 
 void RelayDriver::cycle() {
+	if (!enabled) {
+		return;
+	}
 	driveRelay(&relay1, 1);
 	driveRelay(&relay2, 2);
 }
 
 void RelayDriver::driveRelay(Relay* relay, uint8_t id) {
-	if (!relay->drive()) {
-		return;
+	boolean changed = relay->drive();
+	if (changed) {
+		stats->relayChange(relay->isEnabled(), id);
+		delay(DELAY_AFTER_SWITCH_MS);
 	}
-	stats->relayChange(relay->isEnabled(), id);
 }
 

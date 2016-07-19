@@ -8,6 +8,7 @@
 #include "RelayDriver.h"
 #include "StatsHolder.h"
 #include "Stats.h"
+#include "Buttons.h"
 
 #ifdef __cplusplus
 extern "C" {

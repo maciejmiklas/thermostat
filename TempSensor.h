@@ -5,24 +5,29 @@
 #include "Arduino.h"
 #include "OneWire.h"
 #include "Util.h"
+#include "Service.h"
 #include "DallasTemperature.h"
 
-class TempSensor {
+class TempSensor: public Service {
 public:
 	TempSensor();
 	void cycle();
-
-	// TODO provide average temp over last 10 minutes
 	uint8_t getTemp();
 
 private:
-
-	/* Frequency to read temperature from the sensor. */
-	const static uint16_t PROBE_FREQ_MS = 60000;
-
 	const static uint8_t SENSOR_PIN = 11;
 
-	uint8_t curentTemp;
+	/**
+	 * We take #PROBES_SIZE probes from temp sensor, each one with delay of #PROBE_DELAY milliseconds.
+	 * After collecting all required probes we calculate median and this is the temperature.
+	 */
+	const static uint8_t PROBES_SIZE = 6;
+	const static uint8_t PROBES_MED_IDX = PROBES_SIZE / 2 + 1;
+	const static uint32_t PROBE_FREQ_MS = 60000;
+	int8_t probes[PROBES_SIZE];
+	uint8_t probeIdx;
+
+	int8_t curentTemp;
 
 	uint32_t lastProbeTime;
 

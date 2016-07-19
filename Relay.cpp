@@ -19,23 +19,23 @@ boolean Relay::drive() {
 	}
 	lastSwitch = millis;
 
-	boolean chaning = false;
+	boolean changed = false;
 	uint8_t temp = tempSensor->getTemp();
 	if (enabled && temp < threshold) {
 		digitalWrite(pin, LOW);
 		enabled = false;
-		chaning = true;
+		changed = true;
 #if LOG
 		log(F("Disable relay on: %d by %d deg"), pin, temp);
 #endif
 	} else if (!enabled && temp >= threshold) {
 		digitalWrite(pin, HIGH);
 		enabled = true;
-		chaning = true;
+		changed = true;
 #if LOG
 		log(F("Enable relay on: %d by %d deg"), pin, temp);
 #endif
 	}
 
-	return chaning;
+	return changed;
 }

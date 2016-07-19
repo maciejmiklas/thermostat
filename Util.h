@@ -6,6 +6,7 @@
 void util_setup();
 void util_cycle();
 
+void util_sort_i8(int8_t arr[], uint8_t size);
 void util_sort_u8(uint8_t arr[], uint8_t size);
 uint32_t util_millis();
 uint16_t util_freeRam();

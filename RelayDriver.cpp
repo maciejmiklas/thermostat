@@ -12,7 +12,7 @@ void RelayDriver::cycle() {
 	driveRelay(&relay2, 2);
 }
 
-void RelayDriver::driveRelay(Relay* relay, uint8_t id) {
+inline void RelayDriver::driveRelay(Relay* relay, uint8_t id) {
 	boolean changed = relay->drive();
 	if (changed) {
 		stats->relayChange(relay->isEnabled(), id);

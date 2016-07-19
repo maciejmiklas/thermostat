@@ -1,9 +1,11 @@
 #include "Thermostat.h"
 
-TempSensor tempsensor;
-StatsHolder stats;
-RelayDriver relayDriver(&tempsensor, &stats);
-Buttons buttons;
+static TempSensor tempSensor;
+static StatsHolder stats;
+static RelayDriver relayDriver(&tempSensor, &stats);
+static Display display;
+static MainController mainController(&relayDriver, &display, &tempSensor);
+static Buttons buttons(&mainController);
 
 void setup() {
 	log_setup();
@@ -14,6 +16,5 @@ void setup() {
 void loop() {
 	util_cycle();
 	log_cycle();
-	tempsensor.cycle();
-	relayDriver.cycle();
+	mainController.cycle();
 }

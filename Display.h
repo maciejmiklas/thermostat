@@ -4,8 +4,11 @@
 class Display {
 public:
 	Display();
+
+	/** Display will show main screen. */
 	void reset();
-	void nextContent();
+
+	void nextScreen();
 };
 
 #endif /* DISPLAY_H_ */

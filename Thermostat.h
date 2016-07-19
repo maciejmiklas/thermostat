@@ -9,6 +9,7 @@
 #include "StatsHolder.h"
 #include "Stats.h"
 #include "Buttons.h"
+#include "MainController.h"
 
 #ifdef __cplusplus
 extern "C" {

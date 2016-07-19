@@ -8,7 +8,7 @@ void Display::reset(){
 
 }
 
-void Display::nextContent(){
+void Display::nextScreen(){
 
 }
 

@@ -8,6 +8,7 @@ public:
 	Service();
 	virtual ~Service();
 	void setEnabled(boolean enabled);
+	virtual void cycle() = 0;
 
 protected:
 	boolean enabled;

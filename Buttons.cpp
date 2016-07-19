@@ -11,10 +11,9 @@ void buttons_setup(Buttons* btn) {
 	attachInterrupt(0, _onISR, CHANGE);
 }
 
-Buttons::Buttons() :
-		pressMs(0) {
+Buttons::Buttons(MainController* mainController) :
+		pressMs(0), mainController(mainController) {
 	buttonSetup(BUTTON_NEXT_PIN);
-
 }
 
 void Buttons::buttonSetup(uint8_t pin) {
@@ -32,7 +31,7 @@ void Buttons::onISR() {
 #if LOG
 		log(F("Next button pressed"));
 #endif
-//TODO
+		mainController->onButtonNext();
 	}
 
 }

@@ -16,11 +16,20 @@ void Display::onEvent(BusEvent event, va_list ap) {
 }
 
 inline void Display::showPrevScreen() {
+#if LOG
+	log(F("Display - showPrevScreen"));
+#endif
 }
 
 inline void Display::showNextScreen() {
+#if LOG
+	log(F("Display - showNextScreen"));
+#endif
 }
 
 inline void Display::showStartScreen() {
+#if LOG
+	log(F("Display - showStartScreen"));
+#endif
 }
 

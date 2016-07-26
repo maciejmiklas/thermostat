@@ -8,11 +8,11 @@ class Service : public BusListener {
 public:
 	Service();
 	virtual ~Service();
-	virtual void cycle() = 0;
 
 protected:
 	void onEvent(BusEvent event, va_list ap);
 	boolean enabled;
+	virtual uint8_t setviceId() = 0;
 };
 
 #endif /* SERVICE_H_ */

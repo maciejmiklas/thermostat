@@ -2,6 +2,7 @@
 #define DISPLAY_H_
 
 #include "EventBus.h"
+#include "ArdLog.h"
 
 class Display: public BusListener {
 public:

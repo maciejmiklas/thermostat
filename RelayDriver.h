@@ -17,6 +17,9 @@ public:
 	RelayDriver(TempSensor* ts);
 	void cycle();
 
+protected:
+	uint8_t setviceId();
+
 private:
 	Relay relay1;
 	Relay relay2;

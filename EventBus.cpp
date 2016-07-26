@@ -1,6 +1,6 @@
 #include "EventBus.h"
 
-const static uint8_t LISTNERS_MAX = 10;
+const static uint8_t LISTNERS_MAX = 7;
 static BusListener* listeners[LISTNERS_MAX];
 static uint8_t listenersAmount = 0;
 
@@ -8,8 +8,7 @@ BusListener::~BusListener() {
 }
 
 BusListener::BusListener() {
-	//eb_register(this);
-	log(F("AAAAA"));
+	eb_register(this);
 }
 
 void eb_register(BusListener* listener) {
@@ -31,7 +30,7 @@ void eb_fire(BusEvent event, ...) {
 	log(F("Fire event: %d"), event);
 #endif
 
-	for (uint8_t idx = 0; idx < listenersAmount; listenersAmount++) {
+	for (uint8_t idx = 0; idx < listenersAmount; idx++) {
 		va_list ap;
 		va_start(ap, event);
 		listeners[idx]->onEvent(event, ap);

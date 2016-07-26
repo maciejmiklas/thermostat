@@ -1,7 +1,8 @@
 #include "TempSensor.h"
 
 TempSensor::TempSensor() :
-		probeIdx(10), curentTemp(0), lastProbeTime(0), oneWire(PIN_TEMP_SENSOR), dallasTemperature(&oneWire), enabled(true) {
+		probeIdx(10), curentTemp(0), lastProbeTime(0), oneWire(PIN_TEMP_SENSOR), dallasTemperature(&oneWire), enabled(
+				true) {
 	dallasTemperature.begin();
 	cycle();
 }
@@ -36,4 +37,8 @@ void TempSensor::cycle() {
 #if LOG
 	log(F("Temp reading: %d, current: %d"), temp, curentTemp);
 #endif
+}
+
+uint8_t TempSensor::setviceId() {
+	return SERVICE_ID_TEMP_SENSOR;
 }

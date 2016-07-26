@@ -15,6 +15,10 @@ public:
 	void cycle();
 	uint8_t getTemp();
 
+
+protected:
+	uint8_t setviceId();
+
 private:
 
 	/**

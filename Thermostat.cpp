@@ -1,27 +1,30 @@
 #include "Thermostat.h"
 
 static TempSensor* tempSensor;
-static Stats stats;
-static RelayDriver relayDriver(&tempSensor);
-static Display display;
-static ServiceSuspender mainController;
-static Buttons buttons;
+static Stats* stats;
+static RelayDriver* relayDriver;
+static Display* display;
+static ServiceSuspender* serviceSuspender;
+static Buttons* buttons;
 
 void setup() {
 	log_setup();
 	util_setup();
-	buttons_setup(&buttons);
+
+	tempSensor = new TempSensor();
+	stats = new Stats();
+	relayDriver = new RelayDriver(tempSensor);
+	display = new Display();
+	serviceSuspender = new ServiceSuspender();
+	buttons = new Buttons();
+	buttons_setup(buttons);
 }
 
 boolean sent = false;
 void loop() {
 	util_cycle();
 	log_cycle();
-	mainController.cycle();
-	tempSensor.cycle();
-	relayDriver.cycle();
-	if(!sent){
-		sent = true;
-		eb_fire(BUTTON_NEXT);
-	}
+	serviceSuspender->cycle();
+	tempSensor->cycle();
+	relayDriver->cycle();
 }

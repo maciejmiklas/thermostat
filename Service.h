@@ -2,15 +2,16 @@
 #define SERVICE_H_
 
 #include "Arduino.h"
+#include "EventBus.h"
 
-class Service {
+class Service : public BusListener {
 public:
 	Service();
 	virtual ~Service();
-	void setEnabled(boolean enabled);
 	virtual void cycle() = 0;
 
 protected:
+	void onEvent(BusEvent event, va_list ap);
 	boolean enabled;
 };
 

@@ -1,7 +1,7 @@
 #include "TempSensor.h"
 
 TempSensor::TempSensor() :
-		probeIdx(10), curentTemp(0), lastProbeTime(0), oneWire(SENSOR_PIN), dallasTemperature(&oneWire) {
+		probeIdx(10), curentTemp(0), lastProbeTime(0), oneWire(PIN_TEMP_SENSOR), dallasTemperature(&oneWire), enabled(true) {
 	dallasTemperature.begin();
 	cycle();
 }

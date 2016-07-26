@@ -5,8 +5,9 @@
 #include "Arduino.h"
 #include "OneWire.h"
 #include "Util.h"
-#include "Service.h"
 #include "DallasTemperature.h"
+#include "Service.h"
+#include "Config.h"
 
 class TempSensor: public Service {
 public:
@@ -15,7 +16,6 @@ public:
 	uint8_t getTemp();
 
 private:
-	const static uint8_t SENSOR_PIN = 11;
 
 	/**
 	 * We take #PROBES_SIZE probes from temp sensor, each one with delay of #PROBE_DELAY milliseconds.
@@ -33,6 +33,7 @@ private:
 
 	OneWire oneWire;
 	DallasTemperature dallasTemperature;
+	boolean enabled;
 };
 
 #endif /* TEMPSENSOR_H_ */

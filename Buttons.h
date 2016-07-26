@@ -3,18 +3,16 @@
 
 #include "Arduino.h"
 #include "ArdLog.h"
-#include "MainController.h"
+#include "EventBus.h"
+#include "Config.h"
 
 class Buttons {
 public:
-	Buttons(MainController* mainController);
+	Buttons();
 	void onISR();
 private:
 	const static uint8_t PRESS_MS = 100;
-	const static uint8_t BUTTON_NEXT_PIN = 10;
 	uint32_t pressMs;
-	MainController* mainController;
-
 	void buttonSetup(uint8_t pin);
 };
 

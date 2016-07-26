@@ -8,7 +8,11 @@ Service::~Service() {
 
 }
 
-void Service::setEnabled(boolean enabledPar) {
-	enabled = enabledPar;
+void Service::onEvent(BusEvent event, va_list ap) {
+	if (event == SERVICE_RESUME) {
+		enabled = true;
+	} else if (event == SERVICE_SUSPEND) {
+		enabled = false;
+	}
 }
 

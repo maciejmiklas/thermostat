@@ -11,9 +11,10 @@ void buttons_setup(Buttons* btn) {
 	attachInterrupt(0, _onISR, CHANGE);
 }
 
-Buttons::Buttons(MainController* mainController) :
-		pressMs(0), mainController(mainController) {
-	buttonSetup(BUTTON_NEXT_PIN);
+Buttons::Buttons() :
+		pressMs(0) {
+	buttonSetup(PIN_BUTTON_NEXT);
+	buttonSetup(PIN_BUTTON_PREV);
 }
 
 void Buttons::buttonSetup(uint8_t pin) {
@@ -27,11 +28,16 @@ void Buttons::onISR() {
 		return;
 	}
 	pressMs = ms;
-	if (digitalRead(BUTTON_NEXT_PIN) == 0) {
+	if (digitalRead(PIN_BUTTON_NEXT) == 0) {
 #if LOG
 		log(F("Next button pressed"));
 #endif
-		mainController->onButtonNext();
+		eb_fire(BUTTON_NEXT);
+	} else if (digitalRead(PIN_BUTTON_PREV) == 0) {
+#if LOG
+		log(F("Prev button pressed"));
+#endif
+		eb_fire(BUTTON_PREV);
 	}
 
 }

@@ -1,11 +1,11 @@
 #include "Thermostat.h"
 
-static TempSensor tempSensor;
-static StatsHolder stats;
-static RelayDriver relayDriver(&tempSensor, &stats);
+static TempSensor* tempSensor;
+static Stats stats;
+static RelayDriver relayDriver(&tempSensor);
 static Display display;
-static MainController mainController(&relayDriver, &display, &tempSensor);
-static Buttons buttons(&mainController);
+static ServiceSuspender mainController;
+static Buttons buttons;
 
 void setup() {
 	log_setup();
@@ -13,8 +13,15 @@ void setup() {
 	buttons_setup(&buttons);
 }
 
+boolean sent = false;
 void loop() {
 	util_cycle();
 	log_cycle();
 	mainController.cycle();
+	tempSensor.cycle();
+	relayDriver.cycle();
+	if(!sent){
+		sent = true;
+		eb_fire(BUTTON_NEXT);
+	}
 }

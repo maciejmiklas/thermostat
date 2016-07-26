@@ -1,6 +1,20 @@
 #include "Stats.h"
 
-Stats::~Stats() {
-
+Stats::Stats() :
+		systemTimer() {
+	systemTimer.start();
 }
 
+void Stats::onEvent(BusEvent event, va_list ap) {
+	if (!eb_inGroup(event, RELAY)) {
+		return;
+	}
+	int relayId = va_arg(ap, int);
+
+	if (event == RELAY_ON) {
+		relayTimer[relayId].start();
+
+	} else if (event == RELAY_OFF) {
+		relayTimer[relayId].suspend();
+	}
+}

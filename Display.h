@@ -1,14 +1,17 @@
 #ifndef DISPLAY_H_
 #define DISPLAY_H_
 
-class Display {
+#include "EventBus.h"
+
+class Display: public BusListener {
 public:
 	Display();
 
-	/** Display will show main screen. */
-	void reset();
-
-	void nextScreen();
+private:
+	void onEvent(BusEvent event, va_list ap);
+	inline void showNextScreen();
+	inline void showPrevScreen();
+	inline void showStartScreen();
 };
 
 #endif /* DISPLAY_H_ */

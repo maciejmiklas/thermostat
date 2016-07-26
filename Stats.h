@@ -2,11 +2,19 @@
 #define STATS_H_
 
 #include "Arduino.h"
+#include "Timer.h"
+#include "EventBus.h"
+#import "Config.h"
 
-class Stats {
+class Stats: public BusListener {
 public:
-	virtual void relayChange(boolean enabled, uint8_t id) = 0;
-	virtual ~Stats();
+	Stats();
+
+private:
+	void onEvent(BusEvent event, va_list ap);
+
+	Timer systemTimer;
+	Timer relayTimer[RELAYS_AMOUNT];
 };
 
 #endif /* STATS_H_ */

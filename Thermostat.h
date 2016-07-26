@@ -6,10 +6,11 @@
 #include "ArdLog.h"
 #include "TempSensor.h"
 #include "RelayDriver.h"
-#include "StatsHolder.h"
 #include "Stats.h"
 #include "Buttons.h"
-#include "MainController.h"
+#include "ServiceSuspender.h"
+#include "Timer.h"
+#include "EventBus.h"
 
 #ifdef __cplusplus
 extern "C" {

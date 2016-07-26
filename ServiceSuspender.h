@@ -5,18 +5,16 @@
 #import "Display.h"
 #import "TempSensor.h"
 #import "Util.h"
+#import "EventBus.h"
 
-class MainController {
+class ServiceSuspender: public BusListener {
 public:
-	MainController(RelayDriver* relayDriver, Display* display, TempSensor* tempSensor);
+	ServiceSuspender();
 
-	void onButtonNext();
 	void cycle();
 
 private:
-	RelayDriver* relayDriver;
-	Display* display;
-	TempSensor* tempSensor;
+	void onEvent(BusEvent event, va_list ap);
 
 	/** After button has been pressed suspend all services but display to provide fluent user feedback in GUI */
 	const static uint16_t SUSPEND_SERVICE_MS = 60000;

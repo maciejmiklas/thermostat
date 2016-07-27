@@ -12,7 +12,7 @@ public:
 protected:
 	void onEvent(BusEvent event, va_list ap);
 	boolean enabled;
-	virtual uint8_t setviceId() = 0;
+	virtual uint8_t deviceId() = 0;
 };
 
 #endif /* SERVICE_H_ */

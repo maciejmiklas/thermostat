@@ -17,7 +17,7 @@ public:
 
 
 protected:
-	uint8_t setviceId();
+	uint8_t deviceId();
 
 private:
 

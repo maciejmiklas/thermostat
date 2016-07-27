@@ -18,7 +18,7 @@ void Service::onEvent(BusEvent event, va_list ap) {
 		enabled = false;
 	}
 #if LOG
-	log(F("%s service %d"), enabled ? "Enable" : "Disable", setviceId());
+	log(F("%s service %d"), enabled ? "Enable" : "Disable", deviceId());
 #endif
 }
 

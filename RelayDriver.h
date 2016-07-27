@@ -18,7 +18,7 @@ public:
 	void cycle();
 
 protected:
-	uint8_t setviceId();
+	uint8_t deviceId();
 
 private:
 	Relay relay1;

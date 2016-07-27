@@ -39,6 +39,6 @@ void TempSensor::cycle() {
 #endif
 }
 
-uint8_t TempSensor::setviceId() {
+uint8_t TempSensor::deviceId() {
 	return SERVICE_ID_TEMP_SENSOR;
 }

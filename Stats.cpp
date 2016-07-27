@@ -18,3 +18,7 @@ void Stats::onEvent(BusEvent event, va_list ap) {
 		relayTimer[relayId].suspend();
 	}
 }
+
+Time* Stats::getRelayTime(uint8_t relayId) {
+	return relayTimer[relayId].getTime();
+}

@@ -9,6 +9,7 @@
 class Stats: public BusListener {
 public:
 	Stats();
+	Time* getRelayTime(uint8_t relayId);
 
 private:
 	void onEvent(BusEvent event, va_list ap);

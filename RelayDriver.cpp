@@ -20,7 +20,7 @@ inline void RelayDriver::driveRelay(Relay* relay, uint8_t id) {
 	}
 }
 
-uint8_t RelayDriver::setviceId() {
+uint8_t RelayDriver::deviceId() {
 	return SERVICE_ID_RELAY_DRIVER;
 }
 

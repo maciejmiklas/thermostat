@@ -20,7 +20,6 @@ void setup() {
 	buttons_setup(buttons);
 }
 
-boolean sent = false;
 void loop() {
 	util_cycle();
 	log_cycle();

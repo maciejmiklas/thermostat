@@ -4,10 +4,7 @@ RelayDriver::RelayDriver(TempSensor* ts) :
 		relay1(ts, PIN_RELAY_1, THRESHOLD_RELAY_1), relay2(ts, PIN_RELAY_2, THRESHOLD_RELAY_2) {
 }
 
-void RelayDriver::cycle() {
-	if (!enabled) {
-		return;
-	}
+void RelayDriver::onCycle() {
 	driveRelay(&relay1, 0);
 	driveRelay(&relay2, 1);
 }

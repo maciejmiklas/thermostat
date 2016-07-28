@@ -15,12 +15,13 @@
 class RelayDriver: public Service {
 public:
 	RelayDriver(TempSensor* ts);
-	void cycle();
+
 
 protected:
 	uint8_t deviceId();
 
 private:
+	void onCycle();
 	Relay relay1;
 	Relay relay2;
 

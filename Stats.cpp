@@ -22,3 +22,15 @@ void Stats::onEvent(BusEvent event, va_list ap) {
 Time* Stats::getRelayTime(uint8_t relayId) {
 	return relayTimer[relayId].getTime();
 }
+
+Time* Stats::getUpTime() {
+	return systemTimer.getTime();
+}
+
+void Stats::onCycle() {
+
+}
+
+uint8_t Stats::deviceId() {
+	return SERVICE_ID_STATS;
+}

@@ -4,13 +4,17 @@
 #include "EventBus.h"
 #include "ArdLog.h"
 #include "LiquidCrystal.h"
+#include "TempSensor.h"
+#include "Stats.h"
 
 class Display: public BusListener {
 public:
-	Display();
+	Display(TempSensor* tempSensor, Stats* stats);
 
 private:
 	LiquidCrystal lcd;
+	 TempSensor* const tempSensor;
+	 Stats* const stats;
 
 	void onEvent(BusEvent event, va_list ap);
 	inline void showNextScreen();

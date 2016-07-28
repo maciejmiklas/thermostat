@@ -19,5 +19,6 @@ const static uint8_t PIN_TEMP_SENSOR = 12;
 
 const static uint8_t SERVICE_ID_TEMP_SENSOR = 1;
 const static uint8_t SERVICE_ID_RELAY_DRIVER = 2;
+const static uint8_t SERVICE_ID_STATS = 3;
 
 #endif /* CONFIG_H_ */

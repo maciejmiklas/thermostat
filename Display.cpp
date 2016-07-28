@@ -1,12 +1,11 @@
 #include "Display.h"
 
-Display::Display() :
-		lcd(7, 6, 5, 4, 3, 2) {
+Display::Display(TempSensor* tempSensor, Stats* stats) :
+		lcd(7, 6, 5, 4, 3, 2), tempSensor(tempSensor), stats(stats) {
 	lcd.begin(16, 2);
 	lcd.noAutoscroll();
 
 	lcd.setCursor(0, 0);
-	lcd.print("Hi there!");
 }
 
 void Display::onEvent(BusEvent event, va_list ap) {
@@ -40,8 +39,8 @@ inline void Display::showStartScreen() {
 }
 
 inline void Display::clcd(uint8_t row) {
-	//lcd.setCursor(0, row);
-	//lcd.print("                ");
-	//lcd.setCursor(0, row);
+	lcd.setCursor(0, row);
+	lcd.print("                ");
+	lcd.setCursor(0, row);
 }
 

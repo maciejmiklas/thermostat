@@ -11,7 +11,7 @@ uint8_t TempSensor::getTemp() {
 	return curentTemp;
 }
 
-void TempSensor::cycle() {
+void TempSensor::onCycle() {
 	uint32_t millis = util_millis();
 	if (!enabled || millis - lastProbeTime < PROBE_FREQ_MS) {
 		return;

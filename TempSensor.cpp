@@ -1,10 +1,10 @@
 #include "TempSensor.h"
 
 TempSensor::TempSensor() :
-		probeIdx(10), curentTemp(0), lastProbeTime(0), oneWire(PIN_TEMP_SENSOR), dallasTemperature(&oneWire), enabled(
-				true) {
+		probeIdx(0), curentTemp(0), lastProbeTime(0), oneWire(PIN_TEMP_SENSOR), dallasTemperature(&oneWire), enabled(
+		true) {
 	dallasTemperature.begin();
-	cycle();
+	curentTemp = readTemp();
 }
 
 uint8_t TempSensor::getTemp() {
@@ -17,28 +17,26 @@ void TempSensor::cycle() {
 		return;
 	}
 	lastProbeTime = millis;
-	dallasTemperature.requestTemperatures();
-	int8_t temp = (int8_t) (dallasTemperature.getTempCByIndex(0) + 0.5);
-
+	int8_t temp = readTemp();
 	if (probeIdx == PROBES_SIZE) {
 		util_sort_i8(probes, PROBES_SIZE);
 		curentTemp = probes[PROBES_MED_IDX];
+		probeIdx = 0;
 #if LOG
-		log(F("Sorted probes"), temp);
-		for (uint8_t i = 0; i < PROBES_SIZE; i++) {
-			log(F("-- %d"), probes[i]);
-		}
+		log(F("Temp: %d, probes: %d %d %d %d %d %d"), temp, probes[0], probes[1], probes[2], probes[3], probes[4],
+				probes[5]);
 #endif
 
 	} else {
 		probes[probeIdx++] = temp;
 	}
-
-#if LOG
-	log(F("Temp reading: %d, current: %d"), temp, curentTemp);
-#endif
 }
 
 uint8_t TempSensor::deviceId() {
 	return SERVICE_ID_TEMP_SENSOR;
+}
+
+inline int8_t TempSensor::readTemp() {
+	dallasTemperature.requestTemperatures();
+	return (int8_t) (dallasTemperature.getTempCByIndex(0) + 0.5);
 }

@@ -6,7 +6,6 @@ static RelayDriver* relayDriver;
 static Display* display;
 static ServiceSuspender* serviceSuspender;
 static Buttons* buttons;
-
 void setup() {
 	log_setup();
 	util_setup();

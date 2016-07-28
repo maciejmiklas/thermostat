@@ -26,8 +26,8 @@ private:
 	 * After collecting all required probes we calculate median and this is the temperature.
 	 */
 	const static uint8_t PROBES_SIZE = 6;
-	const static uint8_t PROBES_MED_IDX = PROBES_SIZE / 2 + 1;
-	const static uint32_t PROBE_FREQ_MS = 60000;
+	const static uint8_t PROBES_MED_IDX = PROBES_SIZE / 2;
+	const static uint32_t PROBE_FREQ_MS = 2000;
 	int8_t probes[PROBES_SIZE];
 	uint8_t probeIdx;
 
@@ -38,6 +38,8 @@ private:
 	OneWire oneWire;
 	DallasTemperature dallasTemperature;
 	boolean enabled;
+
+	inline int8_t readTemp();
 };
 
 #endif /* TEMPSENSOR_H_ */

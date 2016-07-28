@@ -26,14 +26,14 @@ boolean Relay::drive() {
 		enabled = false;
 		changed = true;
 #if LOG
-		log(F("Disable relay on: %d by %d deg"), pin, temp);
+		log(F("Relay %d OFF by %d deg"), pin, temp);
 #endif
 	} else if (!enabled && temp >= threshold) {
 		digitalWrite(pin, HIGH);
 		enabled = true;
 		changed = true;
 #if LOG
-		log(F("Enable relay on: %d by %d deg"), pin, temp);
+		log(F("Relay %d ON by %d deg"), pin, temp);
 #endif
 	}
 

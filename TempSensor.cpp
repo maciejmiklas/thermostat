@@ -7,7 +7,7 @@ TempSensor::TempSensor() :
 	curentTemp = readTemp();
 }
 
-uint8_t TempSensor::getTemp() {
+int8_t TempSensor::getTemp() {
 	return curentTemp;
 }
 

@@ -12,7 +12,7 @@
 class TempSensor: public Service {
 public:
 	TempSensor();
-	uint8_t getTemp();
+	int8_t getTemp();
 
 protected:
 	uint8_t deviceId();

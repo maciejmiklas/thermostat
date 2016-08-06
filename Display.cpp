@@ -16,8 +16,9 @@
  */
 #include "Display.h"
 
-Display::Display(TempSensor* tempSensor, Stats* stats) :
-		lcd(7, 6, 5, 4, 3, 2), tempSensor(tempSensor), stats(stats) {
+Display::Display(TempSensor *tempSensor, Stats *stats) :
+		lcd(7, 6, 5, 4, 3, 2), tempSensor(tempSensor), stats(stats), mainState(this), runtimeState(this), relayTimeState(
+				this), dayStatsState(this), driver(4, &mainState, &runtimeState, &relayTimeState, &dayStatsState) {
 	lcd.begin(16, 2);
 	lcd.noAutoscroll();
 
@@ -25,7 +26,20 @@ Display::Display(TempSensor* tempSensor, Stats* stats) :
 }
 
 void Display::onEvent(BusEvent event, va_list ap) {
+	if (event == SERVICE_RESUME) {
+		driver.changeState(STATE_MAIN);
+	} else {
+		driver.execute(event);
+	}
+}
 
+void Display::cycle() {
+	driver.execute(NO_EVENT);
+}
+
+inline void Display::printlnNa(uint8_t row, const char *fmt) {
+	// TODO implement it without sprintf
+	println(row, fmt);
 }
 
 inline void Display::println(uint8_t row, const char *fmt, ...) {
@@ -51,6 +65,10 @@ inline void Display::clcd(uint8_t row) {
 	lcd.setCursor(0, row);
 	lcd.print("                ");
 	lcd.setCursor(0, row);
+}
+
+void Display::printTime(uint8_t row, Time* time) {
+	println(row, "%04d -> %02d:%02d:%02d", time->dd, time->hh, time->mm, time->ss);
 }
 
 // ##################### MainState #####################
@@ -92,16 +110,12 @@ uint8_t Display::MainState::execute(BusEvent event) {
 
 void Display::MainState::init() {
 #if LOG
-	log(F("Display - showStartScreen"));
+	log(F("Display - main state"));
 #endif
-
-	display->println(0, "NOW|MIN|MAX|AVG");
-	update();
-}
-
-void Display::MainState::reset() {
 	lastUpdateMs = 0;
 	lastTemp = -99;
+	display->printlnNa(0, "NOW|MIN|MAX|AVG");
+	update();
 }
 
 // ##################### RuntimeState #####################
@@ -113,29 +127,123 @@ Display::RuntimeState::~RuntimeState() {
 }
 
 uint8_t Display::RuntimeState::execute(BusEvent event) {
+	if (event == NO_EVENT) {
+		return STATE_NOCHANGE;
+	}
+	if (event == BUTTON_NEXT) {
+		return STATE_RELAY_TIME;
+
+	} else if (event == BUTTON_PREV) {
+		return STATE_MAIN;
+
+	}
 	return STATE_NOCHANGE;
 }
 
 void Display::RuntimeState::init() {
+#if LOG
+	log(F("Display - on time"));
+#endif
+	display->printlnNa(0, "System on time");
+	display->printTime(1, display->stats->getUpTime());
 }
 
-void Display::RuntimeState::reset() {
+// ##################### RelayTimeState #####################
+Display::RelayTimeState::RelayTimeState(Display* display) :
+		display(display), relayIdx(0) {
+}
+
+Display::RelayTimeState::~RelayTimeState() {
+}
+
+uint8_t Display::RelayTimeState::execute(BusEvent event) {
+	if (event == NO_EVENT) {
+		return STATE_NOCHANGE;
+	}
+	if (event == BUTTON_NEXT) {
+		relayIdx++;
+		if (relayIdx == RELAYS_AMOUNT) {
+			return STATE_DAY_STATS;
+		}
+		updateDisplay();
+	} else if (event == BUTTON_PREV) {
+		// cannot decrease before checking because it's unsigned int
+		if (relayIdx == 0) {
+			return STATE_RUNTIME;
+		}
+		relayIdx--;
+		updateDisplay();
+	}
+	return STATE_NOCHANGE;
+}
+
+inline void Display::RelayTimeState::updateDisplay() {
+	Time* rt = display->stats->getRelayTime(relayIdx);
+	display->println(0, "Relay %d on time", relayIdx + 1);
+	display->printTime(1, rt);
+}
+
+void Display::RelayTimeState::init() {
+#if LOG
+	log(F("Display - relay time"));
+#endif
+	relayIdx = 0;
 }
 
 // ##################### DayStatsState #####################
 Display::DayStatsState::DayStatsState(Display* display) :
-		display(display) {
+		display(display), daySize(0), showedInfo(false) {
 }
 
 Display::DayStatsState::~DayStatsState() {
 }
 
 uint8_t Display::DayStatsState::execute(BusEvent event) {
+	if (event == NO_EVENT) {
+		return STATE_NOCHANGE;
+	}
+	if (event == BUTTON_NEXT) {
+		if (!showedInfo) {
+			showedInfo = true;
+			showInfo();
+		} else {
+			if (!display->stats->dit_hasNext()) {
+				return STATE_MAIN;
+			}
+			updateDisplay(display->stats->dit_next());
+		}
+	} else if (event == BUTTON_PREV) {
+		// cannot decrease before checking because it's unsigned int
+		if (!display->stats->dit_hasPrev()) {
+			return STATE_RELAY_TIME;
+		}
+		updateDisplay(display->stats->dit_prev());
+	}
 	return STATE_NOCHANGE;
 }
 
-void Display::DayStatsState::init() {
+inline void Display::DayStatsState::updateDisplay(Temp* temp) {
+	display->println(0, "%2d-> %2d|%2d|%2d", temp->day, temp->min, temp->max, temp->avg);
+
+	// TODO support flexible amount of relays
+	if (RELAYS_AMOUNT == 2) {
+		display->println(1, "%2d:%2d, %2d:%2d", temp->realyOnHH[0], temp->realyOnMM[0], temp->realyOnHH[1],
+				temp->realyOnMM[1]);
+	}
 }
 
-void Display::DayStatsState::reset() {
+void Display::DayStatsState::showInfo() {
+	display->printlnNa(0, "DD-> MIN|MAX|AVG");
+	display->printlnNa(1, "ON times[HH:MM,]");
+}
+
+void Display::DayStatsState::init() {
+#if LOG
+	log(F("Display - day stats"));
+#endif
+	showedInfo = false;
+	daySize = display->stats->dit_size();
+	display->stats->dit_reset();
+	display->println(0, "Statistics for %d days", daySize);
+
 }

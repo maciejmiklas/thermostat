@@ -22,18 +22,19 @@
 #include "LiquidCrystal.h"
 #include "TempSensor.h"
 #include "Stats.h"
+#include "Config.h"
 #include "StateMachine.h"
+#include "MachineDriver.h"
 
 class Display: public BusListener {
 public:
 	Display(TempSensor* tempSensor, Stats* stats);
+	void cycle();
 
 private:
 
 	enum DisplayStates {
-		STATE_MAIN = 0,
-		STATE_RUNTIME = 1,
-		STATE_DAY_STATS = 2
+		STATE_MAIN = 0, STATE_RUNTIME = 1, STATE_RELAY_TIME = 2, STATE_DAY_STATS = 3
 	};
 
 	/** Shows main/start screen */
@@ -43,26 +44,37 @@ private:
 		virtual ~MainState();
 		virtual uint8_t execute(BusEvent event);
 		virtual void init();
-		virtual void reset();
 	private:
 		inline void update();
 
 		const static uint16_t UPDATE_FREQ = 1000;
-		uint32_t lastUpdateMs;
 		Display* display;
+		uint32_t lastUpdateMs;
 		int8_t lastTemp;
 	};
 
-	/** Shows runtime for system and on/off time for each relay. */
+	/** Shows runtime for system . */
 	class RuntimeState: public StateMachine {
 	public:
 		RuntimeState(Display* display);
 		virtual ~RuntimeState();
 		virtual uint8_t execute(BusEvent event);
 		virtual void init();
-		virtual void reset();
 	private:
 		Display* display;
+	};
+
+	/** Shows runtime for each relay. */
+	class RelayTimeState: public StateMachine {
+	public:
+		RelayTimeState(Display* display);
+		virtual ~RelayTimeState();
+		virtual uint8_t execute(BusEvent event);
+		virtual void init();
+	private:
+		Display* display;
+		uint8_t relayIdx;
+		inline void updateDisplay();
 	};
 
 	/** Shows statistics for each last xx days. */
@@ -72,22 +84,31 @@ private:
 		virtual ~DayStatsState();
 		virtual uint8_t execute(BusEvent event);
 		virtual void init();
-		virtual void reset();
 	private:
 		Display* display;
+		uint8_t daySize;
+		boolean showedInfo;
+		inline void updateDisplay(Temp* temp);
+		void showInfo();
 	};
-
 
 	LiquidCrystal lcd;
 	TempSensor* const tempSensor;
 	Stats* const stats;
 	const static uint8_t LINE_LENGTH = 16;
 	char lcdBuf[LINE_LENGTH + 1];
+	MainState mainState;
+	RuntimeState runtimeState;
+	RelayTimeState relayTimeState;
+	DayStatsState dayStatsState;
+	MachineDriver driver;
 
 	void onEvent(BusEvent event, va_list ap);
 	inline void clcd(uint8_t row);
 	inline void println(uint8_t row, const char *fmt, ...);
+	inline void printlnNa(uint8_t row, const char *fmt);
 	inline void cleanRight(char *array, short from, short size);
+	void printTime(uint8_t row, Time* time);
 };
 
 #endif /* DISPLAY_H_ */

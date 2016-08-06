@@ -30,6 +30,8 @@ typedef struct {
 	int8_t min;
 	int8_t max;
 	uint8_t day; // day number in history. 0 - now, 1 - yesterday, 2 - before yesterday, and so on.
+	uint8_t realyOnHH[RELAYS_AMOUNT];
+	uint8_t realyOnMM[RELAYS_AMOUNT];
 } Temp;
 
 class Stats: public Service, public BusListener {
@@ -37,7 +39,6 @@ public:
 	Stats(TempSensor* tempSensor);
 	Time* getRelayTime(uint8_t relayId);
 	Time* getUpTime();
-
 	Temp* getActual();
 
 	// dit_xxx provides functions for Day Iterator.
@@ -45,10 +46,11 @@ public:
 
 	/** Go to next entry in history, meaning go back by one day. After reaching history limit it rotates to "now". */
 	Temp* dit_next();
+	boolean dit_hasNext();
 
 	/** Go back in history to more recent day. After reaching "now" it rotates to the end of the history. */
 	Temp* dit_prev();
-
+	boolean dit_hasPrev();
 	/** Resets iterator to day one (now). */
 	void dit_reset();
 

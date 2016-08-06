@@ -67,16 +67,6 @@ public:
 	 */
 	void execute(BusEvent event);
 
-	/**
-	 * This method resets whole work flow by:
-	 * 1) calling reset() on all states
-	 * 2) switching and initializing first state (technically speaking it's 0 index in states array).
-	 *
-	 * Reset  happens when state machine has to process completely new data. For example animating new sprite, or starts
-	 * playing animation from the beginning.
-	 */
-	void reset();
-
 	virtual ~MachineDriver();
 
 private:

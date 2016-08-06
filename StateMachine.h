@@ -41,18 +41,10 @@ public:
 	 */
 	virtual void init() = 0;
 
-	/**
-	 * This method resets whole workflow - this happens when state machine has to process completely new data. For
-	 * example animating new sprite.
-	 */
-	virtual void reset() = 0;
-
 	virtual ~StateMachine() = 0;
 
 	/** Reserved states. */
 	enum DefaultStates {
-		/** Resets all states and starts from first one */
-		STATE_RESET = 253,
 
 		/** Indicates that actual state should continue to execute. */
 		STATE_NOCHANGE = 254,

@@ -42,4 +42,5 @@ void loop() {
 	serviceSuspender->cycle();
 	tempSensor->cycle();
 	relayDriver->cycle();
+	display->cycle();
 }

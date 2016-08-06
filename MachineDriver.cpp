@@ -43,11 +43,6 @@ void MachineDriver::changeState(uint8_t state) {
 
 	boolean init = true;
 	switch (state) {
-	case StateMachine::STATE_RESET:
-		reset();
-		init = false;
-		break;
-
 	case StateMachine::STATE_NOOP:
 		current = &noopState;
 		break;
@@ -60,18 +55,6 @@ void MachineDriver::changeState(uint8_t state) {
 	if (init) {
 		current->init();
 	}
-}
-
-void MachineDriver::reset() {
-#if LOG
-	log(F("Reseting Machine Driver"));
-#endif
-
-	for (uint8_t sIdx = 0; sIdx < statesCnt; sIdx++) {
-		states[sIdx]->reset();
-	}
-	current = states[0];
-	current->init();
 }
 
 boolean MachineDriver::isRunning() {

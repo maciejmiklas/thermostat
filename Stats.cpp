@@ -100,6 +100,14 @@ void Stats::probeDayTemp() {
 	}
 }
 
+boolean Stats::dit_hasNext() {
+	return dit_idx > 0;
+}
+
+boolean Stats::dit_hasPrev() {
+	return dit_idx < DAY_HISTORY_SIZE;
+}
+
 Temp* Stats::dit_next() {
 	if (dit_idx == 0) {
 		dit_idx = dayProbeIdx;

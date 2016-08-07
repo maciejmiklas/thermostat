@@ -30,17 +30,18 @@ void setup() {
 	tempSensor = new TempSensor();
 	stats = new Stats(tempSensor);
 	relayDriver = new RelayDriver(tempSensor);
-	display = new Display(tempSensor, stats);
 	serviceSuspender = new ServiceSuspender();
 	buttons = new Buttons();
-	buttons_setup(buttons);
+	display = new Display(tempSensor, stats);
 }
 
 void loop() {
 	util_cycle();
 	log_cycle();
-	serviceSuspender->cycle();
 	tempSensor->cycle();
+	serviceSuspender->cycle();
+	stats->cycle();
 	relayDriver->cycle();
 	display->cycle();
+	buttons->cycle();
 }

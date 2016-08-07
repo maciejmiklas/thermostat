@@ -36,7 +36,7 @@ void ServiceSuspender::onEvent(BusEvent event, va_list ap) {
 }
 
 void ServiceSuspender::cycle() {
-	if (suspendStart != 0 && util_millis() - suspendStart > SUSPEND_SERVICE_MS) {
+	if (suspendStart != 0 && util_millis() - suspendStart >= SUSPEND_SERVICE_MS) {
 #if LOG
 		log(F("Resuming services"));
 #endif

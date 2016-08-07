@@ -29,6 +29,7 @@ class TempSensor: public Service {
 public:
 	TempSensor();
 	int8_t getTemp();
+	int8_t getQuickTemp();
 
 protected:
 	uint8_t deviceId();
@@ -40,11 +41,12 @@ private:
 	 */
 	const static uint8_t PROBES_SIZE = 6;
 	const static uint8_t PROBES_MED_IDX = PROBES_SIZE / 2;
-	const static uint32_t PROBE_FREQ_MS = 2000;
+	const static uint32_t PROBE_FREQ_MS = 1000;
 
 	int8_t probes[PROBES_SIZE];
 	uint8_t probeIdx;
 	int8_t curentTemp;
+	int8_t lastTemp;
 	uint32_t lastProbeTime;
 	OneWire oneWire;
 	DallasTemperature dallasTemperature;

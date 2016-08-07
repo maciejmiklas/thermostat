@@ -14,11 +14,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#include <Util.h>
+#include "Util.h"
 
 static uint32_t cycleMs;
-
-
 
 void util_setup() {
 	util_cycle();

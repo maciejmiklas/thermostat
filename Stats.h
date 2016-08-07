@@ -66,10 +66,9 @@ private:
 	const static uint8_t PROBES_PER_DAY = 24;
 
 	/** Take probe every hour - 24 probes gives us full day. */
-	const static uint32_t DAY_PROBE_MS = 3600000; // 1000 * 60 * 60;
+	// TODO 3600000
+	const static uint32_t DAY_PROBE_MS = 10000; // 1000 * 60 * 60;
 
-	/** Keep history for last 60 days. */
-	const static uint8_t DAY_HISTORY_SIZE = 60;
 	const static uint8_t ACTUAL_PROBES_SIZE = 24;
 
 	void onEvent(BusEvent event, va_list ap);

@@ -35,7 +35,7 @@ void eb_register(BusListener* listener) {
 		return;
 	}
 
-#if LOG
+#if TRACE
 	log(F("Register %d bus listener"), listenersAmount);
 #endif
 	listeners[listenersAmount++] = listener;
@@ -49,6 +49,9 @@ void eb_fire(BusEvent event, ...) {
 	for (uint8_t idx = 0; idx < listenersAmount; idx++) {
 		va_list ap;
 		va_start(ap, event);
+#if TRACE
+	log(F("Notify: %d with: %d"), idx, event);
+#endif
 		listeners[idx]->onEvent(event, ap);
 		va_end(ap);
 	}

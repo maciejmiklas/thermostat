@@ -50,7 +50,6 @@ private:
 		const static uint16_t UPDATE_FREQ = 1000;
 		Display* display;
 		uint32_t lastUpdateMs;
-		int8_t lastTemp;
 	};
 
 	/** Shows runtime for system . */

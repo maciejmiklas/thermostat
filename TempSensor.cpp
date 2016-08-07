@@ -17,7 +17,8 @@
 #include "TempSensor.h"
 
 TempSensor::TempSensor() :
-		probeIdx(0), curentTemp(0), lastProbeTime(0), oneWire(PIN_TEMP_SENSOR), dallasTemperature(&oneWire), enabled(
+		probeIdx(0), curentTemp(0), lastTemp(0), lastProbeTime(0), oneWire(DIG_PIN_TEMP_SENSOR), dallasTemperature(
+				&oneWire), enabled(
 		true) {
 	dallasTemperature.begin();
 	curentTemp = readTemp();
@@ -27,6 +28,10 @@ int8_t TempSensor::getTemp() {
 	return curentTemp;
 }
 
+int8_t TempSensor::getQuickTemp() {
+	return lastTemp;
+}
+
 void TempSensor::onCycle() {
 	uint32_t millis = util_millis();
 	if (!enabled || millis - lastProbeTime < PROBE_FREQ_MS) {
@@ -34,11 +39,12 @@ void TempSensor::onCycle() {
 	}
 	lastProbeTime = millis;
 	int8_t temp = readTemp();
+	lastTemp = temp;
 	if (probeIdx == PROBES_SIZE) {
 		util_sort_i8(probes, PROBES_SIZE);
 		curentTemp = probes[PROBES_MED_IDX];
 		probeIdx = 0;
-#if LOG
+#if TRACE
 		log(F("Temp: %d, probes: %d %d %d %d %d %d"), temp, probes[0], probes[1], probes[2], probes[3], probes[4],
 				probes[5]);
 #endif

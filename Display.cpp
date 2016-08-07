@@ -17,12 +17,14 @@
 #include "Display.h"
 
 Display::Display(TempSensor *tempSensor, Stats *stats) :
-		lcd(7, 6, 5, 4, 3, 2), tempSensor(tempSensor), stats(stats), mainState(this), runtimeState(this), relayTimeState(
-				this), dayStatsState(this), driver(4, &mainState, &runtimeState, &relayTimeState, &dayStatsState) {
+		lcd(DIG_PIN_LCD_RS, DIG_PIN_LCD_ENABLE, DIG_PIN_LCD_D0, DIG_PIN_LCD_D1, DIG_PIN_LCD_D2, DIG_PIN_LCD_D3), tempSensor(
+				tempSensor), stats(stats), mainState(this), runtimeState(this), relayTimeState(this), dayStatsState(
+				this), driver(4, &mainState, &runtimeState, &relayTimeState, &dayStatsState) {
 	lcd.begin(16, 2);
 	lcd.noAutoscroll();
 
 	lcd.setCursor(0, 0);
+	driver.changeState(STATE_MAIN);
 }
 
 void Display::onEvent(BusEvent event, va_list ap) {
@@ -73,20 +75,16 @@ void Display::printTime(uint8_t row, Time* time) {
 
 // ##################### MainState #####################
 Display::MainState::MainState(Display* display) :
-		display(display), lastUpdateMs(0), lastTemp(-99) {
+		display(display), lastUpdateMs(0) {
 }
 
 Display::MainState::~MainState() {
 }
 
 inline void Display::MainState::update() {
-	int8_t tempNow = display->tempSensor->getTemp();
-	if (lastTemp == tempNow) {
-		return;
-	}
-	lastTemp = tempNow;
+	int8_t tempNow = display->tempSensor->getQuickTemp();
 	Temp* actual = display->stats->getActual();
-	display->println(1, "%d|%d|%d|%d", tempNow, actual->min, actual->max, actual->avg);
+	display->println(1, "%3d|%3d|%3d|%3d", tempNow, actual->min, actual->max, actual->avg);
 }
 
 uint8_t Display::MainState::execute(BusEvent event) {
@@ -95,10 +93,9 @@ uint8_t Display::MainState::execute(BusEvent event) {
 			return STATE_RUNTIME;
 
 		} else if (event == BUTTON_PREV) {
-			return STATE_DAY_STATS;
+			return STATE_RUNTIME;
 		}
 	}
-
 	uint32_t millis = util_millis();
 	if (millis - lastUpdateMs >= UPDATE_FREQ) {
 		update();
@@ -113,7 +110,6 @@ void Display::MainState::init() {
 	log(F("Display - main state"));
 #endif
 	lastUpdateMs = 0;
-	lastTemp = -99;
 	display->printlnNa(0, "NOW|MIN|MAX|AVG");
 	update();
 }
@@ -131,7 +127,7 @@ uint8_t Display::RuntimeState::execute(BusEvent event) {
 		return STATE_NOCHANGE;
 	}
 	if (event == BUTTON_NEXT) {
-		return STATE_RELAY_TIME;
+		return STATE_MAIN;
 
 	} else if (event == BUTTON_PREV) {
 		return STATE_MAIN;

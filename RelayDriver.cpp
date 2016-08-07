@@ -17,7 +17,7 @@
 #include "RelayDriver.h"
 
 RelayDriver::RelayDriver(TempSensor* ts) :
-		relay1(ts, PIN_RELAY_1, THRESHOLD_RELAY_1), relay2(ts, PIN_RELAY_2, THRESHOLD_RELAY_2) {
+		relay1(ts, DIG_PIN_RELAY_1, THRESHOLD_RELAY_1), relay2(ts, DIG_PIN_IN_RELAY_2, THRESHOLD_RELAY_2) {
 }
 
 void RelayDriver::onCycle() {
@@ -29,7 +29,8 @@ inline void RelayDriver::driveRelay(Relay* relay, uint8_t id) {
 	boolean changed = relay->drive();
 	if (changed) {
 		eb_fire(relay->isEnabled() ? RELAY_ON : RELAY_OFF, id);
-		delay(DELAY_AFTER_SWITCH_MS);
+		// TODO replace delay with no-op
+		//delay(DELAY_AFTER_SWITCH_MS);
 	}
 }
 

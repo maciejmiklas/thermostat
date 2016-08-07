@@ -18,6 +18,7 @@
 #define DOMAIN_H_
 
 #include "Arduino.h"
+#include "ArdLog.h"
 
 void util_setup();
 void util_cycle();
@@ -38,6 +39,9 @@ inline void util_sort_u8(uint8_t arr[], uint8_t size) {
 }
 
 inline int8_t util_avg_i8(int8_t arr[], uint8_t size) {
+	if (size == 0) {
+		return 0;
+	}
 	int16_t tmp = 0;
 	for (uint8_t i = 0; i < size; i++) {
 		tmp += arr[i];
@@ -46,6 +50,9 @@ inline int8_t util_avg_i8(int8_t arr[], uint8_t size) {
 }
 
 inline int8_t util_min_i8(int8_t arr[], uint8_t size) {
+	if (size == 0) {
+		return 0;
+	}
 	int8_t tmp = arr[0];
 	for (uint8_t i = 1; i < size; i++) {
 		int8_t next = arr[i];
@@ -57,6 +64,9 @@ inline int8_t util_min_i8(int8_t arr[], uint8_t size) {
 }
 
 inline int8_t util_max_i8(int8_t arr[], uint8_t size) {
+	if (size == 0) {
+		return 0;
+	}
 	int8_t tmp = arr[0];
 	for (uint8_t i = 1; i < size; i++) {
 		int8_t next = arr[i];
@@ -88,7 +98,6 @@ inline uint16_t util_freeRam() {
 
 inline uint16_t util_abs16(int16_t val) {
 	return val > 0 ? val : val * -1;
-
 }
 
 inline uint8_t util_abs8(int8_t val) {

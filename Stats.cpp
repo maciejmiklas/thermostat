@@ -21,6 +21,9 @@ Stats::Stats(TempSensor* tempSensor) :
 				0), actualProbesFull(false) {
 	systemTimer.start();
 	actualTemp.day = 0;
+
+	probeDayTemp();
+	probeActualTemp();
 }
 
 void Stats::onEvent(BusEvent event, va_list ap) {
@@ -54,7 +57,6 @@ void Stats::onCycle() {
 	if (currentMillis - lastProbeMs >= DAY_PROBE_MS) {
 		probeDayTemp();
 		probeActualTemp();
-
 		lastProbeMs = currentMillis;
 	}
 }
@@ -69,7 +71,7 @@ void Stats::probeActualTemp() {
 		actualProbesFull = true;
 	}
 	int8_t actTemp = tempSensor->getTemp();
-	actualProbes[actualProbesIdx++] = actTemp;
+	actualProbes[actualProbesIdx] = actTemp;
 
 	uint8_t probesSize = actualProbesFull ? ACTUAL_PROBES_SIZE : actualProbesIdx;
 	actualTemp.avg = util_avg_i8(actualProbes, probesSize);
@@ -77,9 +79,10 @@ void Stats::probeActualTemp() {
 	actualTemp.max = util_max_i8(actualProbes, probesSize);
 
 #if LOG
-	log(F("Actual(%d) -> Now: %d, Avg: %d, Min: %d, Max :%d"), actualProbesIdx, actTemp, actualTemp.avg, actualTemp.min,
-			actualTemp.max);
+	log(F("Actual(%d/%d) -> Now: %d, Min: %d, Max :%d, Avg: %d"), actualProbesIdx, probesSize, actTemp, actualTemp.min,
+			actualTemp.max, actualTemp.avg);
 #endif
+	actualProbesIdx++;
 }
 
 void Stats::probeDayTemp() {

@@ -28,10 +28,13 @@ typedef enum {
 	RELAY_OFF = 11,
 
 	/** Parameters: none */
-	BUTTON_NEXT = 20,
+	BUTTON_IRQ = 20,
 
 	/** Parameters: none */
-	BUTTON_PREV = 21,
+	BUTTON_NEXT = 21,
+
+	/** Parameters: none */
+	BUTTON_PREV = 22,
 
 	/** Parameters: none */
 	SERVICE_SUSPEND = 30,

@@ -16,45 +16,77 @@
  */
 #include "Buttons.h"
 
-static Buttons* buttons;
+static volatile boolean pressIRQ = false;
 
-static void _onISR() {
-	buttons->onISR();
+static void onIRQ() {
+	pressIRQ = true;
 }
 
-void buttons_setup(Buttons* btn) {
-	buttons = btn;
-	attachInterrupt(0, _onISR, CHANGE);
+inline static void enableIRQ() {
+#if LOG
+	log(F("Btn IRQ ON"));
+#endif
+	attachInterrupt(BUTTON_NEXT_IRQ, onIRQ, FALLING);
+}
+
+inline static void disableIRQ() {
+#if LOG
+	log(F("Btn IRQ OFF"));
+#endif
+	detachInterrupt(BUTTON_NEXT_IRQ);
 }
 
 Buttons::Buttons() :
 		pressMs(0) {
-	buttonSetup(PIN_BUTTON_NEXT);
-	buttonSetup(PIN_BUTTON_PREV);
+	setuButton(DIG_PIN_BUTTON_NEXT);
+	setuButton(DIG_PIN_BUTTON_PREV);
+
+	enableIRQ();
 }
 
-void Buttons::buttonSetup(uint8_t pin) {
-	pinMode(pin, INPUT);   // set Pin as Input (default)
-	digitalWrite(pin, HIGH);  // enable pullup resistor
+void inline Buttons::setuButton(uint8_t pin) {
+	pinMode(pin, INPUT);
+
+	// enable pullup resistor
+	digitalWrite(pin, HIGH);
 }
 
-void Buttons::onISR() {
-	uint32_t ms = millis();
+static inline uint16_t getFreeRam() {
+	extern int __heap_start, *__brkval;
+	int v;
+	return (uint16_t) &v - (__brkval == 0 ? (int) &__heap_start : (int) __brkval);
+}
+
+void Buttons::cycle() {
+	uint32_t ms = util_millis();
 	if (ms - pressMs < PRESS_MS) {
 		return;
 	}
 	pressMs = ms;
-	if (digitalRead(PIN_BUTTON_NEXT) == 0) {
-#if LOG
-		log(F("Next button pressed"));
-#endif
+
+	if (pressIRQ) {
+		pressIRQ = false;
+		eb_fire(BUTTON_IRQ);
 		eb_fire(BUTTON_NEXT);
-	} else if (digitalRead(PIN_BUTTON_PREV) == 0) {
-#if LOG
-		log(F("Prev button pressed"));
-#endif
+	}
+	if (digitalRead(DIG_PIN_BUTTON_NEXT) == 0) {
+		eb_fire(BUTTON_NEXT);
+
+		log(F("Free RAM: %u"), getFreeRam());
+
+	} else if (digitalRead(DIG_PIN_BUTTON_PREV) == 0) {
 		eb_fire(BUTTON_PREV);
 	}
-
 }
 
+void Buttons::onEvent(BusEvent event, va_list ap) {
+	if (!eb_inGroup(event, SERVICE)) {
+		return;
+	}
+	if (event == SERVICE_RESUME) {
+		enableIRQ();
+
+	} else if (event == SERVICE_SUSPEND) {
+		disableIRQ();
+	}
+}

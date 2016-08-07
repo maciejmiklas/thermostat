@@ -21,17 +21,17 @@
 #include "ArdLog.h"
 #include "EventBus.h"
 #include "Config.h"
+#include "Util.h"
 
-class Buttons {
+class Buttons: public BusListener {
 public:
 	Buttons();
-	void onISR();
+	void cycle();
 private:
-	const static uint8_t PRESS_MS = 100;
+	const static uint8_t PRESS_MS = 200;
 	uint32_t pressMs;
-	void buttonSetup(uint8_t pin);
+	void onEvent(BusEvent event, va_list ap);
+	void inline setuButton(uint8_t pin);
 };
-
-void buttons_setup(Buttons* btn);
 
 #endif /* BUTTONS_H_ */

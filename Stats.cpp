@@ -17,11 +17,10 @@
 #include "Stats.h"
 
 Stats::Stats(TempSensor* tempSensor) :
-		tempSensor(tempSensor), systemTimer(), dayProbeIdx(0), lastProbeMs(0), dayHistoryIdx(0), dit_idx(0), actualProbesIdx(
-				0), actualProbesFull(false) {
+		tempSensor(tempSensor), systemTimer(), dayProbeIdx(0), lastProbeMs(0), dayHistoryIdx(0), dayHistoryFull(false), dit_idx(
+				0), actualProbesIdx(0), actualProbesFull(false) {
 	systemTimer.start();
 	actualTemp.day = 0;
-
 	probeDayTemp();
 	probeActualTemp();
 }
@@ -69,6 +68,9 @@ void Stats::probeActualTemp() {
 	if (actualProbesIdx == ACTUAL_PROBES_SIZE) {
 		actualProbesIdx = 0;
 		actualProbesFull = true;
+#if TRACE
+		log(F("Looping day stats"));
+#endif
 	}
 	int8_t actTemp = tempSensor->getTemp();
 	actualProbes[actualProbesIdx] = actTemp;
@@ -78,7 +80,7 @@ void Stats::probeActualTemp() {
 	actualTemp.min = util_min_i8(actualProbes, probesSize);
 	actualTemp.max = util_max_i8(actualProbes, probesSize);
 
-#if LOG
+#if TRACE
 	log(F("Actual(%d/%d) -> Now: %d, Min: %d, Max :%d, Avg: %d"), actualProbesIdx, probesSize, actTemp, actualTemp.min,
 			actualTemp.max, actualTemp.avg);
 #endif
@@ -89,14 +91,15 @@ void Stats::probeDayTemp() {
 	if (dayProbeIdx == PROBES_PER_DAY) {
 		if (dayHistoryIdx == DAY_HISTORY_SIZE) {
 			dayHistoryIdx = 0;
+			dayHistoryFull = true;
 		}
-		Temp temp = dayHistory[dayHistoryIdx++];
-		temp.avg = util_avg_i8(dayProbes, PROBES_PER_DAY);
-		temp.min = util_min_i8(dayProbes, PROBES_PER_DAY);
-		temp.max = util_max_i8(dayProbes, PROBES_PER_DAY);
+		Temp* temp = &dayHistory[dayHistoryIdx++];
+		temp->avg = util_avg_i8(dayProbes, PROBES_PER_DAY);
+		temp->min = util_min_i8(dayProbes, PROBES_PER_DAY);
+		temp->max = util_max_i8(dayProbes, PROBES_PER_DAY);
 		dayProbeIdx = 0;
 #if LOG
-		log(F("History -> AVG: %d, Min: %d, Max :%d"), temp.avg, temp.min, temp.max);
+		log(F("History(%d) -> AVG: %d, Min: %d, Max :%d"), dayHistoryIdx, temp->avg, temp->min, temp->max);
 #endif
 	} else {
 		dayProbes[dayProbeIdx++] = tempSensor->getTemp();
@@ -104,39 +107,55 @@ void Stats::probeDayTemp() {
 }
 
 boolean Stats::dit_hasNext() {
-	return dit_idx > 0;
+	boolean has = dit_idx > 0;
+#if TRACE
+	log(F("dit_hasNext %d -> %d"), (has ? 1 : 0), dit_idx);
+#endif
+	return has;
 }
 
 boolean Stats::dit_hasPrev() {
-	return dit_idx < DAY_HISTORY_SIZE;
+	uint8_t size = _dit_size();
+	boolean has = dit_idx < size - 1;
+#if TRACE
+	log(F("dit_hasPrev %d -> %d/%d"), (has ? 1 : 0), dit_idx, size);
+#endif
+	return has;
 }
 
 Temp* Stats::dit_next() {
-	if (dit_idx == 0) {
-		dit_idx = dayProbeIdx;
-	}
-	Temp* temp = &dayHistory[dit_idx--];
+	uint8_t histIdx = --dit_idx;
+#if TRACE
+	log(F("dit_next %d"), histIdx);
+#endif
+	Temp* temp = &dayHistory[histIdx];
 	updateTempDay(temp);
 	return temp;
 }
 
 Temp* Stats::dit_prev() {
-	if (dit_idx == DAY_HISTORY_SIZE) {
-		dit_idx = 0;
-	}
-	Temp* temp = &dayHistory[dit_idx++];
+	uint8_t histIdx = ++dit_idx;
+#if TRACE
+	log(F("dit_prev %d"), histIdx);
+#endif
+
+	Temp* temp = &dayHistory[histIdx];
 	updateTempDay(temp);
 	return temp;
 }
 
 inline void Stats::updateTempDay(Temp* temp) {
-	temp->day = DAY_HISTORY_SIZE - dit_idx;
+	temp->day = _dit_size() - dit_idx;
 }
 
 void Stats::dit_reset() {
-	dit_idx = dayProbeIdx;
+	dit_idx = _dit_size();
+}
+
+uint8_t Stats::_dit_size() {
+	return dayHistoryFull ? DAY_HISTORY_SIZE : dayHistoryIdx;
 }
 
 uint8_t Stats::dit_size() {
-	return dayProbeIdx;
+	return _dit_size();
 }

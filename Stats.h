@@ -66,8 +66,7 @@ private:
 	const static uint8_t PROBES_PER_DAY = 24;
 
 	/** Take probe every hour - 24 probes gives us full day. */
-	// TODO 3600000
-	const static uint32_t DAY_PROBE_MS = 10000; // 1000 * 60 * 60;
+	const static uint32_t DAY_PROBE_MS = 3600000; // 1000 * 60 * 60;
 
 	const static uint8_t ACTUAL_PROBES_SIZE = 24;
 
@@ -76,6 +75,8 @@ private:
 	inline void probeDayTemp();
 	inline void probeActualTemp();
 	inline void updateTempDay(Temp* temp);
+	/** Amount of history entries. */
+	inline uint8_t _dit_size();
 
 	TempSensor* tempSensor;
 
@@ -89,6 +90,7 @@ private:
 
 	Temp dayHistory[DAY_HISTORY_SIZE];
 	uint8_t dayHistoryIdx;
+	boolean dayHistoryFull;
 
 	uint8_t dit_idx;
 

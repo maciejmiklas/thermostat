@@ -35,12 +35,12 @@ public:
 	Time* getTime();
 	void start();
 	void suspend();
-	void reset();
 
 private:
 	uint32_t runtimeMs;
 	uint32_t timeMs;
 	Time time;
+	boolean running;
 
 	const static uint16_t TR__MS_SEC = 1000;
 	const static uint32_t TR__SEC_DD = 86400;
@@ -48,7 +48,7 @@ private:
 	const static uint8_t TR__SEC_MM = 60;
 
 	inline void update();
-	inline void sample(boolean keep);
+	inline void sample();
 };
 
 

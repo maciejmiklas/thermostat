@@ -31,7 +31,7 @@
 class RelayDriver: public Service {
 public:
 	RelayDriver(TempSensor* ts);
-
+	boolean isOn(uint8_t relayId);
 
 protected:
 	uint8_t deviceId();
@@ -40,6 +40,7 @@ private:
 	void onCycle();
 	Relay relay1;
 	Relay relay2;
+	Relay* relays[RELAYS_AMOUNT];
 
 	inline void driveRelay(Relay* relay, uint8_t id);
 };

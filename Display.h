@@ -25,20 +25,33 @@
 #include "Config.h"
 #include "StateMachine.h"
 #include "MachineDriver.h"
+#include "RelayDriver.h"
 
 class Display: public BusListener {
 public:
-	Display(TempSensor* tempSensor, Stats* stats);
+	Display(TempSensor* tempSensor, Stats* stats, RelayDriver* relayDriver);
 	void cycle();
 
 private:
-
 	enum DisplayStates {
 		STATE_MAIN = 0, STATE_RUNTIME = 1, STATE_RELAY_TIME = 2, STATE_DAY_STATS = 3
 	};
 
+	class DisplayState: public StateMachine {
+	public:
+		DisplayState(Display* display);
+		virtual ~DisplayState();
+		virtual void init();
+	protected:
+		inline boolean shouldUpdate();
+		Display* display;
+	private:
+		const static uint16_t UPDATE_FREQ = 1000;
+		uint32_t lastUpdateMs;
+	};
+
 	/** Shows main/start screen */
-	class MainState: public StateMachine {
+	class MainState: public DisplayState {
 	public:
 		MainState(Display* display);
 		virtual ~MainState();
@@ -46,34 +59,30 @@ private:
 		virtual void init();
 	private:
 		inline void update();
-
-		const static uint16_t UPDATE_FREQ = 1000;
-		Display* display;
-		uint32_t lastUpdateMs;
 	};
 
 	/** Shows runtime for system . */
-	class RuntimeState: public StateMachine {
+	class RuntimeState: public DisplayState {
 	public:
 		RuntimeState(Display* display);
 		virtual ~RuntimeState();
 		virtual uint8_t execute(BusEvent event);
 		virtual void init();
 	private:
-		Display* display;
+		inline void update();
 	};
 
 	/** Shows runtime for each relay. */
-	class RelayTimeState: public StateMachine {
+	class RelayTimeState: public DisplayState {
 	public:
 		RelayTimeState(Display* display);
 		virtual ~RelayTimeState();
 		virtual uint8_t execute(BusEvent event);
 		virtual void init();
 	private:
-		Display* display;
 		uint8_t relayIdx;
 		inline void updateDisplay();
+		inline void updateDisplayTime();
 	};
 
 	/** Shows statistics for each last xx days. */
@@ -94,6 +103,7 @@ private:
 	LiquidCrystal lcd;
 	TempSensor* const tempSensor;
 	Stats* const stats;
+	RelayDriver* const relayDriver;
 	const static uint8_t LINE_LENGTH = 16;
 	char lcdBuf[LINE_LENGTH + 1];
 	MainState mainState;

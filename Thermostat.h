@@ -27,6 +27,7 @@
 #include "ServiceSuspender.h"
 #include "Timer.h"
 #include "EventBus.h"
+#include "SystemStatus.h"
 
 #ifdef __cplusplus
 extern "C" {

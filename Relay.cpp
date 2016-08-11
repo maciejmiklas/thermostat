@@ -17,15 +17,14 @@
 #include "Relay.h"
 
 Relay::Relay(TempSensor* ts, uint8_t pin, uint8_t threshold) :
-		tempSensor(ts), pin(pin), threshold(threshold) {
-	enabled = false;
+		tempSensor(ts), pin(pin), threshold(threshold), on(false) {
 	lastSwitch = 0;
 	pinMode(pin, OUTPUT);
 	digitalWrite(pin, LOW);
 }
 
-boolean Relay::isEnabled() {
-	return enabled;
+boolean Relay::isOn() {
+	return on;
 }
 
 boolean Relay::drive() {
@@ -37,16 +36,16 @@ boolean Relay::drive() {
 
 	boolean changed = false;
 	uint8_t temp = tempSensor->getTemp();
-	if (enabled && temp < threshold) {
+	if (on && temp < threshold) {
 		digitalWrite(pin, LOW);
-		enabled = false;
+		on = false;
 		changed = true;
 #if LOG
 		log(F("Relay %d OFF by %d deg"), pin, temp);
 #endif
-	} else if (!enabled && temp >= threshold) {
+	} else if (!on && temp >= threshold) {
 		digitalWrite(pin, HIGH);
-		enabled = true;
+		on = true;
 		changed = true;
 #if LOG
 		log(F("Relay %d ON by %d deg"), pin, temp);

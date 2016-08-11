@@ -17,35 +17,32 @@
 #include "Timer.h"
 
 Timer::Timer() :
-		runtimeMs(0), timeMs(0), time() {
+		runtimeMs(0), timeMs(0), time(), running(false) {
 }
 
 void Timer::start() {
-	sample(true);
+	running = true;
+	sample();
 }
 
 void Timer::suspend() {
-	sample(false);
+	running = false;
+	sample();
+	update();
 
-#if LOG
+#if TRACE
 	log(F("Suspended timer on %lu ms"), timeMs);
 #endif
 }
 
-void Timer::reset() {
-	timeMs = 0;
-	runtimeMs = 0;
-}
-
 Time* Timer::getTime() {
-	sample(true);
-	update();
+	if (running) {
+		sample();
+		update();
+	}
 	return &time;
 }
 
-//long milis =  126000000 + 1440000 + 17000;// 1d 11h 24m 17s
-//long milis =  345600000 + 1440000 + 17000;// 4d 0h 24m 17s
-//long milis =  446400000 + 1440000 + 17000;// 5d 4h 24m 17s
 inline void Timer::update() {
 	uint32_t sec = timeMs / TR__MS_SEC;
 
@@ -65,14 +62,10 @@ inline void Timer::update() {
 	time.ss = tmp;
 }
 
-inline void Timer::sample(boolean keep) {
+inline void Timer::sample() {
 	uint32_t ms = util_millis();
 	if (runtimeMs > 0) {
 		timeMs += ms - runtimeMs;
 	}
-	if (keep) {
-		runtimeMs = ms;
-	} else {
-		runtimeMs = 0;
-	}
+	runtimeMs = ms;
 }

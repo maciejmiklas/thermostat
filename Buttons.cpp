@@ -72,8 +72,6 @@ void Buttons::cycle() {
 	if (digitalRead(DIG_PIN_BUTTON_NEXT) == 0) {
 		eb_fire(BUTTON_NEXT);
 
-		log(F("Free RAM: %u"), getFreeRam());
-
 	} else if (digitalRead(DIG_PIN_BUTTON_PREV) == 0) {
 		eb_fire(BUTTON_PREV);
 	}

@@ -22,6 +22,7 @@ static RelayDriver* relayDriver;
 static Display* display;
 static ServiceSuspender* serviceSuspender;
 static Buttons* buttons;
+static SystemStatus* systemStatus;
 
 void setup() {
 	log_setup();
@@ -32,7 +33,8 @@ void setup() {
 	relayDriver = new RelayDriver(tempSensor);
 	serviceSuspender = new ServiceSuspender();
 	buttons = new Buttons();
-	display = new Display(tempSensor, stats);
+	display = new Display(tempSensor, stats, relayDriver);
+	systemStatus = new SystemStatus();
 }
 
 void loop() {
@@ -44,4 +46,5 @@ void loop() {
 	relayDriver->cycle();
 	display->cycle();
 	buttons->cycle();
+	systemStatus->cycle();
 }

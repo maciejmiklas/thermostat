@@ -5,6 +5,14 @@ ArdLog
 *.o
 *.obj
 
+#intellij
+.idea
+build
+.gradle
+gradle
+gradlew
+gradlew.bat
+
 # Precompiled Headers
 *.gch
 *.pch

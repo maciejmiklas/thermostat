@@ -85,9 +85,13 @@ public class TempLevelSim {
     }
 
 
+    /**
+     * 1) p=1,i=2 - slow cooling, less relay switches, temp not accurate
+     * 2) p=6,i=2 - aggressive cooling, frequent relay switches, temp accurate
+     */
     static class PIDDriver implements Driver {
-        private static final float AMP_P = 12;
-        private static final float AMP_I = 4f;
+        private static final float AMP_P = 1;
+        private static final float AMP_I = 2f;
         private static final float AMP_D = 0f;
         private static final float SWITCH_THRESHOLD = -10.0f;
         private float iDerivationSum = 0;
@@ -192,7 +196,7 @@ public class TempLevelSim {
             XYSeries seriesP = new XYSeries("P");
             XYSeries seriesI = new XYSeries("I");
             XYSeries seriesD = new XYSeries("D");
-         //  XYSeries seriesPID = new XYSeries("PID");
+           XYSeries seriesPID = new XYSeries("PID");
 
 
             for (ProbePoint point : probes) {
@@ -203,7 +207,7 @@ public class TempLevelSim {
                 seriesP.add(sample, point.pidVal.valP);
                 seriesI.add(sample, point.pidVal.valI);
                 seriesD.add(sample, point.pidVal.valD);
-          //      seriesPID.add(sample, point.pidVal.pid);
+                seriesPID.add(sample, point.pidVal.pid);
             }
             XYSeriesCollection dataset = new XYSeriesCollection();
             dataset.addSeries(seriesTemp);
@@ -212,8 +216,8 @@ public class TempLevelSim {
 
             dataset.addSeries(seriesP);
             dataset.addSeries(seriesI);
-            dataset.addSeries(seriesD);
-           // dataset.addSeries(seriesPID);
+           // dataset.addSeries(seriesD);
+            dataset.addSeries(seriesPID);
             return dataset;
         }
 
@@ -250,8 +254,8 @@ public class TempLevelSim {
             renderer.setSeriesPaint(5, Color.BLACK);
             renderer.setSeriesStroke(5, createStroke());
 
-           // renderer.setSeriesPaint(6, Color.YELLOW);
-          //  renderer.setSeriesStroke(6, createStroke());
+            renderer.setSeriesPaint(6, Color.YELLOW);
+            renderer.setSeriesStroke(6, createStroke());
 
             XYPlot plot = chart.getXYPlot();
             plot.setRenderer(renderer);

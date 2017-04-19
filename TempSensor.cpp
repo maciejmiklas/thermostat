@@ -24,11 +24,11 @@ TempSensor::TempSensor() :
 	curentTemp = readTemp();
 }
 
-int8_t TempSensor::getTemp() {
+int16_t TempSensor::getTemp() {
 	return curentTemp;
 }
 
-int8_t TempSensor::getQuickTemp() {
+int16_t TempSensor::getQuickTemp() {
 	return lastTemp;
 }
 
@@ -62,3 +62,5 @@ inline int8_t TempSensor::readTemp() {
 	dallasTemperature.requestTemperatures();
 	return (int8_t) (dallasTemperature.getTempCByIndex(0) + 0.5);
 }
+
+// TODO support for farenheit

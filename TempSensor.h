@@ -28,8 +28,8 @@
 class TempSensor: public Service {
 public:
 	TempSensor();
-	int8_t getTemp();
-	int8_t getQuickTemp();
+	int16_t getTemp();
+	int16_t getQuickTemp();
 
 protected:
 	uint8_t deviceId();

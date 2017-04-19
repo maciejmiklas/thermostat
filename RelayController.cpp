@@ -14,33 +14,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#include "ServiceSuspender.h"
+#include "RelayController.h"
 
-ServiceSuspender::ServiceSuspender() :
-		suspendStart(0) {
+RelayController::RelayController() {
+	// TODO Auto-generated constructor stub
+
 }
 
-void ServiceSuspender::onEvent(BusEvent event, va_list ap) {
-	if (!eb_inGroup(event, BusEventGroup::BUTTON)) {
-		return;
-	}
-
-	if (suspendStart == 0) {
-#if LOG
-		log(F("Suspending services"));
-#endif
-		eb_fire(BusEvent::SERVICE_SUSPEND);
-	}
-
-	suspendStart = util_millis();
+RelayController::~RelayController() {
+	// TODO Auto-generated destructor stub
 }
 
-void ServiceSuspender::cycle() {
-	if (suspendStart != 0 && util_millis() - suspendStart >= SUSPEND_SERVICE_MS) {
-#if LOG
-		log(F("Resuming services"));
-#endif
-		eb_fire(BusEvent::SERVICE_RESUME);
-		suspendStart = 0;
-	}
-}

@@ -26,15 +26,15 @@ Stats::Stats(TempSensor* tempSensor) :
 }
 
 void Stats::onEvent(BusEvent event, va_list ap) {
-	if (!eb_inGroup(event, RELAY)) {
+	if (!eb_inGroup(event, BusEventGroup::RELAY)) {
 		return;
 	}
 	int relayId = va_arg(ap, int);
 
-	if (event == RELAY_ON) {
+	if (event == BusEvent::RELAY_ON) {
 		relayTimer[relayId].start();
 
-	} else if (event == RELAY_OFF) {
+	} else if (event == BusEvent::RELAY_OFF) {
 		relayTimer[relayId].suspend();
 	}
 }

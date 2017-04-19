@@ -26,9 +26,9 @@
 #import "ArdLog.h"
 
 typedef struct {
-	int8_t avg;
-	int8_t min;
-	int8_t max;
+	int16_t avg;
+	int16_t min;
+	int16_t max;
 	uint8_t day; // day number in history. 0 - now, 1 - yesterday, 2 - before yesterday, and so on.
 	uint8_t realyOnHH[RELAYS_AMOUNT];
 	uint8_t realyOnMM[RELAYS_AMOUNT];

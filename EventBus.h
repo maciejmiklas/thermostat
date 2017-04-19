@@ -20,7 +20,7 @@
 #import "Arduino.h"
 #import "ArdLog.h"
 
-typedef enum {
+enum class BusEvent {
 	/** Parameters: 0 - relay ID */
 	RELAY_ON = 10,
 
@@ -47,11 +47,11 @@ typedef enum {
 	 * It's just used by some methods passing events to indicate that there was no event.
 	 */
 	NO_EVENT = 255
-} BusEvent;
+};
 
-typedef enum {
+enum class BusEventGroup {
 	RELAY, BUTTON, SERVICE
-} BusEventGroup;
+};
 
 class BusListener {
 public:

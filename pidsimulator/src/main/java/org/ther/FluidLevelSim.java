@@ -37,7 +37,7 @@ import java.util.List;
  * This one is meant only as exercise, it regulates fluid level in a cylindrical tank.
  * Water is flowing into a tank and it' coming out. As a result water level is changing.
  */
-public class FluidLevelTest {
+public class FluidLevelSim {
     private final Output out = new Output();
     private final Driver driver;
 
@@ -47,18 +47,18 @@ public class FluidLevelTest {
      */
     private static final float DIAMETER = 3;
 
-    private static final int PROBES = 20;
+    private static final int PROBES = 100;
 
     public static void main(String... args) {
 
-        FluidLevelTest ex = new FluidLevelTest(new PIDDriver());
+        FluidLevelSim ex = new FluidLevelSim(new PIDDriver());
         ex.calculate();
     }
 
 
     public void calculate() {
         Output setPoint = new Output();
-        setPoint.level = 1;
+        setPoint.level = 2.5F;
 
         Input in = new Input();
         in.flowIn = 1;
@@ -66,10 +66,13 @@ public class FluidLevelTest {
         List<ProbePoint> probes = new ArrayList<>(PROBES);
         for (int sample = 0; sample < PROBES; sample++) {
             Output out = probe(in);
-            driver.drive(setPoint, out, in);
+            PIDVal pidVal = driver.drive(setPoint, out, in);
 
-            System.out.println(in + " " + out);
-            probes.add(new ProbePoint(in, out, setPoint, sample));
+            System.out.println(in + " " + out+ " -> "+pidVal);
+            probes.add(new ProbePoint(in, out, setPoint, sample, pidVal));
+            if(sample == 30){
+                in.flowIn = 4f;
+            }
         }
 
         ChartUI chartUI = new ChartUI();
@@ -77,10 +80,8 @@ public class FluidLevelTest {
         chartUI.setVisible(true);
     }
 
-    public FluidLevelTest(Driver driver) {
+    public FluidLevelSim(Driver driver) {
         this.driver = driver;
-
-
     }
 
     public Output probe(Input in) {
@@ -93,29 +94,77 @@ public class FluidLevelTest {
 
 
     interface Driver {
-        void drive(Output setPoint, Output current, Input in);
+        PIDVal drive(Output setPoint, Output current, Input in);
     }
 
     static class PIDDriver implements Driver {
-        private static final float AMP_P = 10;
-        private static final float AMP_I = 0;
-        private static final float AMP_D = 0;
+        private static final float AMP_P = 6;
+        private static final float AMP_I = 2.5f;
+        private static final float AMP_D = 1.4f;
+        private float iDerivationSum = 0;
+        private float dPrevDerivation = 0;
 
         @Override
-        public void drive(Output setPoint, Output current, Input in) {
+        public PIDVal drive(Output setPoint, Output current, Input in) {
             float valP = calculateP(setPoint, current);
+            float valI = calculateI(setPoint, current);
+            float valD = calculateD(setPoint, current);
 
-            float pid = valP;
+            float pid = valP + valI + valD;
             if (pid > 0) {
                 pid = 0;
+            }else  if (pid < -5 ){
+                pid = -5;
             }
-
             in.flowOut = pid;
+            return new PIDVal(valP, valI, valD, pid);
         }
 
         private float calculateP(Output setPoint, Output current) {
             float derivation = setPoint.level - current.level;
             return AMP_P * derivation;
+        }
+
+        private float calculateI(Output setPoint, Output current) {
+            float derivation = setPoint.level - current.level;
+            iDerivationSum += derivation;
+            return AMP_I * iDerivationSum;
+        }
+
+        private float calculateD(Output setPoint, Output current) {
+            float derivation = setPoint.level - current.level;
+            float d = AMP_D * (derivation - dPrevDerivation);
+            dPrevDerivation = derivation;
+            return d;
+        }
+    }
+
+    static class PIDVal implements Cloneable {
+        float valP;
+        float valI;
+        float valD;
+        float pid;
+
+        public PIDVal(float valP, float valI, float valD, float pid) {
+            this.valP = valP;
+            this.valI = valI;
+            this.valD = valD;
+            this.pid = pid;
+        }
+
+        @Override
+        protected PIDVal clone() {
+            return new PIDVal(valP, valI, valD, pid);
+        }
+
+        @Override
+        public String toString() {
+            return MoreObjects.toStringHelper("PID")
+                    .add("valP", valP)
+                    .add("valI", valI)
+                    .add("valD", valD)
+                    .add("pid", pid)
+                    .toString();
         }
     }
 
@@ -124,14 +173,15 @@ public class FluidLevelTest {
         Input in;
         Output setPoint;
         int sample;
+        PIDVal pidVal;
 
-        public ProbePoint(Input in, Output out, Output setPoint, int sample) {
+        public ProbePoint(Input in, Output out, Output setPoint, int sample, PIDVal pidVal) {
             this.in = in.clone();
             this.out = out.clone();
-            this.setPoint = setPoint.clone();
             this.sample = sample;
+            this.setPoint = setPoint.clone();
+            this.pidVal = pidVal.clone();
         }
-
     }
 
     static class Input implements Cloneable {
@@ -203,7 +253,12 @@ public class FluidLevelTest {
             XYSeries seriesIn = new XYSeries("in");
             XYSeries seriesOut = new XYSeries("out");
             XYSeries seriesLevel = new XYSeries("level");
-            XYSeries seriesSp = new XYSeries("sp");
+            XYSeries seriesSp = new XYSeries("SP");
+
+            XYSeries seriesP = new XYSeries("P");
+            XYSeries seriesI = new XYSeries("I");
+            XYSeries seriesD = new XYSeries("D");
+
 
             for (ProbePoint point : probes) {
                 int sample = point.sample;
@@ -211,12 +266,19 @@ public class FluidLevelTest {
                 seriesOut.add(sample, point.in.flowOut);
                 seriesLevel.add(sample, point.out.level);
                 seriesSp.add(sample, point.setPoint.level);
+
+                seriesP.add(sample, point.pidVal.valP);
+                seriesI.add(sample, point.pidVal.valI);
+                seriesD.add(sample, point.pidVal.valD);
             }
             XYSeriesCollection dataset = new XYSeriesCollection();
             dataset.addSeries(seriesIn);
             dataset.addSeries(seriesOut);
             dataset.addSeries(seriesLevel);
             dataset.addSeries(seriesSp);
+            dataset.addSeries(seriesP);
+            dataset.addSeries(seriesI);
+            dataset.addSeries(seriesD);
 
             return dataset;
         }
@@ -247,6 +309,15 @@ public class FluidLevelTest {
 
             renderer.setSeriesPaint(3, Color.PINK);
             renderer.setSeriesStroke(3, createStroke());
+
+            renderer.setSeriesPaint(4, Color.WHITE);
+            renderer.setSeriesStroke(4, createStroke());
+
+            renderer.setSeriesPaint(5, Color.BLACK);
+            renderer.setSeriesStroke(5, createStroke());
+
+            renderer.setSeriesPaint(6, Color.YELLOW);
+            renderer.setSeriesStroke(6, createStroke());
 
             XYPlot plot = chart.getXYPlot();
             plot.setRenderer(renderer);

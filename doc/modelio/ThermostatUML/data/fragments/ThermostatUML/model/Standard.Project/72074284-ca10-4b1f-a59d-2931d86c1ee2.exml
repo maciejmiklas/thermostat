@@ -1,0 +1,20 @@
+<?xml version="1.0" ?>
+<!--GENERATED FILE, PLEASE DO NOT EDIT!!!--><EXT object="ThermostatUML" version="4">
+  <OBJECT>
+    <ID name="ThermostatUML" mc="Standard.Project" uid="72074284-ca10-4b1f-a59d-2931d86c1ee2"/>
+    <ATTRIBUTES>
+      <ATT name="ProjectContext"></ATT>
+      <ATT name="ProjectDescr"></ATT>
+      <ATT name="Name"><![CDATA[ThermostatUML]]></ATT>
+      <ATT name="status">1970354901745664</ATT>
+    </ATTRIBUTES>
+    <DEPENDENCIES>
+      <COMP relation="Model">
+        <COMPID name="thermostatuml" mc="Standard.Package" uid="ddb0abb8-f5ce-4ae0-b0e2-61f95f206326"/>
+      </COMP>
+      <COMP relation="DiagramRoot">
+        <COMPID name="ThermostatUML" mc="Infrastructure.DiagramSet" uid="57921e55-28a6-4776-af3d-8cb9121cf2b3"/>
+      </COMP>
+    </DEPENDENCIES>
+  </OBJECT>
+</EXT>

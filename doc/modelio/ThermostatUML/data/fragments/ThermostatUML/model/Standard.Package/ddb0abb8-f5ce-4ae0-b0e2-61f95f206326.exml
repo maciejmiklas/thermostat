@@ -145,6 +145,22 @@
             </LINK>
           </DEPENDENCIES>
         </OBJECT>
+        <OBJECT>
+          <ID name="ts" mc="Standard.Instance" uid="5d08d8aa-ac73-4d42-9088-a12dc2c2c2a4"/>
+          <ATTRIBUTES>
+            <ATT name="IsConstant">false</ATT>
+            <ATT name="MultiplicityMin"><![CDATA[1]]></ATT>
+            <ATT name="MultiplicityMax"><![CDATA[1]]></ATT>
+            <ATT name="Value"></ATT>
+            <ATT name="Name"><![CDATA[ts]]></ATT>
+            <ATT name="status">1970354901745664</ATT>
+          </ATTRIBUTES>
+          <DEPENDENCIES>
+            <LINK relation="Base">
+              <ID name="TempSensor" mc="Standard.Class" uid="7540eab2-fba3-42c0-be0c-b3a47d26ffc2"/>
+            </LINK>
+          </DEPENDENCIES>
+        </OBJECT>
       </COMP>
       <COMP relation="OwnedElement">
         <OBJECT>
@@ -232,6 +248,7 @@
         <COMPID name="Relay" mc="Standard.Class" uid="b7b8d5e5-68bf-4ffd-be19-f7e32794281c"/>
         <COMPID name="RelayHysteresisController" mc="Standard.Class" uid="03465ec6-ae09-4855-a230-826e54fb962b"/>
         <COMPID name="RelayPIDController" mc="Standard.Class" uid="836716f0-c41f-4f85-8655-1ae5439e55b2"/>
+        <COMPID name="TempSensor" mc="Standard.Class" uid="7540eab2-fba3-42c0-be0c-b3a47d26ffc2"/>
       </COMP>
       <COMP relation="Product">
         <COMPID name="Message Bus" mc="Standard.ClassDiagram" uid="7e7750a5-c80a-4965-b174-1d7572b6eddb"/>

@@ -20,7 +20,7 @@
           <DEPENDENCIES>
             <LINK relation="Represented">
               <REFOBJ>
-                <ID name="hb" mc="Standard.Instance" uid="750c869f-9ec0-4d3b-ba81-aa19241ccfff"/>
+                <ID name="bu" mc="Standard.Instance" uid="a250c99b-39cb-47ee-a494-0c91c96fa10a"/>
               </REFOBJ>
             </LINK>
             <COMP relation="Started">
@@ -47,6 +47,22 @@
                             <ID name="eb_fire" mc="Standard.Operation" uid="655f8d2e-5df3-4b8c-8c96-1e9b58edd4ac"/>
                           </REFOBJ>
                         </LINK>
+                        <COMP relation="Descriptor">
+                          <OBJECT>
+                            <ID name="" mc="Infrastructure.Note" uid="fc239fd4-5720-42ae-bf20-4b30e9a9b11b"/>
+                            <ATTRIBUTES>
+                              <ATT name="Content"><![CDATA[<Enter note text here>]]></ATT>
+                              <ATT name="MimeType"></ATT>
+                              <ATT name="Name"></ATT>
+                              <ATT name="status">1970354901745664</ATT>
+                            </ATTRIBUTES>
+                            <DEPENDENCIES>
+                              <LINK relation="Model">
+                                <FOREIGNID name="description" mc="Infrastructure.NoteType" uid="00000000-0000-3e81-0000-000000000000"/>
+                              </LINK>
+                            </DEPENDENCIES>
+                          </OBJECT>
+                        </COMP>
                       </DEPENDENCIES>
                     </OBJECT>
                   </COMP>
@@ -54,6 +70,22 @@
                     <REFOBJ>
                       <ID name="Communication Node2" mc="Standard.CommunicationNode" uid="f7b2c887-bcda-4c61-9bd7-7036ee97760d"/>
                     </REFOBJ>
+                  </LINK>
+                </DEPENDENCIES>
+              </OBJECT>
+            </COMP>
+            <COMP relation="Descriptor">
+              <OBJECT>
+                <ID name="" mc="Infrastructure.Note" uid="4ed677df-cc10-417a-b1ab-216b70566a60"/>
+                <ATTRIBUTES>
+                  <ATT name="Content"><![CDATA[<Enter note text here>]]></ATT>
+                  <ATT name="MimeType"></ATT>
+                  <ATT name="Name"></ATT>
+                  <ATT name="status">1970354901745664</ATT>
+                </ATTRIBUTES>
+                <DEPENDENCIES>
+                  <LINK relation="Model">
+                    <FOREIGNID name="description" mc="Infrastructure.NoteType" uid="00000000-0000-3e81-0000-000000000000"/>
                   </LINK>
                 </DEPENDENCIES>
               </OBJECT>
@@ -303,6 +335,39 @@
                   </LINK>
                 </DEPENDENCIES>
               </OBJECT>
+              <OBJECT>
+                <ID name=" " mc="Standard.CommunicationChannel" uid="9c26bbfc-0643-4361-88b8-63fbeee72af8"/>
+                <ATTRIBUTES>
+                  <ATT name="Name"><![CDATA[ ]]></ATT>
+                  <ATT name="status">1970354901745664</ATT>
+                </ATTRIBUTES>
+                <DEPENDENCIES>
+                  <COMP relation="StartToEndMessage">
+                    <OBJECT>
+                      <ID name="m" mc="Standard.CommunicationMessage" uid="5ffc215b-7e74-4d88-b4cb-889b581a3ab1"/>
+                      <ATTRIBUTES>
+                        <ATT name="Argument"><![CDATA[BusEvent.CYCLE]]></ATT>
+                        <ATT name="Sequence"><![CDATA[1.9]]></ATT>
+                        <ATT name="SortOfMessage">SyncCall</ATT>
+                        <ATT name="Name"><![CDATA[m]]></ATT>
+                        <ATT name="status">1970354901745664</ATT>
+                      </ATTRIBUTES>
+                      <DEPENDENCIES>
+                        <LINK relation="Invoked">
+                          <REFOBJ>
+                            <ID name="onEvent" mc="Standard.Operation" uid="80bb0176-bade-479d-8494-c742dba496f8"/>
+                          </REFOBJ>
+                        </LINK>
+                      </DEPENDENCIES>
+                    </OBJECT>
+                  </COMP>
+                  <LINK relation="End">
+                    <REFOBJ>
+                      <ID name="Communication Node13" mc="Standard.CommunicationNode" uid="7030e166-d371-4461-a53b-9f0cce36b060"/>
+                    </REFOBJ>
+                  </LINK>
+                </DEPENDENCIES>
+              </OBJECT>
             </COMP>
           </DEPENDENCIES>
         </OBJECT>
@@ -397,6 +462,495 @@
             </LINK>
           </DEPENDENCIES>
         </OBJECT>
+        <OBJECT>
+          <ID name="Communication Node8" mc="Standard.CommunicationNode" uid="f360a9e0-56d4-41d0-b414-bf8714da3648"/>
+          <ATTRIBUTES>
+            <ATT name="Selector"></ATT>
+            <ATT name="Name"><![CDATA[Communication Node8]]></ATT>
+            <ATT name="status">1970354901745664</ATT>
+          </ATTRIBUTES>
+          <DEPENDENCIES>
+            <LINK relation="Represented">
+              <REFOBJ>
+                <ID name="bu" mc="Standard.Instance" uid="a250c99b-39cb-47ee-a494-0c91c96fa10a"/>
+              </REFOBJ>
+            </LINK>
+            <COMP relation="Started">
+              <OBJECT>
+                <ID name=" " mc="Standard.CommunicationChannel" uid="e47ed1cf-c5f5-41e2-9e23-a87567306de5"/>
+                <ATTRIBUTES>
+                  <ATT name="Name"><![CDATA[ ]]></ATT>
+                  <ATT name="status">1970354901745664</ATT>
+                </ATTRIBUTES>
+                <DEPENDENCIES>
+                  <COMP relation="StartToEndMessage">
+                    <OBJECT>
+                      <ID name="m" mc="Standard.CommunicationMessage" uid="a4e874aa-8730-4dee-9e4d-d36de91fa22b"/>
+                      <ATTRIBUTES>
+                        <ATT name="Argument"><![CDATA[BusEvent::BUTTON_NEXT]]></ATT>
+                        <ATT name="Sequence"><![CDATA[1]]></ATT>
+                        <ATT name="SortOfMessage">SyncCall</ATT>
+                        <ATT name="Name"><![CDATA[m]]></ATT>
+                        <ATT name="status">1970354901745664</ATT>
+                      </ATTRIBUTES>
+                      <DEPENDENCIES>
+                        <LINK relation="Invoked">
+                          <REFOBJ>
+                            <ID name="onEvent" mc="Standard.Operation" uid="80bb0176-bade-479d-8494-c742dba496f8"/>
+                          </REFOBJ>
+                        </LINK>
+                      </DEPENDENCIES>
+                    </OBJECT>
+                  </COMP>
+                  <LINK relation="End">
+                    <REFOBJ>
+                      <ID name="Communication Node9" mc="Standard.CommunicationNode" uid="85cd4c8b-2386-48b3-b902-f9f056fa5ab8"/>
+                    </REFOBJ>
+                  </LINK>
+                </DEPENDENCIES>
+              </OBJECT>
+            </COMP>
+          </DEPENDENCIES>
+        </OBJECT>
+        <OBJECT>
+          <ID name="Communication Node9" mc="Standard.CommunicationNode" uid="85cd4c8b-2386-48b3-b902-f9f056fa5ab8"/>
+          <ATTRIBUTES>
+            <ATT name="Selector"></ATT>
+            <ATT name="Name"><![CDATA[Communication Node9]]></ATT>
+            <ATT name="status">1970354901745664</ATT>
+          </ATTRIBUTES>
+          <DEPENDENCIES>
+            <LINK relation="Represented">
+              <REFOBJ>
+                <ID name="eb" mc="Standard.Instance" uid="10d601c9-0266-4e0c-a577-7d4eccd2d453"/>
+              </REFOBJ>
+            </LINK>
+            <COMP relation="Started">
+              <OBJECT>
+                <ID name=" " mc="Standard.CommunicationChannel" uid="7028ae6f-1636-48f1-aba2-5a814a2802b4"/>
+                <ATTRIBUTES>
+                  <ATT name="Name"><![CDATA[ ]]></ATT>
+                  <ATT name="status">1970354901745664</ATT>
+                </ATTRIBUTES>
+                <DEPENDENCIES>
+                  <COMP relation="StartToEndMessage">
+                    <OBJECT>
+                      <ID name="m" mc="Standard.CommunicationMessage" uid="b41fa3cf-a400-47d7-9a4c-bcbe3d76dc4e"/>
+                      <ATTRIBUTES>
+                        <ATT name="Argument"><![CDATA[BusEvent::BUTTON_NEXT]]></ATT>
+                        <ATT name="Sequence"><![CDATA[1.1]]></ATT>
+                        <ATT name="SortOfMessage">SyncCall</ATT>
+                        <ATT name="Name"><![CDATA[m]]></ATT>
+                        <ATT name="status">1970354901745664</ATT>
+                      </ATTRIBUTES>
+                      <DEPENDENCIES>
+                        <LINK relation="Invoked">
+                          <REFOBJ>
+                            <ID name="onEvent" mc="Standard.Operation" uid="80bb0176-bade-479d-8494-c742dba496f8"/>
+                          </REFOBJ>
+                        </LINK>
+                      </DEPENDENCIES>
+                    </OBJECT>
+                  </COMP>
+                  <LINK relation="End">
+                    <REFOBJ>
+                      <ID name="" mc="Standard.CommunicationNode" uid="4747d0a5-711e-4690-8510-981aa3377e74"/>
+                    </REFOBJ>
+                  </LINK>
+                </DEPENDENCIES>
+              </OBJECT>
+              <OBJECT>
+                <ID name=" " mc="Standard.CommunicationChannel" uid="0f76692e-ff98-4915-be31-66efa49e66f5"/>
+                <ATTRIBUTES>
+                  <ATT name="Name"><![CDATA[ ]]></ATT>
+                  <ATT name="status">1970354901745664</ATT>
+                </ATTRIBUTES>
+                <DEPENDENCIES>
+                  <COMP relation="StartToEndMessage">
+                    <OBJECT>
+                      <ID name="m" mc="Standard.CommunicationMessage" uid="289e9f67-33c6-4f55-b2b5-6e9f07a29067"/>
+                      <ATTRIBUTES>
+                        <ATT name="Argument"><![CDATA[BusEvent::BUTTON_NEXT]]></ATT>
+                        <ATT name="Sequence"><![CDATA[1.2]]></ATT>
+                        <ATT name="SortOfMessage">SyncCall</ATT>
+                        <ATT name="Name"><![CDATA[m]]></ATT>
+                        <ATT name="status">1970354901745664</ATT>
+                      </ATTRIBUTES>
+                      <DEPENDENCIES>
+                        <LINK relation="Invoked">
+                          <REFOBJ>
+                            <ID name="onEvent" mc="Standard.Operation" uid="80bb0176-bade-479d-8494-c742dba496f8"/>
+                          </REFOBJ>
+                        </LINK>
+                      </DEPENDENCIES>
+                    </OBJECT>
+                  </COMP>
+                  <LINK relation="End">
+                    <REFOBJ>
+                      <ID name="Communication Node10" mc="Standard.CommunicationNode" uid="e23bdcfa-45cd-42bc-86c3-eec45d064f9b"/>
+                    </REFOBJ>
+                  </LINK>
+                </DEPENDENCIES>
+              </OBJECT>
+              <OBJECT>
+                <ID name=" " mc="Standard.CommunicationChannel" uid="454247bf-dc13-493f-b10d-338545536138"/>
+                <ATTRIBUTES>
+                  <ATT name="Name"><![CDATA[ ]]></ATT>
+                  <ATT name="status">1970354901745664</ATT>
+                </ATTRIBUTES>
+                <DEPENDENCIES>
+                  <COMP relation="StartToEndMessage">
+                    <OBJECT>
+                      <ID name="m" mc="Standard.CommunicationMessage" uid="886432a7-1b31-4045-9800-77bdc9a31330"/>
+                      <ATTRIBUTES>
+                        <ATT name="Argument"><![CDATA[BusEvent::SERVICE_SUSPEND]]></ATT>
+                        <ATT name="Sequence"><![CDATA[2.1]]></ATT>
+                        <ATT name="SortOfMessage">SyncCall</ATT>
+                        <ATT name="Name"><![CDATA[m]]></ATT>
+                        <ATT name="status">1970354901745664</ATT>
+                      </ATTRIBUTES>
+                      <DEPENDENCIES>
+                        <LINK relation="Invoked">
+                          <REFOBJ>
+                            <ID name="onEvent" mc="Standard.Operation" uid="80bb0176-bade-479d-8494-c742dba496f8"/>
+                          </REFOBJ>
+                        </LINK>
+                      </DEPENDENCIES>
+                    </OBJECT>
+                  </COMP>
+                  <LINK relation="End">
+                    <REFOBJ>
+                      <ID name="Communication Node11" mc="Standard.CommunicationNode" uid="9bf5f233-7fd6-4962-9a11-685e1dbd7b5e"/>
+                    </REFOBJ>
+                  </LINK>
+                </DEPENDENCIES>
+              </OBJECT>
+              <OBJECT>
+                <ID name=" " mc="Standard.CommunicationChannel" uid="44ecc0f8-3592-4e1d-a272-0865772dcbd7"/>
+                <ATTRIBUTES>
+                  <ATT name="Name"><![CDATA[ ]]></ATT>
+                  <ATT name="status">1970354901745664</ATT>
+                </ATTRIBUTES>
+                <DEPENDENCIES>
+                  <COMP relation="StartToEndMessage">
+                    <OBJECT>
+                      <ID name="m" mc="Standard.CommunicationMessage" uid="6449d72a-4e9e-4822-b562-a5701ec0c2ef"/>
+                      <ATTRIBUTES>
+                        <ATT name="Argument"><![CDATA[BusEvent::SERVICE_SUSPEND]]></ATT>
+                        <ATT name="Sequence"><![CDATA[2.2]]></ATT>
+                        <ATT name="SortOfMessage">SyncCall</ATT>
+                        <ATT name="Name"><![CDATA[m]]></ATT>
+                        <ATT name="status">1970354901745664</ATT>
+                      </ATTRIBUTES>
+                      <DEPENDENCIES>
+                        <LINK relation="Invoked">
+                          <REFOBJ>
+                            <ID name="onEvent" mc="Standard.Operation" uid="80bb0176-bade-479d-8494-c742dba496f8"/>
+                          </REFOBJ>
+                        </LINK>
+                      </DEPENDENCIES>
+                    </OBJECT>
+                  </COMP>
+                  <LINK relation="End">
+                    <REFOBJ>
+                      <ID name="Communication Node12" mc="Standard.CommunicationNode" uid="6a74cf90-526a-461a-b8fa-7f701ed2ebbe"/>
+                    </REFOBJ>
+                  </LINK>
+                </DEPENDENCIES>
+              </OBJECT>
+              <OBJECT>
+                <ID name=" " mc="Standard.CommunicationChannel" uid="b8b2f8a0-866f-4bd4-aed1-38cdccaa4af0"/>
+                <ATTRIBUTES>
+                  <ATT name="Name"><![CDATA[ ]]></ATT>
+                  <ATT name="status">1970354901745664</ATT>
+                </ATTRIBUTES>
+                <DEPENDENCIES>
+                  <COMP relation="StartToEndMessage">
+                    <OBJECT>
+                      <ID name="m" mc="Standard.CommunicationMessage" uid="75389e4c-1173-4e88-8eb8-953878ce2b57"/>
+                      <ATTRIBUTES>
+                        <ATT name="Argument"><![CDATA[BusEvent::SERVICE_SUSPEND]]></ATT>
+                        <ATT name="Sequence"><![CDATA[2.3]]></ATT>
+                        <ATT name="SortOfMessage">SyncCall</ATT>
+                        <ATT name="Name"><![CDATA[m]]></ATT>
+                        <ATT name="status">1970354901745664</ATT>
+                      </ATTRIBUTES>
+                      <DEPENDENCIES>
+                        <LINK relation="Invoked">
+                          <REFOBJ>
+                            <ID name="onEvent" mc="Standard.Operation" uid="80bb0176-bade-479d-8494-c742dba496f8"/>
+                          </REFOBJ>
+                        </LINK>
+                      </DEPENDENCIES>
+                    </OBJECT>
+                  </COMP>
+                  <LINK relation="End">
+                    <REFOBJ>
+                      <ID name="Communication Node14" mc="Standard.CommunicationNode" uid="875c9a70-b721-491e-a916-09187bb66877"/>
+                    </REFOBJ>
+                  </LINK>
+                </DEPENDENCIES>
+              </OBJECT>
+              <OBJECT>
+                <ID name=" " mc="Standard.CommunicationChannel" uid="50744db1-6c76-4749-a3d5-de374ca3a543"/>
+                <ATTRIBUTES>
+                  <ATT name="Name"><![CDATA[ ]]></ATT>
+                  <ATT name="status">1970354901745664</ATT>
+                </ATTRIBUTES>
+                <DEPENDENCIES>
+                  <COMP relation="StartToEndMessage">
+                    <OBJECT>
+                      <ID name="m" mc="Standard.CommunicationMessage" uid="6ad51619-524b-49b1-b833-4a60b4d4eb50"/>
+                      <ATTRIBUTES>
+                        <ATT name="Argument"><![CDATA[BusEvent::SERVICE_RESUME]]></ATT>
+                        <ATT name="Sequence"><![CDATA[3.1]]></ATT>
+                        <ATT name="SortOfMessage">SyncCall</ATT>
+                        <ATT name="Name"><![CDATA[m]]></ATT>
+                        <ATT name="status">1970354901745664</ATT>
+                      </ATTRIBUTES>
+                      <DEPENDENCIES>
+                        <LINK relation="Invoked">
+                          <REFOBJ>
+                            <ID name="onEvent" mc="Standard.Operation" uid="80bb0176-bade-479d-8494-c742dba496f8"/>
+                          </REFOBJ>
+                        </LINK>
+                      </DEPENDENCIES>
+                    </OBJECT>
+                  </COMP>
+                  <LINK relation="End">
+                    <REFOBJ>
+                      <ID name="Communication Node11" mc="Standard.CommunicationNode" uid="9bf5f233-7fd6-4962-9a11-685e1dbd7b5e"/>
+                    </REFOBJ>
+                  </LINK>
+                </DEPENDENCIES>
+              </OBJECT>
+              <OBJECT>
+                <ID name=" " mc="Standard.CommunicationChannel" uid="88b101bf-0f06-4658-a72a-cd10024c3441"/>
+                <ATTRIBUTES>
+                  <ATT name="Name"><![CDATA[ ]]></ATT>
+                  <ATT name="status">1970354901745664</ATT>
+                </ATTRIBUTES>
+                <DEPENDENCIES>
+                  <COMP relation="StartToEndMessage">
+                    <OBJECT>
+                      <ID name="m" mc="Standard.CommunicationMessage" uid="e856c1e2-3424-480e-b6b0-58dbedb5ce28"/>
+                      <ATTRIBUTES>
+                        <ATT name="Argument"><![CDATA[BusEvent::SERVICE_RESUME]]></ATT>
+                        <ATT name="Sequence"><![CDATA[3.2]]></ATT>
+                        <ATT name="SortOfMessage">SyncCall</ATT>
+                        <ATT name="Name"><![CDATA[m]]></ATT>
+                        <ATT name="status">1970354901745664</ATT>
+                      </ATTRIBUTES>
+                      <DEPENDENCIES>
+                        <LINK relation="Invoked">
+                          <REFOBJ>
+                            <ID name="onEvent" mc="Standard.Operation" uid="80bb0176-bade-479d-8494-c742dba496f8"/>
+                          </REFOBJ>
+                        </LINK>
+                      </DEPENDENCIES>
+                    </OBJECT>
+                  </COMP>
+                  <LINK relation="End">
+                    <REFOBJ>
+                      <ID name="Communication Node12" mc="Standard.CommunicationNode" uid="6a74cf90-526a-461a-b8fa-7f701ed2ebbe"/>
+                    </REFOBJ>
+                  </LINK>
+                </DEPENDENCIES>
+              </OBJECT>
+              <OBJECT>
+                <ID name=" " mc="Standard.CommunicationChannel" uid="1bf63e9a-da31-45ac-aadb-97dfb562389c"/>
+                <ATTRIBUTES>
+                  <ATT name="Name"><![CDATA[ ]]></ATT>
+                  <ATT name="status">1970354901745664</ATT>
+                </ATTRIBUTES>
+                <DEPENDENCIES>
+                  <COMP relation="StartToEndMessage">
+                    <OBJECT>
+                      <ID name="m" mc="Standard.CommunicationMessage" uid="c0f4fe32-a8ce-4af2-9337-1918f9104f80"/>
+                      <ATTRIBUTES>
+                        <ATT name="Argument"><![CDATA[BusEvent::SERVICE_RESUME]]></ATT>
+                        <ATT name="Sequence"><![CDATA[3.3]]></ATT>
+                        <ATT name="SortOfMessage">SyncCall</ATT>
+                        <ATT name="Name"><![CDATA[m]]></ATT>
+                        <ATT name="status">1970354901745664</ATT>
+                      </ATTRIBUTES>
+                      <DEPENDENCIES>
+                        <LINK relation="Invoked">
+                          <REFOBJ>
+                            <ID name="onEvent" mc="Standard.Operation" uid="80bb0176-bade-479d-8494-c742dba496f8"/>
+                          </REFOBJ>
+                        </LINK>
+                      </DEPENDENCIES>
+                    </OBJECT>
+                  </COMP>
+                  <LINK relation="End">
+                    <REFOBJ>
+                      <ID name="Communication Node14" mc="Standard.CommunicationNode" uid="875c9a70-b721-491e-a916-09187bb66877"/>
+                    </REFOBJ>
+                  </LINK>
+                </DEPENDENCIES>
+              </OBJECT>
+            </COMP>
+          </DEPENDENCIES>
+        </OBJECT>
+        <OBJECT>
+          <ID name="" mc="Standard.CommunicationNode" uid="4747d0a5-711e-4690-8510-981aa3377e74"/>
+          <ATTRIBUTES>
+            <ATT name="Selector"></ATT>
+            <ATT name="Name"></ATT>
+            <ATT name="status">1970354901745664</ATT>
+          </ATTRIBUTES>
+          <DEPENDENCIES>
+            <LINK relation="Represented">
+              <REFOBJ>
+                <ID name="su" mc="Standard.Instance" uid="b47354d1-d8f8-4ad3-bb8b-5b0abd393353"/>
+              </REFOBJ>
+            </LINK>
+            <COMP relation="Started">
+              <OBJECT>
+                <ID name=" " mc="Standard.CommunicationChannel" uid="73a7eac6-2c83-461a-87e9-3ec3f4f11df9"/>
+                <ATTRIBUTES>
+                  <ATT name="Name"><![CDATA[ ]]></ATT>
+                  <ATT name="status">1970354901745664</ATT>
+                </ATTRIBUTES>
+                <DEPENDENCIES>
+                  <COMP relation="StartToEndMessage">
+                    <OBJECT>
+                      <ID name="m" mc="Standard.CommunicationMessage" uid="f72b8b58-87e9-40e9-9342-92498511d1ae"/>
+                      <ATTRIBUTES>
+                        <ATT name="Argument"><![CDATA[BusEvent::SERVICE_SUSPEND]]></ATT>
+                        <ATT name="Sequence"><![CDATA[2]]></ATT>
+                        <ATT name="SortOfMessage">SyncCall</ATT>
+                        <ATT name="Name"><![CDATA[m]]></ATT>
+                        <ATT name="status">1970354901745664</ATT>
+                      </ATTRIBUTES>
+                      <DEPENDENCIES>
+                        <LINK relation="Invoked">
+                          <REFOBJ>
+                            <ID name="onEvent" mc="Standard.Operation" uid="80bb0176-bade-479d-8494-c742dba496f8"/>
+                          </REFOBJ>
+                        </LINK>
+                      </DEPENDENCIES>
+                    </OBJECT>
+                  </COMP>
+                  <LINK relation="End">
+                    <REFOBJ>
+                      <ID name="Communication Node9" mc="Standard.CommunicationNode" uid="85cd4c8b-2386-48b3-b902-f9f056fa5ab8"/>
+                    </REFOBJ>
+                  </LINK>
+                </DEPENDENCIES>
+              </OBJECT>
+              <OBJECT>
+                <ID name=" " mc="Standard.CommunicationChannel" uid="7b3f7ec5-7f56-4d9d-ad8b-bb3c092c4435"/>
+                <ATTRIBUTES>
+                  <ATT name="Name"><![CDATA[ ]]></ATT>
+                  <ATT name="status">1970354901745664</ATT>
+                </ATTRIBUTES>
+                <DEPENDENCIES>
+                  <COMP relation="StartToEndMessage">
+                    <OBJECT>
+                      <ID name="m" mc="Standard.CommunicationMessage" uid="a6f34122-3070-4ecf-be0a-3f26ed412b5f"/>
+                      <ATTRIBUTES>
+                        <ATT name="Argument"><![CDATA[BusEvent::SERVICE_RESUME]]></ATT>
+                        <ATT name="Sequence"><![CDATA[3]]></ATT>
+                        <ATT name="SortOfMessage">SyncCall</ATT>
+                        <ATT name="Name"><![CDATA[m]]></ATT>
+                        <ATT name="status">1970354901745664</ATT>
+                      </ATTRIBUTES>
+                      <DEPENDENCIES>
+                        <LINK relation="Invoked">
+                          <REFOBJ>
+                            <ID name="onEvent" mc="Standard.Operation" uid="80bb0176-bade-479d-8494-c742dba496f8"/>
+                          </REFOBJ>
+                        </LINK>
+                      </DEPENDENCIES>
+                    </OBJECT>
+                  </COMP>
+                  <LINK relation="End">
+                    <REFOBJ>
+                      <ID name="Communication Node9" mc="Standard.CommunicationNode" uid="85cd4c8b-2386-48b3-b902-f9f056fa5ab8"/>
+                    </REFOBJ>
+                  </LINK>
+                </DEPENDENCIES>
+              </OBJECT>
+            </COMP>
+          </DEPENDENCIES>
+        </OBJECT>
+        <OBJECT>
+          <ID name="Communication Node10" mc="Standard.CommunicationNode" uid="e23bdcfa-45cd-42bc-86c3-eec45d064f9b"/>
+          <ATTRIBUTES>
+            <ATT name="Selector"></ATT>
+            <ATT name="Name"><![CDATA[Communication Node10]]></ATT>
+            <ATT name="status">1970354901745664</ATT>
+          </ATTRIBUTES>
+          <DEPENDENCIES>
+            <LINK relation="Represented">
+              <REFOBJ>
+                <ID name="ds" mc="Standard.Instance" uid="764bcd14-e746-479b-aabf-2534e5fcc373"/>
+              </REFOBJ>
+            </LINK>
+          </DEPENDENCIES>
+        </OBJECT>
+        <OBJECT>
+          <ID name="Communication Node11" mc="Standard.CommunicationNode" uid="9bf5f233-7fd6-4962-9a11-685e1dbd7b5e"/>
+          <ATTRIBUTES>
+            <ATT name="Selector"></ATT>
+            <ATT name="Name"><![CDATA[Communication Node11]]></ATT>
+            <ATT name="status">1970354901745664</ATT>
+          </ATTRIBUTES>
+          <DEPENDENCIES>
+            <LINK relation="Represented">
+              <REFOBJ>
+                <ID name="st" mc="Standard.Instance" uid="c227d126-07f1-46f8-8fac-5fb4fd55decb"/>
+              </REFOBJ>
+            </LINK>
+          </DEPENDENCIES>
+        </OBJECT>
+        <OBJECT>
+          <ID name="Communication Node12" mc="Standard.CommunicationNode" uid="6a74cf90-526a-461a-b8fa-7f701ed2ebbe"/>
+          <ATTRIBUTES>
+            <ATT name="Selector"></ATT>
+            <ATT name="Name"><![CDATA[Communication Node12]]></ATT>
+            <ATT name="status">1970354901745664</ATT>
+          </ATTRIBUTES>
+          <DEPENDENCIES>
+            <LINK relation="Represented">
+              <REFOBJ>
+                <ID name="rd" mc="Standard.Instance" uid="6e4f9e7c-b0e8-4516-badf-296873b0b467"/>
+              </REFOBJ>
+            </LINK>
+          </DEPENDENCIES>
+        </OBJECT>
+        <OBJECT>
+          <ID name="Communication Node13" mc="Standard.CommunicationNode" uid="7030e166-d371-4461-a53b-9f0cce36b060"/>
+          <ATTRIBUTES>
+            <ATT name="Selector"></ATT>
+            <ATT name="Name"><![CDATA[Communication Node13]]></ATT>
+            <ATT name="status">1970354901745664</ATT>
+          </ATTRIBUTES>
+          <DEPENDENCIES>
+            <LINK relation="Represented">
+              <REFOBJ>
+                <ID name="ts" mc="Standard.Instance" uid="5d08d8aa-ac73-4d42-9088-a12dc2c2c2a4"/>
+              </REFOBJ>
+            </LINK>
+          </DEPENDENCIES>
+        </OBJECT>
+        <OBJECT>
+          <ID name="Communication Node14" mc="Standard.CommunicationNode" uid="875c9a70-b721-491e-a916-09187bb66877"/>
+          <ATTRIBUTES>
+            <ATT name="Selector"></ATT>
+            <ATT name="Name"><![CDATA[Communication Node14]]></ATT>
+            <ATT name="status">1970354901745664</ATT>
+          </ATTRIBUTES>
+          <DEPENDENCIES>
+            <LINK relation="Represented">
+              <REFOBJ>
+                <ID name="ts" mc="Standard.Instance" uid="5d08d8aa-ac73-4d42-9088-a12dc2c2c2a4"/>
+              </REFOBJ>
+            </LINK>
+          </DEPENDENCIES>
+        </OBJECT>
       </COMP>
       <COMP relation="OwnedCollaboration">
         <OBJECT>
@@ -415,6 +969,7 @@
       </COMP>
       <COMP relation="Product">
         <COMPID name="Events" mc="Standard.CommunicationDiagram" uid="68be4b88-8aef-41e2-8ff2-74501a314f97"/>
+        <COMPID name="Buttons NEXT" mc="Standard.CommunicationDiagram" uid="c296bb34-c8bb-4874-8a62-510b24928d28"/>
       </COMP>
     </DEPENDENCIES>
   </OBJECT>

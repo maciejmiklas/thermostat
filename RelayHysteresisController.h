@@ -14,33 +14,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#include "ServiceSuspender.h"
+#ifndef RELAYHYSTERESISCONTROLLER_H_
+#define RELAYHYSTERESISCONTROLLER_H_
 
-ServiceSuspender::ServiceSuspender() :
-		suspendStart(0) {
-}
+#include "RelayController.h"
 
-void ServiceSuspender::onEvent(BusEvent event, va_list ap) {
-	if (!eb_inGroup(event, BusEventGroup::BUTTON)) {
-		return;
-	}
+class RelayHysteresisController: public RelayController {
+public:
+	RelayHysteresisController();
+	virtual ~RelayHysteresisController();
+	Relay::State execute(int16_t currentTemp, int16_t tempSetpoint);
+};
 
-	if (suspendStart == 0) {
-#if LOG
-		log(F("Suspending services"));
-#endif
-		eb_fire(BusEvent::SERVICE_SUSPEND);
-	}
-
-	suspendStart = util_millis();
-}
-
-void ServiceSuspender::cycle() {
-	if (suspendStart != 0 && util_millis() - suspendStart >= SUSPEND_SERVICE_MS) {
-#if LOG
-		log(F("Resuming services"));
-#endif
-		eb_fire(BusEvent::SERVICE_RESUME);
-		suspendStart = 0;
-	}
-}
+#endif /* RELAYHYSTERESISCONTROLLER_H_ */

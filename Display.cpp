@@ -16,6 +16,9 @@
  */
 #include "Display.h"
 
+
+//TODO display is a dispatcher because it has #driver and #relayDriver, how about extra class for it?
+
 Display::Display(TempSensor *tempSensor, Stats *stats, RelayDriver* relayDriver) :
 		lcd(DIG_PIN_LCD_RS, DIG_PIN_LCD_ENABLE, DIG_PIN_LCD_D0, DIG_PIN_LCD_D1, DIG_PIN_LCD_D2, DIG_PIN_LCD_D3), tempSensor(
 				tempSensor), stats(stats), relayDriver(relayDriver), mainState(this), runtimeState(this), relayTimeState(
@@ -28,7 +31,7 @@ Display::Display(TempSensor *tempSensor, Stats *stats, RelayDriver* relayDriver)
 }
 
 void Display::onEvent(BusEvent event, va_list ap) {
-	if (event == SERVICE_RESUME) {
+	if (event == BusEvent::SERVICE_RESUME) {
 		driver.changeState(STATE_MAIN);
 	} else {
 		driver.execute(event);
@@ -36,7 +39,7 @@ void Display::onEvent(BusEvent event, va_list ap) {
 }
 
 void Display::cycle() {
-	driver.execute(NO_EVENT);
+	driver.execute(BusEvent::NO_EVENT);
 }
 
 inline void Display::printlnNa(uint8_t row, const char *fmt) {
@@ -110,11 +113,11 @@ inline void Display::MainState::update() {
 }
 
 uint8_t Display::MainState::execute(BusEvent event) {
-	if (event != NO_EVENT) {
-		if (event == BUTTON_NEXT) {
+	if (event != BusEvent::NO_EVENT) {
+		if (event == BusEvent::BUTTON_NEXT) {
 			return STATE_RUNTIME;
 
-		} else if (event == BUTTON_PREV) {
+		} else if (event == BusEvent::BUTTON_PREV) {
 			return STATE_DAY_STATS;
 		}
 	}
@@ -143,11 +146,11 @@ Display::RuntimeState::~RuntimeState() {
 }
 
 uint8_t Display::RuntimeState::execute(BusEvent event) {
-	if (event != NO_EVENT) {
-		if (event == BUTTON_NEXT) {
+	if (event != BusEvent::NO_EVENT) {
+		if (event == BusEvent::BUTTON_NEXT) {
 			return STATE_RELAY_TIME;
 
-		} else if (event == BUTTON_PREV) {
+		} else if (event == BusEvent::BUTTON_PREV) {
 			return STATE_MAIN;
 		}
 	}
@@ -181,14 +184,14 @@ Display::RelayTimeState::~RelayTimeState() {
 }
 
 uint8_t Display::RelayTimeState::execute(BusEvent event) {
-	if (event == BUTTON_NEXT) {
+	if (event == BusEvent::BUTTON_NEXT) {
 		relayIdx++;
 		if (relayIdx == RELAYS_AMOUNT) {
 			return STATE_DAY_STATS;
 		}
 		updateDisplay();
 
-	} else if (event == BUTTON_PREV) {
+	} else if (event == BusEvent::BUTTON_PREV) {
 		// cannot decrease before checking because it's unsigned int
 		if (relayIdx == 0) {
 			return STATE_RUNTIME;
@@ -230,10 +233,10 @@ Display::DayStatsState::~DayStatsState() {
 }
 
 uint8_t Display::DayStatsState::execute(BusEvent event) {
-	if (event == NO_EVENT) {
+	if (event == BusEvent::NO_EVENT) {
 		return STATE_NOCHANGE;
 	}
-	if (event == BUTTON_NEXT) {
+	if (event == BusEvent::BUTTON_NEXT) {
 		if(daySize == 0){
 			return STATE_MAIN;
 		}
@@ -246,7 +249,7 @@ uint8_t Display::DayStatsState::execute(BusEvent event) {
 			}
 			updateDisplay(display->stats->dit_next());
 		}
-	} else if (event == BUTTON_PREV) {
+	} else if (event == BusEvent::BUTTON_PREV) {
 		if (daySize == 0 || !showedInfo || !display->stats->dit_hasPrev()) {
 			return STATE_RELAY_TIME;
 		}

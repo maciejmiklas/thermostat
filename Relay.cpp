@@ -16,8 +16,8 @@
  */
 #include "Relay.h"
 
-Relay::Relay(TempSensor* ts, uint8_t pin, uint8_t threshold) :
-		tempSensor(ts), pin(pin), threshold(threshold), on(false) {
+Relay::Relay(TempSensor* ts, uint8_t pin, uint8_t tempSetPoint) :
+		tempSensor(ts), pin(pin), tempSetPoint(tempSetPoint), on(false) {
 	lastSwitch = 0;
 	pinMode(pin, OUTPUT);
 	digitalWrite(pin, LOW);
@@ -36,14 +36,14 @@ boolean Relay::drive() {
 
 	boolean changed = false;
 	uint8_t temp = tempSensor->getTemp();
-	if (on && temp < threshold) {
+	if (on && temp < tempSetPoint) {
 		digitalWrite(pin, LOW);
 		on = false;
 		changed = true;
 #if LOG
 		log(F("Relay %d OFF by %d deg"), pin, temp);
 #endif
-	} else if (!on && temp >= threshold) {
+	} else if (!on && temp >= tempSetPoint) {
 		digitalWrite(pin, HIGH);
 		on = true;
 		changed = true;

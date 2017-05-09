@@ -23,14 +23,14 @@ RelayDriver::RelayDriver(TempSensor* ts) :
 }
 
 void RelayDriver::onCycle() {
-	driveRelay(&relay1, 0);
-	driveRelay(&relay2, 1);
+	drive(&relay1, 0);
+	drive(&relay2, 1);
 }
 
-inline void RelayDriver::driveRelay(Relay* relay, uint8_t id) {
+inline void RelayDriver::drive(Relay* relay, uint8_t id) {
 	boolean changed = relay->drive();
 	if (changed) {
-		eb_fire(relay->isOn() ? RELAY_ON : RELAY_OFF, id);
+		eb_fire(relay->isOn() ? BusEvent::RELAY_ON : BusEvent::RELAY_OFF, id);
 		// TODO replace delay with no-op
 		//delay(DELAY_AFTER_SWITCH_MS);
 	}

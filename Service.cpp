@@ -32,13 +32,13 @@ void Service::cycle() {
 
 // ############### ServiceBusListener ###############
 void Service::ServiceBusListener::onEvent(BusEvent event, va_list ap) {
-	if (!eb_inGroup(event, SERVICE)) {
+	if (!eb_inGroup(event, BusEventGroup::SERVICE)) {
 		return;
 	}
-	if (event == SERVICE_RESUME) {
+	if (event == BusEvent::SERVICE_RESUME) {
 		service->enabled = true;
 
-	} else if (event == SERVICE_SUSPEND) {
+	} else if (event == BusEvent::SERVICE_SUSPEND) {
 		service->enabled = false;
 	}
 #if LOG

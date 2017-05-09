@@ -33,6 +33,7 @@ public:
 	void cycle();
 
 private:
+
 	enum DisplayStates {
 		STATE_MAIN = 0, STATE_RUNTIME = 1, STATE_RELAY_TIME = 2, STATE_DAY_STATS = 3
 	};

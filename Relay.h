@@ -22,14 +22,18 @@
 
 class Relay {
 public:
-	Relay(TempSensor* ts, uint8_t pin, uint8_t threshold);
+	Relay(TempSensor* ts, uint8_t pin, uint8_t tempSetPoint);
 	boolean isOn();
 	boolean drive();
+
+	enum class State {
+		OFF = 0, ON = 1
+	};
 
 private:
 	TempSensor* const tempSensor;
 	const uint8_t pin;
-	const uint8_t threshold;
+	const uint8_t tempSetPoint;
 	boolean on;
 	uint32_t lastSwitch;
 

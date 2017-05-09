@@ -51,6 +51,7 @@ void inline Buttons::setuButton(uint8_t pin) {
 	digitalWrite(pin, HIGH);
 }
 
+// TODO move it to util ?
 static inline uint16_t getFreeRam() {
 	extern int __heap_start, *__brkval;
 	int v;
@@ -66,25 +67,25 @@ void Buttons::cycle() {
 
 	if (pressIRQ) {
 		pressIRQ = false;
-		eb_fire(BUTTON_IRQ);
-		eb_fire(BUTTON_NEXT);
+		eb_fire(BusEvent::BUTTON_IRQ);
+		eb_fire(BusEvent::BUTTON_NEXT);
 	}
 	if (digitalRead(DIG_PIN_BUTTON_NEXT) == 0) {
-		eb_fire(BUTTON_NEXT);
+		eb_fire(BusEvent::BUTTON_NEXT);
 
 	} else if (digitalRead(DIG_PIN_BUTTON_PREV) == 0) {
-		eb_fire(BUTTON_PREV);
+		eb_fire(BusEvent::BUTTON_PREV);
 	}
 }
 
 void Buttons::onEvent(BusEvent event, va_list ap) {
-	if (!eb_inGroup(event, SERVICE)) {
+	if (!eb_inGroup(event, BusEventGroup::SERVICE)) {
 		return;
 	}
-	if (event == SERVICE_RESUME) {
+	if (event == BusEvent::SERVICE_RESUME) {
 		enableIRQ();
 
-	} else if (event == SERVICE_SUSPEND) {
+	} else if (event == BusEvent::SERVICE_SUSPEND) {
 		disableIRQ();
 	}
 }

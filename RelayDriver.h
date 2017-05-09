@@ -42,7 +42,7 @@ private:
 	Relay relay2;
 	Relay* relays[RELAYS_AMOUNT];
 
-	inline void driveRelay(Relay* relay, uint8_t id);
+	inline void drive(Relay* relay, uint8_t id);
 };
 
 #endif /* RELAYDRIVER_H_ */

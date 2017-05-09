@@ -57,16 +57,17 @@ void eb_fire(BusEvent event, ...) {
 	}
 }
 
-boolean eb_inGroup(BusEvent event, BusEventGroup group) {
+boolean eb_inGroup(BusEvent eventEnum, BusEventGroup group) {
 	boolean in = false;
+	uint8_t event = static_cast<uint8_t>(eventEnum);
 	switch (group) {
-	case RELAY:
+	case BusEventGroup::RELAY:
 		in = event >= 10 && event < 20;
 		break;
-	case BUTTON:
+	case BusEventGroup::BUTTON:
 		in = event >= 20 && event < 30;
 		break;
-	case SERVICE:
+	case BusEventGroup::SERVICE:
 		in = event >= 30 && event < 40;
 		break;
 	}

@@ -26,9 +26,9 @@ SystemStatus::~SystemStatus() {
 }
 
 void SystemStatus::onEvent(BusEvent event, va_list ap) {
-	if (event == SERVICE_SUSPEND) {
+	if (event == BusEvent::SERVICE_SUSPEND) {
 		sosOff();
-	} else if (event == SERVICE_RESUME) {
+	} else if (event == BusEvent::SERVICE_RESUME) {
 		sosOn();
 	}
 }

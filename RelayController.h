@@ -22,9 +22,14 @@
 class RelayController {
 
 public:
-	RelayController();
+
+	RelayController(TempSensor* tempSensor, int16_t tempSetPoint);
 	virtual ~RelayController();
-	virtual Relay::State execute(int16_t currentTemp, int16_t tempSetpoint) = 0;
+	virtual Relay::State execute() = 0;
+
+protected:
+	TempSensor* const tempSensor;
+	const int16_t tempSetPoint;
 };
 
 #endif /* RELAYCONTROLLER_H_ */

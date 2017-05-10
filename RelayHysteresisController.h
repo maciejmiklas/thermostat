@@ -18,12 +18,17 @@
 #define RELAYHYSTERESISCONTROLLER_H_
 
 #include "RelayController.h"
+#include "TempSensor.h"
 
 class RelayHysteresisController: public RelayController {
 public:
-	RelayHysteresisController();
+	RelayHysteresisController(TempSensor* ts, int16_t tempSetPoint);
 	virtual ~RelayHysteresisController();
-	Relay::State execute(int16_t currentTemp, int16_t tempSetpoint);
+	Relay::State execute();
+
+private:
+	uint32_t lastSwitchMs;
+	boolean on;
 };
 
 #endif /* RELAYHYSTERESISCONTROLLER_H_ */

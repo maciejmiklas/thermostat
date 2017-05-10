@@ -16,41 +16,32 @@
  */
 #include "Relay.h"
 
-Relay::Relay(TempSensor* ts, uint8_t pin, uint8_t tempSetPoint) :
-		tempSensor(ts), pin(pin), tempSetPoint(tempSetPoint), on(false) {
-	lastSwitch = 0;
+Relay::Relay(uint8_t pin) :
+		pin(pin), state(Relay::State::OFF) {
 	pinMode(pin, OUTPUT);
 	digitalWrite(pin, LOW);
 }
 
-boolean Relay::isOn() {
-	return on;
+void Relay::execute(State st) {
+	if (st == State::NO_CHANGE) {
+		return;
+	}
+	state = st;
+	if (st == State::ON) {
+#if LOG
+		log(F("Relay %d ON"), pin);
+#endif
+		digitalWrite(pin, HIGH);
+	} else if (st == State::OFF) {
+
+#if LOG
+		log(F("Relay %d OFF"), pin);
+#endif
+
+		digitalWrite(pin, HIGH);
+	}
 }
 
-boolean Relay::drive() {
-	uint32_t millis = util_millis();
-	if (millis - lastSwitch < MIN_SWITCH_MS) {
-		return false;
-	}
-	lastSwitch = millis;
-
-	boolean changed = false;
-	uint8_t temp = tempSensor->getTemp();
-	if (on && temp < tempSetPoint) {
-		digitalWrite(pin, LOW);
-		on = false;
-		changed = true;
-#if LOG
-		log(F("Relay %d OFF by %d deg"), pin, temp);
-#endif
-	} else if (!on && temp >= tempSetPoint) {
-		digitalWrite(pin, HIGH);
-		on = true;
-		changed = true;
-#if LOG
-		log(F("Relay %d ON by %d deg"), pin, temp);
-#endif
-	}
-
-	return changed;
+Relay::State Relay::getState() {
+	return state;
 }

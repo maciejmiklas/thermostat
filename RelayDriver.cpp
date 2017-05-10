@@ -17,30 +17,50 @@
 #include "RelayDriver.h"
 
 RelayDriver::RelayDriver(TempSensor* ts) :
-		relay1(ts, DIG_PIN_RELAY_1, THRESHOLD_RELAY_1), relay2(ts, DIG_PIN_IN_RELAY_2, THRESHOLD_RELAY_2) {
-	relays[0] = &relay1;
-	relays[1] = &relay2;
+		tempSensor(ts) {
+	initRelays();
 }
 
-void RelayDriver::onCycle() {
-	drive(&relay1, 0);
-	drive(&relay2, 1);
-}
+inline void RelayDriver::initRelays() {
+	relays[0].controller = new RelayHysteresisController(tempSensor, THRESHOLD_RELAY_0);
+	relays[0].relay = new Relay(DIG_PIN_RELAY_0);
+	relays[0].pin = DIG_PIN_RELAY_0;
 
-inline void RelayDriver::drive(Relay* relay, uint8_t id) {
-	boolean changed = relay->drive();
-	if (changed) {
-		eb_fire(relay->isOn() ? BusEvent::RELAY_ON : BusEvent::RELAY_OFF, id);
-		// TODO replace delay with no-op
-		//delay(DELAY_AFTER_SWITCH_MS);
-	}
+	relays[1].controller = new RelayHysteresisController(tempSensor, THRESHOLD_RELAY_1);
+	relays[1].relay = new Relay(DIG_PIN_RELAY_1);
+	relays[1].pin = DIG_PIN_RELAY_1;
 }
 
 boolean RelayDriver::isOn(uint8_t relayId){
-	return relays[relayId]->isOn();
+	return relays[relayId].relay->getState() == Relay::State::ON;
+}
+
+void RelayDriver::onCycle() {
+	for (uint8_t i = 0; i < RELAYS_AMOUNT; i++) {
+		executeRelay(&relays[i], i);
+	}
+}
+
+inline void RelayDriver::executeRelay(RelayData* rd, uint8_t id) {
+	Relay::State state = rd->controller->execute();
+	if (state == Relay::State::NO_CHANGE) {
+		return;
+	}
+	relays[id].relay->execute(state);
+
+	// TODO replace delay with no-op
+	delay(RELAY_DELAY_AFTER_SWITCH_MS);
+
+	eb_fire(state == Relay::State::ON ? BusEvent::RELAY_ON : BusEvent::RELAY_OFF, id);
 }
 
 uint8_t RelayDriver::deviceId() {
 	return SERVICE_ID_RELAY_DRIVER;
 }
 
+RelayDriver::~RelayDriver() {
+	for (uint8_t i = 0; i < RELAYS_AMOUNT; i++) {
+		delete (relays[i].controller);
+		delete (relays[i].relay);
+	}
+}

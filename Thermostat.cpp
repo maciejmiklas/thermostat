@@ -40,6 +40,8 @@ void setup() {
 void loop() {
 	util_cycle();
 	log_cycle();
+
+	// TODO replace cycle with event on system bus
 	tempSensor->cycle();
 	serviceSuspender->cycle();
 	stats->cycle();

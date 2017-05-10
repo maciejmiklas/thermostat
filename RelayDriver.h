@@ -17,12 +17,10 @@
 #ifndef RELAYDRIVER_H_
 #define RELAYDRIVER_H_
 
-#import "TempSensor.h"
-#import "Stats.h"
 #import "Relay.h"
-#import "Service.h"
-#import "EventBus.h"
-#import "Config.h"
+#import "RelayController.h"
+#import "RelayHysteresisController.h"
+#import "Arduino.h"
 
 /**
  * We are supporting two fans: first will go on after reaching first temperature threshold, and second one after
@@ -31,18 +29,23 @@
 class RelayDriver: public Service {
 public:
 	RelayDriver(TempSensor* ts);
+	~RelayDriver();
 	boolean isOn(uint8_t relayId);
-
 protected:
 	uint8_t deviceId();
 
 private:
-	void onCycle();
-	Relay relay1;
-	Relay relay2;
-	Relay* relays[RELAYS_AMOUNT];
+	typedef struct {
+		Relay* relay;
+		uint8_t pin;
+		RelayController* controller;
+	} RelayData;
+	RelayData relays[RELAYS_AMOUNT];
+	TempSensor* const tempSensor;
 
-	inline void drive(Relay* relay, uint8_t id);
+	void onCycle();
+	inline void executeRelay(RelayData* rd, uint8_t id);
+	inline void initRelays();
 };
 
 #endif /* RELAYDRIVER_H_ */

@@ -16,12 +16,11 @@
  */
 #include "RelayController.h"
 
-RelayController::RelayController() {
-	// TODO Auto-generated constructor stub
+RelayController::RelayController(TempSensor* ts, int16_t tempSetPoint) :
+		tempSensor(ts), tempSetPoint(tempSetPoint) {
 
 }
 
 RelayController::~RelayController() {
-	// TODO Auto-generated destructor stub
 }
 

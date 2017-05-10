@@ -20,7 +20,7 @@
 //TODO display is a dispatcher because it has #driver and #relayDriver, how about extra class for it?
 
 Display::Display(TempSensor *tempSensor, Stats *stats, RelayDriver* relayDriver) :
-		lcd(DIG_PIN_LCD_RS, DIG_PIN_LCD_ENABLE, DIG_PIN_LCD_D0, DIG_PIN_LCD_D1, DIG_PIN_LCD_D2, DIG_PIN_LCD_D3), tempSensor(
+		lcd(DIG_PIN_LCD_RS, DIG_PIN_LCD_ENABLE, DIG_PIN_LCD_D4, DIG_PIN_LCD_D5, DIG_PIN_LCD_D6, DIG_PIN_LCD_D7), tempSensor(
 				tempSensor), stats(stats), relayDriver(relayDriver), mainState(this), runtimeState(this), relayTimeState(
 				this), dayStatsState(this), driver(4, &mainState, &runtimeState, &relayTimeState, &dayStatsState) {
 	lcd.begin(16, 2);

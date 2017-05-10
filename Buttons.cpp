@@ -18,6 +18,11 @@
 
 static volatile boolean pressIRQ = false;
 
+//TODO try following:
+// 1) Enable IRQ and do not disable it
+// 2) read pin input in IRQ
+// 3) in loop reacto to this input and reset it
+
 static void onIRQ() {
 	pressIRQ = true;
 }
@@ -65,9 +70,10 @@ void Buttons::cycle() {
 	}
 	pressMs = ms;
 
+	// TODO IRQ processing makes no, because we are reading ping inputs within a loop
 	if (pressIRQ) {
 		pressIRQ = false;
-		eb_fire(BusEvent::BUTTON_IRQ);
+		eb_fire(BusEvent::BUTTON_IRQ);// TODO why do we fire this event ?
 		eb_fire(BusEvent::BUTTON_NEXT);
 	}
 	if (digitalRead(DIG_PIN_BUTTON_NEXT) == 0) {

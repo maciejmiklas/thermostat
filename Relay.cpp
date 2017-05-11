@@ -22,7 +22,7 @@ Relay::Relay(uint8_t pin) :
 	digitalWrite(pin, LOW);
 }
 
-void Relay::execute(State st) {
+void Relay::switchState(State st) {
 	if (st == State::NO_CHANGE) {
 		return;
 	}

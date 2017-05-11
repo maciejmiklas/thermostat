@@ -26,7 +26,9 @@ SystemStatus::~SystemStatus() {
 }
 
 void SystemStatus::onEvent(BusEvent event, va_list ap) {
-	if (event == BusEvent::SERVICE_SUSPEND) {
+	if (event == BusEvent::CYCLE) {
+		cycle();
+	} else if (event == BusEvent::SERVICE_SUSPEND) {
 		sosOff();
 	} else if (event == BusEvent::SERVICE_RESUME) {
 		sosOn();
@@ -65,7 +67,7 @@ void SystemStatus::doSwitch(uint16_t duration) {
 // 10 - LED OFF
 // 11 - LED ON for short time
 // 12 - LED OFF
-void SystemStatus::cycle() {
+inline void SystemStatus::cycle() {
 	if (!sosEnabled) {
 		return;
 	}

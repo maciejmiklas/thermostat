@@ -21,7 +21,7 @@ static volatile boolean pressIRQ = false;
 //TODO try following:
 // 1) Enable IRQ and do not disable it
 // 2) read pin input in IRQ
-// 3) in loop reacto to this input and reset it
+// 3) in loop react to this input and reset it
 
 static void onIRQ() {
 	pressIRQ = true;
@@ -52,7 +52,7 @@ Buttons::Buttons() :
 void inline Buttons::setuButton(uint8_t pin) {
 	pinMode(pin, INPUT);
 
-	// enable pullup resistor
+	// enable pull-up resistor
 	digitalWrite(pin, HIGH);
 }
 
@@ -63,17 +63,16 @@ static inline uint16_t getFreeRam() {
 	return (uint16_t) &v - (__brkval == 0 ? (int) &__heap_start : (int) __brkval);
 }
 
-void Buttons::cycle() {
+inline void Buttons::cycle() {
 	uint32_t ms = util_millis();
 	if (ms - pressMs < PRESS_MS) {
 		return;
 	}
 	pressMs = ms;
 
-	// TODO IRQ processing makes no, because we are reading ping inputs within a loop
+	// TODO IRQ processing makes no sense, because we are reading ping inputs within a loop
 	if (pressIRQ) {
 		pressIRQ = false;
-		eb_fire(BusEvent::BUTTON_IRQ);// TODO why do we fire this event ?
 		eb_fire(BusEvent::BUTTON_NEXT);
 	}
 	if (digitalRead(DIG_PIN_BUTTON_NEXT) == 0) {
@@ -85,13 +84,17 @@ void Buttons::cycle() {
 }
 
 void Buttons::onEvent(BusEvent event, va_list ap) {
-	if (!eb_inGroup(event, BusEventGroup::SERVICE)) {
-		return;
-	}
-	if (event == BusEvent::SERVICE_RESUME) {
-		enableIRQ();
+	if (event == BusEvent::CYCLE) {
+		cycle();
 
-	} else if (event == BusEvent::SERVICE_SUSPEND) {
-		disableIRQ();
+	} else if (eb_inGroup(event, BusEventGroup::SERVICE)) {
+		return;
+
+		if (event == BusEvent::SERVICE_RESUME) {
+			enableIRQ();
+
+		} else if (event == BusEvent::SERVICE_SUSPEND) {
+			disableIRQ();
+		}
 	}
 }

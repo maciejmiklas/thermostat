@@ -25,7 +25,6 @@ class SystemStatus: public BusListener {
 public:
 	SystemStatus();
 	virtual ~SystemStatus();
-	void cycle();
 
 private:
 	/* LED on time for 3x long flash. */
@@ -55,6 +54,7 @@ private:
 	void sosOn();
 	void sosOff();
 	void doSwitch(uint16_t duration);
+	inline void cycle();
 };
 
 #endif /* SYSTEMSTATUS_H_ */

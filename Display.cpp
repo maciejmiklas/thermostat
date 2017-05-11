@@ -16,9 +16,6 @@
  */
 #include "Display.h"
 
-
-//TODO display is a dispatcher because it has #driver and #relayDriver, how about extra class for it?
-
 Display::Display(TempSensor *tempSensor, Stats *stats, RelayDriver* relayDriver) :
 		lcd(DIG_PIN_LCD_RS, DIG_PIN_LCD_ENABLE, DIG_PIN_LCD_D4, DIG_PIN_LCD_D5, DIG_PIN_LCD_D6, DIG_PIN_LCD_D7), tempSensor(
 				tempSensor), stats(stats), relayDriver(relayDriver), mainState(this), runtimeState(this), relayTimeState(
@@ -33,13 +30,8 @@ Display::Display(TempSensor *tempSensor, Stats *stats, RelayDriver* relayDriver)
 void Display::onEvent(BusEvent event, va_list ap) {
 	if (event == BusEvent::SERVICE_RESUME) {
 		driver.changeState(STATE_MAIN);
-	} else {
-		driver.execute(event);
 	}
-}
-
-void Display::cycle() {
-	driver.execute(BusEvent::NO_EVENT);
+	driver.execute(event);
 }
 
 inline void Display::printlnNa(uint8_t row, const char *fmt) {
@@ -113,7 +105,11 @@ inline void Display::MainState::update() {
 }
 
 uint8_t Display::MainState::execute(BusEvent event) {
-	if (event != BusEvent::NO_EVENT) {
+	if (event == BusEvent::CYCLE) {
+		if (shouldUpdate()) {
+			update();
+		}
+	} else {
 		if (event == BusEvent::BUTTON_NEXT) {
 			return STATE_RUNTIME;
 
@@ -121,10 +117,6 @@ uint8_t Display::MainState::execute(BusEvent event) {
 			return STATE_DAY_STATS;
 		}
 	}
-	if (shouldUpdate()) {
-		update();
-	}
-
 	return STATE_NOCHANGE;
 }
 
@@ -146,7 +138,7 @@ Display::RuntimeState::~RuntimeState() {
 }
 
 uint8_t Display::RuntimeState::execute(BusEvent event) {
-	if (event != BusEvent::NO_EVENT) {
+	if (event != BusEvent::CYCLE) {
 		if (event == BusEvent::BUTTON_NEXT) {
 			return STATE_RELAY_TIME;
 
@@ -233,11 +225,11 @@ Display::DayStatsState::~DayStatsState() {
 }
 
 uint8_t Display::DayStatsState::execute(BusEvent event) {
-	if (event == BusEvent::NO_EVENT) {
+	if (event == BusEvent::CYCLE) {
 		return STATE_NOCHANGE;
 	}
 	if (event == BusEvent::BUTTON_NEXT) {
-		if(daySize == 0){
+		if (daySize == 0) {
 			return STATE_MAIN;
 		}
 		if (!showedInfo) {

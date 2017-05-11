@@ -17,12 +17,11 @@
 #ifndef RELAYCONTROLLER_H_
 #define RELAYCONTROLLER_H_
 
-#import "Relay.h"
+#include "Relay.h"
 
 class RelayController {
 
 public:
-
 	RelayController(TempSensor* tempSensor, int16_t tempSetPoint);
 	virtual ~RelayController();
 	virtual Relay::State execute() = 0;

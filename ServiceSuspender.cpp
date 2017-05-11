@@ -21,21 +21,22 @@ ServiceSuspender::ServiceSuspender() :
 }
 
 void ServiceSuspender::onEvent(BusEvent event, va_list ap) {
-	if (!eb_inGroup(event, BusEventGroup::BUTTON)) {
-		return;
-	}
+	if (event == BusEvent::CYCLE) {
+		cycle();
+	} else if (eb_inGroup(event, BusEventGroup::BUTTON)) {
 
-	if (suspendStart == 0) {
+		if (suspendStart == 0) {
 #if LOG
-		log(F("Suspending services"));
+			log(F("Suspending services"));
 #endif
-		eb_fire(BusEvent::SERVICE_SUSPEND);
-	}
+			eb_fire(BusEvent::SERVICE_SUSPEND);
+		}
 
-	suspendStart = util_millis();
+		suspendStart = util_millis();
+	}
 }
 
-void ServiceSuspender::cycle() {
+inline void ServiceSuspender::cycle() {
 	if (suspendStart != 0 && util_millis() - suspendStart >= SUSPEND_SERVICE_MS) {
 #if LOG
 		log(F("Resuming services"));

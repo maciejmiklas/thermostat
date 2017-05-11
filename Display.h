@@ -30,8 +30,6 @@
 class Display: public BusListener {
 public:
 	Display(TempSensor* tempSensor, Stats* stats, RelayDriver* relayDriver);
-	void cycle();
-
 private:
 
 	enum DisplayStates {

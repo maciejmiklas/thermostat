@@ -51,7 +51,7 @@ Temp* Stats::getActual() {
 	return &actualTemp;
 }
 
-void Stats::onCycle() {
+void Stats::cycle() {
 	uint32_t currentMillis = util_millis();
 	if (currentMillis - lastProbeMs >= DAY_PROBE_MS) {
 		probeDayTemp();
@@ -129,7 +129,7 @@ Temp* Stats::dit_next() {
 	log(F("dit_next %d"), histIdx);
 #endif
 	Temp* temp = &dayHistory[histIdx];
-	updateTempDay(temp);
+	updateDayTemp(temp);
 	return temp;
 }
 
@@ -140,11 +140,11 @@ Temp* Stats::dit_prev() {
 #endif
 
 	Temp* temp = &dayHistory[histIdx];
-	updateTempDay(temp);
+	updateDayTemp(temp);
 	return temp;
 }
 
-inline void Stats::updateTempDay(Temp* temp) {
+inline void Stats::updateDayTemp(Temp* temp) {
 	temp->day = _dit_size() - dit_idx;
 }
 

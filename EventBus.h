@@ -17,8 +17,8 @@
 #ifndef EVENTBUS_H_
 #define EVENTBUS_H_
 
-#import "Arduino.h"
-#import "ArdLog.h"
+#include "Arduino.h"
+#include "ArdLog.h"
 
 enum class BusEvent {
 	/** Parameters: 0 - relay ID */
@@ -28,13 +28,10 @@ enum class BusEvent {
 	RELAY_OFF = 11,
 
 	/** Parameters: none */
-	BUTTON_IRQ = 20,
+	BUTTON_NEXT = 20,
 
 	/** Parameters: none */
-	BUTTON_NEXT = 21,
-
-	/** Parameters: none */
-	BUTTON_PREV = 22,
+	BUTTON_PREV = 21,
 
 	/** Parameters: none */
 	SERVICE_SUSPEND = 30,
@@ -42,11 +39,8 @@ enum class BusEvent {
 	/** Parameters: none */
 	SERVICE_RESUME = 31,
 
-	/**
-	 * Event with this state will not be fired.
-	 * It's just used by some methods passing events to indicate that there was no event.
-	 */
-	NO_EVENT = 255
+	/** Parameters: none */
+	CYCLE = 255,
 };
 
 enum class BusEventGroup {

@@ -25,10 +25,9 @@ class Service {
 public:
 	Service();
 	virtual ~Service();
-	void cycle();
 
 protected:
-	virtual void onCycle() = 0;
+	virtual void cycle() = 0;
 	virtual uint8_t deviceId() = 0;
 
 private:

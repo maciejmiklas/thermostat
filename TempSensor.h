@@ -33,6 +33,7 @@ public:
 
 protected:
 	uint8_t deviceId();
+	void cycle();
 
 private:
 	/**
@@ -53,7 +54,6 @@ private:
 	boolean enabled;
 
 	inline int8_t readTemp();
-	void onCycle();
 };
 
 #endif /* TEMPSENSOR_H_ */

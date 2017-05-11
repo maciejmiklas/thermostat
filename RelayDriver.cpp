@@ -35,7 +35,7 @@ boolean RelayDriver::isOn(uint8_t relayId){
 	return relays[relayId].relay->getState() == Relay::State::ON;
 }
 
-void RelayDriver::onCycle() {
+void RelayDriver::cycle() {
 	for (uint8_t i = 0; i < RELAYS_AMOUNT; i++) {
 		executeRelay(&relays[i], i);
 	}
@@ -46,7 +46,7 @@ inline void RelayDriver::executeRelay(RelayData* rd, uint8_t id) {
 	if (state == Relay::State::NO_CHANGE) {
 		return;
 	}
-	relays[id].relay->execute(state);
+	relays[id].relay->switchState(state);
 
 	// TODO replace delay with no-op
 	delay(RELAY_DELAY_AFTER_SWITCH_MS);

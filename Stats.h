@@ -20,10 +20,10 @@
 #include "Arduino.h"
 #include "Timer.h"
 #include "EventBus.h"
-#import "Config.h"
-#import "Service.h"
-#import "TempSensor.h"
-#import "ArdLog.h"
+#include "Config.h"
+#include "Service.h"
+#include "TempSensor.h"
+#include "ArdLog.h"
 
 typedef struct {
 	int16_t avg;
@@ -59,6 +59,7 @@ public:
 
 protected:
 	uint8_t deviceId();
+	void cycle();
 
 private:
 
@@ -71,10 +72,9 @@ private:
 	const static uint8_t ACTUAL_PROBES_SIZE = 24;
 
 	void onEvent(BusEvent event, va_list ap);
-	void onCycle();
 	inline void probeDayTemp();
 	inline void probeActualTemp();
-	inline void updateTempDay(Temp* temp);
+	inline void updateDayTemp(Temp* temp);
 	/** Amount of history entries. */
 	inline uint8_t _dit_size();
 

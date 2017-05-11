@@ -17,10 +17,10 @@
 #ifndef RELAYDRIVER_H_
 #define RELAYDRIVER_H_
 
-#import "Relay.h"
-#import "RelayController.h"
-#import "RelayHysteresisController.h"
-#import "Arduino.h"
+#include "Relay.h"
+#include "RelayController.h"
+#include "RelayHysteresisController.h"
+#include "Arduino.h"
 
 /**
  * We are supporting two fans: first will go on after reaching first temperature threshold, and second one after
@@ -33,6 +33,7 @@ public:
 	boolean isOn(uint8_t relayId);
 protected:
 	uint8_t deviceId();
+	void cycle();
 
 private:
 	typedef struct {
@@ -41,10 +42,11 @@ private:
 		RelayController* controller;
 	} RelayData;
 	RelayData relays[RELAYS_AMOUNT];
-	TempSensor* const tempSensor;
 
-	void onCycle();
+	TempSensor* const tempSensor;
 	inline void executeRelay(RelayData* rd, uint8_t id);
+
+	/* In this method you can define your relay setup! */
 	inline void initRelays();
 };
 

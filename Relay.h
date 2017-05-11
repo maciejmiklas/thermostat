@@ -28,7 +28,7 @@ public:
 		OFF = 0, ON = 1, NO_CHANGE = 2
 	};
 
-	void execute(State state);\
+	void switchState(State state);
 	State getState();
 
 private:

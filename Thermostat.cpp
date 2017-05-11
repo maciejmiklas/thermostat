@@ -41,12 +41,6 @@ void loop() {
 	util_cycle();
 	log_cycle();
 
-	// TODO replace cycle with event on system bus
-	tempSensor->cycle();
-	serviceSuspender->cycle();
-	stats->cycle();
-	relayDriver->cycle();
-	display->cycle();
-	buttons->cycle();
-	systemStatus->cycle();
+	// Hart beat
+	eb_fire(BusEvent::CYCLE);
 }

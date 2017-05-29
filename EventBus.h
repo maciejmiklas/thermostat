@@ -50,6 +50,8 @@ enum class BusEventGroup {
 class BusListener {
 public:
 	virtual void onEvent(BusEvent event, va_list ap) = 0;
+	virtual uint8_t listenerId() = 0;
+
 protected:
 	virtual ~BusListener();
 	BusListener();

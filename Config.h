@@ -46,12 +46,17 @@ const static uint8_t DIG_PIN_TEMP_SENSOR = 12;
 
 const static uint8_t DIG_PIN_SYSTEM_STATUS_LED = 13;
 
-const static uint8_t SERVICE_ID_TEMP_SENSOR = 1;
-const static uint8_t SERVICE_ID_RELAY_DRIVER = 2;
-const static uint8_t SERVICE_ID_STATS = 3;
+const static uint8_t DEVICE_ID_TEMP_SENSOR = 1;
+const static uint8_t DEVICE_ID_RELAY_DRIVER = 2;
+const static uint8_t DEVICE_ID_STATS = 3;
+
+const static uint8_t LISTENER_ID_BUTTONS = 200;
+const static uint8_t LISTENER_ID_DISPLAY = 201;
+const static uint8_t LISTENER_ID_SUSPENDER = 202;
+const static uint8_t LISTENER_ID_STATUS = 203;
 
 /* Minimum time to switch next relay. */
-const static uint16_t RELAY_DELAY_AFTER_SWITCH_MS = 200;
+const static uint16_t RELAY_DELAY_AFTER_SWITCH_MS = 500;
 
 /* Prevents frequent switches of the particular relay. */
 const static uint32_t RELAY_MIN_SWITCH_MS = 600.000;

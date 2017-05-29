@@ -19,6 +19,12 @@
 Stats::Stats(TempSensor* tempSensor) :
 		tempSensor(tempSensor), systemTimer(), dayProbeIdx(0), lastProbeMs(0), dayHistoryIdx(0), dayHistoryFull(false), dit_idx(
 				0), actualProbesIdx(0), actualProbesFull(false) {
+}
+
+void Stats::init(){
+#if TRACE
+	log(F("ST init"));
+#endif
 	systemTimer.start();
 	actualTemp.day = 0;
 	probeDayTemp();
@@ -37,6 +43,9 @@ void Stats::onEvent(BusEvent event, va_list ap) {
 	} else if (event == BusEvent::RELAY_OFF) {
 		relayTimer[relayId].suspend();
 	}
+}
+uint8_t Stats::listenerId(){
+	return deviceId();
 }
 
 Time* Stats::getRelayTime(uint8_t relayId) {
@@ -61,7 +70,7 @@ void Stats::cycle() {
 }
 
 uint8_t Stats::deviceId() {
-	return SERVICE_ID_STATS;
+	return DEVICE_ID_STATS;
 }
 
 void Stats::probeActualTemp() {
@@ -69,7 +78,7 @@ void Stats::probeActualTemp() {
 		actualProbesIdx = 0;
 		actualProbesFull = true;
 #if TRACE
-		log(F("Looping day stats"));
+		log(F("ST day stats"));
 #endif
 	}
 	int8_t actTemp = tempSensor->getTemp();
@@ -81,7 +90,7 @@ void Stats::probeActualTemp() {
 	actualTemp.max = util_max_i8(actualProbes, probesSize);
 
 #if TRACE
-	log(F("Actual(%d/%d) -> Now: %d, Min: %d, Max :%d, Avg: %d"), actualProbesIdx, probesSize, actTemp, actualTemp.min,
+	log(F("ST Actual(%d/%d)->%d,%d,%d,%d"), actualProbesIdx, probesSize, actTemp, actualTemp.min,
 			actualTemp.max, actualTemp.avg);
 #endif
 	actualProbesIdx++;
@@ -99,7 +108,7 @@ void Stats::probeDayTemp() {
 		temp->max = util_max_i8(dayProbes, PROBES_PER_DAY);
 		dayProbeIdx = 0;
 #if LOG
-		log(F("History(%d) -> AVG: %d, Min: %d, Max :%d"), dayHistoryIdx, temp->avg, temp->min, temp->max);
+		log(F("ST Hist(%d)->%d,%d,%d"), dayHistoryIdx, temp->avg, temp->min, temp->max);
 #endif
 	} else {
 		dayProbes[dayProbeIdx++] = tempSensor->getTemp();
@@ -109,7 +118,7 @@ void Stats::probeDayTemp() {
 boolean Stats::dit_hasNext() {
 	boolean has = dit_idx > 0;
 #if TRACE
-	log(F("dit_hasNext %d -> %d"), (has ? 1 : 0), dit_idx);
+	log(F("ST HN %d -> %d"), (has ? 1 : 0), dit_idx);
 #endif
 	return has;
 }
@@ -118,7 +127,7 @@ boolean Stats::dit_hasPrev() {
 	uint8_t size = _dit_size();
 	boolean has = dit_idx < size - 1;
 #if TRACE
-	log(F("dit_hasPrev %d -> %d/%d"), (has ? 1 : 0), dit_idx, size);
+	log(F("ST HP %d -> %d/%d"), (has ? 1 : 0), dit_idx, size);
 #endif
 	return has;
 }
@@ -126,7 +135,7 @@ boolean Stats::dit_hasPrev() {
 Temp* Stats::dit_next() {
 	uint8_t histIdx = --dit_idx;
 #if TRACE
-	log(F("dit_next %d"), histIdx);
+	log(F("ST NE %d"), histIdx);
 #endif
 	Temp* temp = &dayHistory[histIdx];
 	updateDayTemp(temp);
@@ -136,7 +145,7 @@ Temp* Stats::dit_next() {
 Temp* Stats::dit_prev() {
 	uint8_t histIdx = ++dit_idx;
 #if TRACE
-	log(F("dit_prev %d"), histIdx);
+	log(F("ST PRE %d"), histIdx);
 #endif
 
 	Temp* temp = &dayHistory[histIdx];

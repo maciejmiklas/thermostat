@@ -31,20 +31,17 @@ public:
 	int16_t getTemp();
 	int16_t getQuickTemp();
 
-protected:
-	uint8_t deviceId();
-	void cycle();
-
 private:
 	/**
 	 * We take #PROBES_SIZE probes from temp sensor, each one with delay of #PROBE_DELAY milliseconds.
 	 * After collecting all required probes we calculate median and this is the temperature.
 	 */
+	// log statement assumes at least 6 probes - adopt it after changing size!
 	const static uint8_t PROBES_SIZE = 6;
 	const static uint8_t PROBES_MED_IDX = PROBES_SIZE / 2;
 	const static uint32_t PROBE_FREQ_MS = 1000;
 
-	int8_t probes[PROBES_SIZE];
+	int8_t probes[PROBES_SIZE] = {};
 	uint8_t probeIdx;
 	int8_t curentTemp;
 	int8_t lastTemp;
@@ -54,6 +51,9 @@ private:
 	boolean enabled;
 
 	inline int8_t readTemp();
+	uint8_t deviceId();
+	void cycle();
+	void init();
 };
 
 #endif /* TEMPSENSOR_H_ */

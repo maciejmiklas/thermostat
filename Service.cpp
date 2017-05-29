@@ -34,12 +34,16 @@ void Service::ServiceBusListener::onEvent(BusEvent event, va_list ap) {
 			service->enabled = false;
 		}
 #if LOG
-		log(F("%s service %d"), service->enabled ? "Enable" : "Disable", service->deviceId());
+		log(F("SE %s service %d"), service->enabled ? "E" : "D", service->deviceId());
 #endif
 
 	} else if (service->enabled && event == BusEvent::CYCLE) {
 		service->cycle();
 	}
+}
+
+uint8_t Service::ServiceBusListener::listenerId() {
+	return service->deviceId() + 100;
 }
 
 Service::ServiceBusListener::ServiceBusListener(Service* service) :

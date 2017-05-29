@@ -1,5 +1,5 @@
 /*
- * Licensed to the Apache Software Foundation (ASF) under one or more
+3 * Licensed to the Apache Software Foundation (ASF) under one or more
  * contributor license agreements.  See the NOTICE file distributed with
  * this work for additional information regarding copyright ownership.
  * The ASF licenses this file to You under the Apache License, Version 2.0
@@ -14,29 +14,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#ifndef BUTTONS_H_
-#define BUTTONS_H_
-
-#include "Arduino.h"
-#include "ArdLog.h"
-#include "EventBus.h"
-#include "Config.h"
-#include "Util.h"
 #include "Initializable.h"
 
-class Buttons: public BusListener, public Initializable {
-public:
-	Buttons();
+Initializable::Initializable() {
 
-private:
-	const static uint8_t PRESS_MS = 200;
-	uint32_t pressMs;
+}
 
-	void init();
-	void onEvent(BusEvent event, va_list ap);
-	uint8_t listenerId();
-	void inline setuButton(uint8_t pin);
-	void inline cycle();
-};
+Initializable::~Initializable() {
+}
 
-#endif /* BUTTONS_H_ */

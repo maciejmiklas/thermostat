@@ -18,10 +18,12 @@
 
 RelayDriver::RelayDriver(TempSensor* ts) :
 		tempSensor(ts) {
-	initRelays();
 }
 
-inline void RelayDriver::initRelays() {
+void RelayDriver::init() {
+#if TRACE
+	log(F("RD init"));
+#endif
 	relays[0].controller = new RelayHysteresisController(tempSensor, THRESHOLD_RELAY_0);
 	relays[0].relay = new Relay(DIG_PIN_RELAY_0);
 	relays[0].pin = DIG_PIN_RELAY_0;
@@ -31,7 +33,7 @@ inline void RelayDriver::initRelays() {
 	relays[1].pin = DIG_PIN_RELAY_1;
 }
 
-boolean RelayDriver::isOn(uint8_t relayId){
+boolean RelayDriver::isOn(uint8_t relayId) {
 	return relays[relayId].relay->getState() == Relay::State::ON;
 }
 
@@ -55,7 +57,7 @@ inline void RelayDriver::executeRelay(RelayData* rd, uint8_t id) {
 }
 
 uint8_t RelayDriver::deviceId() {
-	return SERVICE_ID_RELAY_DRIVER;
+	return DEVICE_ID_RELAY_DRIVER;
 }
 
 RelayDriver::~RelayDriver() {

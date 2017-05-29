@@ -48,6 +48,9 @@ void SystemStatus::sosOff() {
 	sosEnabled = false;
 }
 
+uint8_t SystemStatus::listenerId() {
+	return LISTENER_ID_STATUS;
+}
 void SystemStatus::doSwitch(uint16_t duration) {
 	if (util_millis() - switchMs >= duration) {
 		state++;

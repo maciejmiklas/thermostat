@@ -18,10 +18,8 @@
 
 TempSensor::TempSensor() :
 		probeIdx(0), curentTemp(0), lastTemp(0), lastProbeTime(0), oneWire(DIG_PIN_TEMP_SENSOR), dallasTemperature(
-				&oneWire), enabled(
-		true) {
-	dallasTemperature.begin();
-	curentTemp = readTemp();
+				&oneWire), enabled(true) {
+
 }
 
 int16_t TempSensor::getTemp() {
@@ -30,6 +28,14 @@ int16_t TempSensor::getTemp() {
 
 int16_t TempSensor::getQuickTemp() {
 	return lastTemp;
+}
+
+void TempSensor::init() {
+#if TRACE
+	log(F("TS init"));
+#endif
+	dallasTemperature.begin();
+	curentTemp = readTemp();
 }
 
 void TempSensor::cycle() {
@@ -55,7 +61,7 @@ void TempSensor::cycle() {
 }
 
 uint8_t TempSensor::deviceId() {
-	return SERVICE_ID_TEMP_SENSOR;
+	return DEVICE_ID_TEMP_SENSOR;
 }
 
 inline int8_t TempSensor::readTemp() {

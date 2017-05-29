@@ -16,7 +16,6 @@
  */
 #include "MachineDriver.h"
 
-
 MachineDriver::MachineDriver(uint8_t statesCnt, ...) :
 		statesCnt(statesCnt), noopState(), states(new StateMachine*[statesCnt]) {
 	this->current = &noopState;
@@ -38,7 +37,7 @@ void MachineDriver::changeState(uint8_t state) {
 	}
 
 #if LOG
-	log(F("Change state to %d of %d"), state, statesCnt);
+	log(F("MD > %d of %d"), state, statesCnt);
 #endif
 
 	boolean init = true;

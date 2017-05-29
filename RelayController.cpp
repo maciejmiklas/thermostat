@@ -18,7 +18,6 @@
 
 RelayController::RelayController(TempSensor* ts, int16_t tempSetPoint) :
 		tempSensor(ts), tempSetPoint(tempSetPoint) {
-
 }
 
 RelayController::~RelayController() {

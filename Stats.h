@@ -57,10 +57,6 @@ public:
 	/** Amount of history entries. */
 	uint8_t dit_size();
 
-protected:
-	uint8_t deviceId();
-	void cycle();
-
 private:
 
 	/** Take 24 probes per day to calculate agv/min/max per day*/
@@ -70,13 +66,6 @@ private:
 	const static uint32_t DAY_PROBE_MS = 3600000; // 1000 * 60 * 60;
 
 	const static uint8_t ACTUAL_PROBES_SIZE = 24;
-
-	void onEvent(BusEvent event, va_list ap);
-	inline void probeDayTemp();
-	inline void probeActualTemp();
-	inline void updateDayTemp(Temp* temp);
-	/** Amount of history entries. */
-	inline uint8_t _dit_size();
 
 	TempSensor* tempSensor;
 
@@ -98,6 +87,17 @@ private:
 	uint8_t actualProbesIdx;
 	boolean actualProbesFull;
 	Temp actualTemp;
+
+	uint8_t deviceId();
+	void init();
+	void cycle();
+	uint8_t listenerId();
+	void onEvent(BusEvent event, va_list ap);
+	inline void probeDayTemp();
+	inline void probeActualTemp();
+	inline void updateDayTemp(Temp* temp);
+	/** Amount of history entries. */
+	inline uint8_t _dit_size();
 };
 
 #endif /* STATS_H_ */

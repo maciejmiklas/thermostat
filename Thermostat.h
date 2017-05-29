@@ -28,6 +28,7 @@
 #include "Timer.h"
 #include "EventBus.h"
 #include "SystemStatus.h"
+#include "Initializable.h"
 
 #ifdef __cplusplus
 extern "C" {

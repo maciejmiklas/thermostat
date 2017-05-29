@@ -1,5 +1,5 @@
 /*
- * Licensed to the Apache Software Foundation (ASF) under one or more
+3 * Licensed to the Apache Software Foundation (ASF) under one or more
  * contributor license agreements.  See the NOTICE file distributed with
  * this work for additional information regarding copyright ownership.
  * The ASF licenses this file to You under the Apache License, Version 2.0
@@ -30,27 +30,31 @@ BusListener::BusListener() {
 void eb_register(BusListener* listener) {
 	if (listenersAmount == LISTNERS_MAX) {
 #if LOG
-		log(F("### TOO MANY LISTENERS (%d) ###"), listenersAmount);
+		log(F("EB LISTENERS ERR (%d) !"), listenersAmount);
 #endif
 		return;
 	}
 
 #if TRACE
-	log(F("Register %d bus listener"), listenersAmount);
+	log(F("EB Reg %d"), listenersAmount);
 #endif
 	listeners[listenersAmount++] = listener;
 }
 
 void eb_fire(BusEvent event, ...) {
 #if LOG
-	log(F("Fire event: %d"), event);
+	if (event != BusEvent::CYCLE) {
+		log(F("EB Fire: %d"), event);
+	}
 #endif
 
 	for (uint8_t idx = 0; idx < listenersAmount; idx++) {
 		va_list ap;
 		va_start(ap, event);
 #if TRACE
-	log(F("Notify: %d with: %d"), idx, event);
+		if (event != BusEvent::CYCLE) {
+			log(F("EB Notify: %d"), listeners[idx]->listenerId());
+		}
 #endif
 		listeners[idx]->onEvent(event, ap);
 		va_end(ap);

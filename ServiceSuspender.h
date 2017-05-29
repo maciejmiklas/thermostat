@@ -29,6 +29,7 @@ public:
 private:
 	inline void cycle();
 	void onEvent(BusEvent event, va_list ap);
+	uint8_t listenerId();
 
 	/** After button has been pressed suspend all services but display to provide fluent user feedback in GUI */
 	const static uint16_t SUSPEND_SERVICE_MS = 60000;

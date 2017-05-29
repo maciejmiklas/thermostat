@@ -26,10 +26,12 @@
 #include "StateMachine.h"
 #include "MachineDriver.h"
 #include "RelayDriver.h"
+#include "Initializable.h"
 
-class Display: public BusListener {
+class Display: public BusListener, public Initializable {
 public:
 	Display(TempSensor* tempSensor, Stats* stats, RelayDriver* relayDriver);
+	uint8_t listenerId();
 private:
 
 	enum DisplayStates {
@@ -40,10 +42,10 @@ private:
 	public:
 		DisplayState(Display* display);
 		virtual ~DisplayState();
-		virtual void init();
 	protected:
 		inline boolean shouldUpdate();
 		Display* display;
+		virtual void init();
 	private:
 		const static uint16_t UPDATE_FREQ = 1000;
 		uint32_t lastUpdateMs;
@@ -55,8 +57,8 @@ private:
 		MainState(Display* display);
 		virtual ~MainState();
 		virtual uint8_t execute(BusEvent event);
-		virtual void init();
 	private:
+		virtual void init();
 		inline void update();
 	};
 
@@ -66,8 +68,8 @@ private:
 		RuntimeState(Display* display);
 		virtual ~RuntimeState();
 		virtual uint8_t execute(BusEvent event);
-		virtual void init();
 	private:
+		virtual void init();
 		inline void update();
 	};
 
@@ -77,8 +79,8 @@ private:
 		RelayTimeState(Display* display);
 		virtual ~RelayTimeState();
 		virtual uint8_t execute(BusEvent event);
-		virtual void init();
 	private:
+		virtual void init();
 		uint8_t relayIdx;
 		inline void updateDisplay();
 		inline void updateDisplayTime();
@@ -90,11 +92,11 @@ private:
 		DayStatsState(Display* display);
 		virtual ~DayStatsState();
 		virtual uint8_t execute(BusEvent event);
-		virtual void init();
 	private:
 		Display* display;
 		uint8_t daySize;
 		boolean showedInfo;
+		virtual void init();
 		inline void updateDisplay(Temp* temp);
 		void showInfo();
 	};
@@ -111,11 +113,12 @@ private:
 	DayStatsState dayStatsState;
 	MachineDriver driver;
 
+	void init();
 	void onEvent(BusEvent event, va_list ap);
-	inline void clcd(uint8_t row);
+	inline void clrow(uint8_t row);
 	inline void println(uint8_t row, const char *fmt, ...);
 	inline void printlnNa(uint8_t row, const char *fmt);
-	inline void cleanRight(char *array, short from, short size);
+	inline void lcdBufClRight(uint8_t from);
 	void printTime(uint8_t row, Time* time);
 };
 

@@ -19,24 +19,28 @@
 
 #include "Arduino.h"
 #include "EventBus.h"
+#include "Initializable.h"
 
-class Service {
+class Service: public Initializable {
 
 public:
 	Service();
 	virtual ~Service();
 
+
 protected:
 	virtual void cycle() = 0;
+
+	/** Range: 1-99 */
 	virtual uint8_t deviceId() = 0;
 
 private:
 	class ServiceBusListener: public BusListener {
 	public:
 		ServiceBusListener(Service* service);
-	protected:
-		void onEvent(BusEvent event, va_list ap);
 	private:
+		void onEvent(BusEvent event, va_list ap);
+		uint8_t listenerId();
 		Service* service;
 	};
 

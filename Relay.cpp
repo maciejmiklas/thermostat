@@ -29,13 +29,13 @@ void Relay::switchState(State st) {
 	state = st;
 	if (st == State::ON) {
 #if LOG
-		log(F("Relay %d ON"), pin);
+		log(F("RE %d ON"), pin);
 #endif
 		digitalWrite(pin, HIGH);
 	} else if (st == State::OFF) {
 
 #if LOG
-		log(F("Relay %d OFF"), pin);
+		log(F("RE %d OFF"), pin);
 #endif
 
 		digitalWrite(pin, HIGH);

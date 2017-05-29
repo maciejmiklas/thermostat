@@ -51,6 +51,7 @@ private:
 	boolean sosEnabled;
 
 	void onEvent(BusEvent event, va_list ap);
+	uint8_t listenerId();
 	void sosOn();
 	void sosOff();
 	void doSwitch(uint16_t duration);

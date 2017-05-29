@@ -31,9 +31,9 @@ public:
 	RelayDriver(TempSensor* ts);
 	~RelayDriver();
 	boolean isOn(uint8_t relayId);
+
 protected:
-	uint8_t deviceId();
-	void cycle();
+
 
 private:
 	typedef struct {
@@ -44,10 +44,13 @@ private:
 	RelayData relays[RELAYS_AMOUNT];
 
 	TempSensor* const tempSensor;
+
 	inline void executeRelay(RelayData* rd, uint8_t id);
 
 	/* In this method you can define your relay setup! */
-	inline void initRelays();
+	void init();
+	uint8_t deviceId();
+	void cycle();
 };
 
 #endif /* RELAYDRIVER_H_ */

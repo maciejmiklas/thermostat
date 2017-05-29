@@ -31,7 +31,7 @@ void Timer::suspend() {
 	update();
 
 #if TRACE
-	log(F("Suspended timer on %lu ms"), timeMs);
+	log(F("Suspended timer for %lu ms"), timeMs);
 #endif
 }
 

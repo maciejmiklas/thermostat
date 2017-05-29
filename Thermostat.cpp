@@ -24,6 +24,10 @@ static ServiceSuspender* serviceSuspender;
 static Buttons* buttons;
 static SystemStatus* systemStatus;
 
+static void init(Initializable* ini){
+	ini->init();
+}
+
 void setup() {
 	log_setup();
 	util_setup();
@@ -32,9 +36,16 @@ void setup() {
 	stats = new Stats(tempSensor);
 	relayDriver = new RelayDriver(tempSensor);
 	serviceSuspender = new ServiceSuspender();
-	buttons = new Buttons();
-	display = new Display(tempSensor, stats, relayDriver);
 	systemStatus = new SystemStatus();
+	//display = new Display(tempSensor, stats, relayDriver);
+	//buttons = new Buttons();
+
+	// init phase
+	init(tempSensor);
+	init(stats);
+	init(relayDriver);
+	//init(display);
+	//init(buttons);
 }
 
 void loop() {

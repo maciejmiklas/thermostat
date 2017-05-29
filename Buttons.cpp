@@ -19,9 +19,8 @@
 static volatile boolean pressIRQ = false;
 
 //TODO try following:
-// 1) Enable IRQ and do not disable it
-// 2) read pin input in IRQ
-// 3) in loop react to this input and reset it
+// 1) read pin input in IRQ
+// 2) in loop react to this input and reset it
 
 static void onIRQ() {
 	pressIRQ = true;
@@ -29,24 +28,35 @@ static void onIRQ() {
 
 inline static void enableIRQ() {
 #if LOG
-	log(F("Btn IRQ ON"));
+	log(F("BT IRQ ON"));
 #endif
 	attachInterrupt(BUTTON_NEXT_IRQ, onIRQ, FALLING);
 }
 
 inline static void disableIRQ() {
 #if LOG
-	log(F("Btn IRQ OFF"));
+	log(F("BT IRQ OFF"));
 #endif
 	detachInterrupt(BUTTON_NEXT_IRQ);
 }
 
-Buttons::Buttons() :
-		pressMs(0) {
+void Buttons::init() {
+#if TRACE
+	log(F("BT init"));
+#endif
+
 	setuButton(DIG_PIN_BUTTON_NEXT);
 	setuButton(DIG_PIN_BUTTON_PREV);
 
 	enableIRQ();
+}
+
+Buttons::Buttons() :
+		pressMs(0) {
+}
+
+uint8_t Buttons::listenerId() {
+	return LISTENER_ID_BUTTONS;
 }
 
 void inline Buttons::setuButton(uint8_t pin) {
@@ -54,13 +64,6 @@ void inline Buttons::setuButton(uint8_t pin) {
 
 	// enable pull-up resistor
 	digitalWrite(pin, HIGH);
-}
-
-// TODO move it to util ?
-static inline uint16_t getFreeRam() {
-	extern int __heap_start, *__brkval;
-	int v;
-	return (uint16_t) &v - (__brkval == 0 ? (int) &__heap_start : (int) __brkval);
 }
 
 inline void Buttons::cycle() {

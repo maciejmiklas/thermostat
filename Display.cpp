@@ -20,6 +20,16 @@ Display::Display(TempSensor *tempSensor, Stats *stats, RelayDriver* relayDriver)
 		lcd(DIG_PIN_LCD_RS, DIG_PIN_LCD_ENABLE, DIG_PIN_LCD_D4, DIG_PIN_LCD_D5, DIG_PIN_LCD_D6, DIG_PIN_LCD_D7), tempSensor(
 				tempSensor), stats(stats), relayDriver(relayDriver), mainState(this), runtimeState(this), relayTimeState(
 				this), dayStatsState(this), driver(4, &mainState, &runtimeState, &relayTimeState, &dayStatsState) {
+}
+
+uint8_t Display::listenerId() {
+	return LISTENER_ID_DISPLAY;
+}
+
+void Display::init(){
+#if TRACE
+	log(F("DS init"));
+#endif
 	lcd.begin(16, 2);
 	lcd.noAutoscroll();
 
@@ -44,21 +54,23 @@ inline void Display::println(uint8_t row, const char *fmt, ...) {
 
 	va_list va;
 	va_start(va, fmt);
-	short chars = vsprintf(lcdBuf, fmt, va);
+	uint8_t chars = vsprintf(lcdBuf, fmt, va);
 	va_end(va);
 
-	cleanRight(lcdBuf, chars, LINE_LENGTH);
+	lcdBufClRight(chars);
 	lcd.print(lcdBuf);
 }
 
-inline void Display::cleanRight(char *array, short from, short size) {
-	for (short int i = from; i < size; i++) {
-		array[i] = ' ';
+inline void Display::lcdBufClRight(uint8_t from) {
+	for (uint8_t i = from; i < LINE_LENGTH; i++) {
+		lcdBuf[i] = ' ';
 	}
-	array[size] = '\0';
+
+	// #lcdBuf length =  #LINE_LENGTH + 1
+	lcdBuf[LINE_LENGTH] = '\n';
 }
 
-inline void Display::clcd(uint8_t row) {
+inline void Display::clrow(uint8_t row) {
 	lcd.setCursor(0, row);
 	lcd.print("                ");
 	lcd.setCursor(0, row);
@@ -122,7 +134,7 @@ uint8_t Display::MainState::execute(BusEvent event) {
 
 void Display::MainState::init() {
 #if LOG
-	log(F("Display - main state"));
+	log(F("DS - main state"));
 #endif
 	DisplayState::init();
 	display->printlnNa(0, "NOW|MIN|MAX|AVG");
@@ -160,7 +172,7 @@ inline void Display::RuntimeState::update() {
 
 void Display::RuntimeState::init() {
 #if LOG
-	log(F("Display - on time"));
+	log(F("DS - on time"));
 #endif
 	DisplayState::init();
 	display->printlnNa(0, "System on time");
@@ -209,7 +221,7 @@ inline void Display::RelayTimeState::updateDisplayTime() {
 
 void Display::RelayTimeState::init() {
 #if LOG
-	log(F("Display - relay time"));
+	log(F("DS - relay time"));
 #endif
 	DisplayState::init();
 	relayIdx = 0;
@@ -267,7 +279,7 @@ void Display::DayStatsState::showInfo() {
 
 void Display::DayStatsState::init() {
 #if LOG
-	log(F("Display - day stats"));
+	log(F("DS - day stats"));
 #endif
 	showedInfo = false;
 	display->stats->dit_reset();

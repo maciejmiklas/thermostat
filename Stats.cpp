@@ -108,7 +108,7 @@ void Stats::probeDayTemp() {
 		temp->max = util_max_i8(dayProbes, PROBES_PER_DAY);
 		dayProbeIdx = 0;
 #if LOG
-		log(F("ST Hist(%d)->%d,%d,%d"), dayHistoryIdx, temp->avg, temp->min, temp->max);
+		log(F("ST H(%d)->%d,%d,%d"), dayHistoryIdx, temp->avg, temp->min, temp->max);
 #endif
 	} else {
 		dayProbes[dayProbeIdx++] = tempSensor->getTemp();
@@ -118,7 +118,7 @@ void Stats::probeDayTemp() {
 boolean Stats::dit_hasNext() {
 	boolean has = dit_idx > 0;
 #if TRACE
-	log(F("ST HN %d -> %d"), (has ? 1 : 0), dit_idx);
+	log(F("ST HN %d->%d"), (has ? 1 : 0), dit_idx);
 #endif
 	return has;
 }
@@ -127,7 +127,7 @@ boolean Stats::dit_hasPrev() {
 	uint8_t size = _dit_size();
 	boolean has = dit_idx < size - 1;
 #if TRACE
-	log(F("ST HP %d -> %d/%d"), (has ? 1 : 0), dit_idx, size);
+	log(F("ST HP %d->ss%d/%d"), (has ? 1 : 0), dit_idx, size);
 #endif
 	return has;
 }

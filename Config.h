@@ -17,8 +17,8 @@
 #ifndef CONFIG_H_
 #define CONFIG_H_
 
-/** Keep history for last 30 days. */
-const static uint8_t DAY_HISTORY_SIZE = 60;
+/** Keep history for last 14 days. */
+const static uint8_t DAY_HISTORY_SIZE = 14;
 
 const static uint8_t RELAYS_AMOUNT = 2;
 

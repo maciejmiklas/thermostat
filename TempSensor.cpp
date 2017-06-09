@@ -65,8 +65,9 @@ uint8_t TempSensor::deviceId() {
 }
 
 inline int8_t TempSensor::readTemp() {
-	dallasTemperature.requestTemperatures();
-	return (int8_t) (dallasTemperature.getTempCByIndex(0) + 0.5);
+	//dallasTemperature.requestTemperatures();
+	//return (int8_t) (dallasTemperature.getTempCByIndex(0) + 0.5);
+	return 77;
 }
 
 // TODO support for farenheit

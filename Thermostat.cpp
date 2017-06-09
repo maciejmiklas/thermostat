@@ -16,13 +16,13 @@
  */
 #include "Thermostat.h"
 
-//static TempSensor* tempSensor;
-//static Stats* stats;
-//static RelayDriver* relayDriver;
-//static Display* display;
-//static ServiceSuspender* serviceSuspender;
-//static Buttons* buttons;
-//static SystemStatus* systemStatus;
+static TempSensor* tempSensor;
+static Stats* stats;
+static RelayDriver* relayDriver;
+static Display* display;
+static ServiceSuspender* serviceSuspender;
+static Buttons* buttons;
+static SystemStatus* systemStatus;
 
 //static void init(Initializable* ini){
 //	ini->init();
@@ -35,17 +35,16 @@ static inline uint16_t getFreeRam() {
 }
 
 void setup() {
-	Serial.begin(115200);
-	Serial.print(F("FR:"));Serial.println(getFreeRam());
-
 	util_setup();
-	Serial.print(F("FR1:"));Serial.println(getFreeRam());
 	log_setup();
 
-
-	//tempSensor = new TempSensor();log_freeRAM("X-1");
-	//stats = new Stats(tempSensor);log_freeRAM("X-2");
-	//relayDriver = new RelayDriver(tempSensor);log_freeRAM("X-3");
+	Serial.print(F("FR1:"));Serial.println(getFreeRam());
+	tempSensor = new TempSensor();
+	Serial.print(F("FR2:"));Serial.println(getFreeRam());
+	stats = new Stats(tempSensor);
+	Serial.print(F("FR3:"));Serial.println(getFreeRam());
+	//relayDriver = new RelayDriver(tempSensor);
+	Serial.print(F("FR4:"));Serial.println(getFreeRam());
 	//serviceSuspender = new ServiceSuspender();log_freeRAM("X-4");
 	//systemStatus = new SystemStatus();log_freeRAM("X-5");
 	//display = new Display(tempSensor, stats, relayDriver);log_freeRAM("X-6");
@@ -60,9 +59,10 @@ void setup() {
 }
 
 void loop() {
-	//util_cycle();
-	//log_cycle();
+	//Serial.print(F("LOOP:"));Serial.println(getFreeRam());
+	util_cycle();
+	log_cycle();
 
 	// Hart beat
-	//eb_fire(BusEvent::CYCLE);
+	eb_fire(BusEvent::CYCLE);
 }

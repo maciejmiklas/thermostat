@@ -17,7 +17,7 @@
 #include "RelayDriver.h"
 
 RelayDriver::RelayDriver(TempSensor* ts) :
-		tempSensor(ts) {
+		tempSensor(ts), lastSwitchMs(0) {
 }
 
 void RelayDriver::init() {
@@ -27,10 +27,12 @@ void RelayDriver::init() {
 	relays[0].controller = new RelayHysteresisController(tempSensor, THRESHOLD_RELAY_0);
 	relays[0].relay = new Relay(DIG_PIN_RELAY_0);
 	relays[0].pin = DIG_PIN_RELAY_0;
+	relays[0].state = Relay::State::OFF; // TODO can we set this as default ?
 
 	relays[1].controller = new RelayHysteresisController(tempSensor, THRESHOLD_RELAY_1);
 	relays[1].relay = new Relay(DIG_PIN_RELAY_1);
 	relays[1].pin = DIG_PIN_RELAY_1;
+	relays[1].state = Relay::State::OFF;
 }
 
 boolean RelayDriver::isOn(uint8_t relayId) {
@@ -39,19 +41,21 @@ boolean RelayDriver::isOn(uint8_t relayId) {
 
 void RelayDriver::cycle() {
 	for (uint8_t i = 0; i < RELAYS_AMOUNT; i++) {
-		executeRelay(&relays[i], i);
+		executeRelay(i);
 	}
 }
 
-inline void RelayDriver::executeRelay(RelayData* rd, uint8_t id) {
-	Relay::State state = rd->controller->execute();
-	if (state == Relay::State::NO_CHANGE) {
+inline void RelayDriver::executeRelay(uint8_t id) {
+	RelayData& rd = relays[id];
+	Relay::State state = rd.controller->execute();
+	uint32_t time = util_millis();
+	if (state == Relay::State::NO_CHANGE || state == rd.state
+			|| time - lastSwitchMs < RELAY_DELAY_AFTER_SWITCH_MS) {
 		return;
 	}
-	relays[id].relay->switchState(state);
-
-	// TODO replace delay with no-op
-	delay(RELAY_DELAY_AFTER_SWITCH_MS);
+	lastSwitchMs = time;
+	rd.state = state;
+	rd.relay->onState(state);
 
 	eb_fire(state == Relay::State::ON ? BusEvent::RELAY_ON : BusEvent::RELAY_OFF, id);
 }

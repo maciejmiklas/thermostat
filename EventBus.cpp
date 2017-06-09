@@ -30,7 +30,7 @@ BusListener::BusListener() {
 void eb_register(BusListener* listener) {
 	if (listenersAmount == LISTNERS_MAX) {
 #if LOG
-		log(F("EB LISTENERS ERR (%d) !"), listenersAmount);
+		log(F("EB LIS ERR (%d) !"), listenersAmount);
 #endif
 		return;
 	}
@@ -53,7 +53,7 @@ void eb_fire(BusEvent event, ...) {
 		va_start(ap, event);
 #if TRACE
 		if (event != BusEvent::CYCLE) {
-			log(F("EB Notify: %d"), listeners[idx]->listenerId());
+			log(F("EB NOT: %d"), listeners[idx]->listenerId());
 		}
 #endif
 		listeners[idx]->onEvent(event, ap);

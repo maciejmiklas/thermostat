@@ -34,7 +34,7 @@ void Service::ServiceBusListener::onEvent(BusEvent event, va_list ap) {
 			service->enabled = false;
 		}
 #if LOG
-		log(F("SE %s service %d"), service->enabled ? "E" : "D", service->deviceId());
+		log(F("SE %s - %d"), service->enabled ? "E" : "D", service->deviceId());
 #endif
 
 	} else if (service->enabled && event == BusEvent::CYCLE) {

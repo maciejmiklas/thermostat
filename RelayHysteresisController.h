@@ -28,7 +28,6 @@ public:
 
 private:
 	uint32_t lastSwitchMs;
-	boolean on;
 };
 
 #endif /* RELAYHYSTERESISCONTROLLER_H_ */

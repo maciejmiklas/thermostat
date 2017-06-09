@@ -24,9 +24,9 @@ static ServiceSuspender* serviceSuspender;
 static Buttons* buttons;
 static SystemStatus* systemStatus;
 
-//static void init(Initializable* ini){
-//	ini->init();
-//}
+static void init(Initializable* ini){
+	ini->init();
+}
 
 static inline uint16_t getFreeRam() {
 	extern int __heap_start, *__brkval;
@@ -38,28 +38,24 @@ void setup() {
 	util_setup();
 	log_setup();
 
-	Serial.print(F("FR1:"));Serial.println(getFreeRam());
 	tempSensor = new TempSensor();
-	Serial.print(F("FR2:"));Serial.println(getFreeRam());
 	stats = new Stats(tempSensor);
-	Serial.print(F("FR3:"));Serial.println(getFreeRam());
-	//relayDriver = new RelayDriver(tempSensor);
-	Serial.print(F("FR4:"));Serial.println(getFreeRam());
-	//serviceSuspender = new ServiceSuspender();log_freeRAM("X-4");
-	//systemStatus = new SystemStatus();log_freeRAM("X-5");
-	//display = new Display(tempSensor, stats, relayDriver);log_freeRAM("X-6");
-	//buttons = new Buttons();log_freeRAM("X-7");
+	relayDriver = new RelayDriver(tempSensor);
+	serviceSuspender = new ServiceSuspender();
+	systemStatus = new SystemStatus();
+	display = new Display(tempSensor, stats, relayDriver);
+	buttons = new Buttons();
 
 	// init phase
-	//init(tempSensor);
-	//init(stats);
-	//init(relayDriver);
-	//init(display);
-	//init(buttons);
+	init(tempSensor);
+	init(stats);
+	init(relayDriver);
+	init(display);
+	init(buttons);
 }
 
 void loop() {
-	//Serial.print(F("LOOP:"));Serial.println(getFreeRam());
+	//Serial.print(F("LP:"));Serial.println(getFreeRam());
 	util_cycle();
 	log_cycle();
 

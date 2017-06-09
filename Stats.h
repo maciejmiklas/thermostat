@@ -73,7 +73,7 @@ private:
 	Timer relayTimer[RELAYS_AMOUNT];
 
 	/** FIFO Queue containing statistics for each day. Top of the queue has the oldest day, bottom most recent. */
-	int8_t dayProbes[PROBES_PER_DAY];
+	int16_t dayProbes[PROBES_PER_DAY];
 	uint8_t dayProbeIdx;
 	uint32_t lastProbeMs;
 
@@ -83,7 +83,7 @@ private:
 
 	uint8_t dit_idx;
 
-	int8_t actualProbes[ACTUAL_PROBES_SIZE];
+	int16_t actualProbes[ACTUAL_PROBES_SIZE];
 	uint8_t actualProbesIdx;
 	boolean actualProbesFull;
 	Temp actualTemp;

@@ -55,8 +55,10 @@ const static uint8_t LISTENER_ID_DISPLAY = 201;
 const static uint8_t LISTENER_ID_SUSPENDER = 202;
 const static uint8_t LISTENER_ID_STATUS = 203;
 
+#define USE_FEHRENHEIT false
+
 /* Minimum time to switch next relay. */
-const static uint16_t RELAY_DELAY_AFTER_SWITCH_MS = 500;
+const static uint16_t RELAY_DELAY_AFTER_SWITCH_MS = 60.000;
 
 /* Prevents frequent switches of the particular relay. */
 const static uint32_t RELAY_MIN_SWITCH_MS = 600.000;

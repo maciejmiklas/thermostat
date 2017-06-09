@@ -134,7 +134,7 @@ uint8_t Display::MainState::execute(BusEvent event) {
 
 void Display::MainState::init() {
 #if LOG
-	log(F("DS - main state"));
+	log(F("DSMS-init"));
 #endif
 	DisplayState::init();
 	display->printlnNa(0, "NOW|MIN|MAX|AVG");
@@ -172,7 +172,7 @@ inline void Display::RuntimeState::update() {
 
 void Display::RuntimeState::init() {
 #if LOG
-	log(F("DS - on time"));
+	log(F("DSRS-init"));
 #endif
 	DisplayState::init();
 	display->printlnNa(0, "System on time");
@@ -221,7 +221,7 @@ inline void Display::RelayTimeState::updateDisplayTime() {
 
 void Display::RelayTimeState::init() {
 #if LOG
-	log(F("DS - relay time"));
+	log(F("DSRT-init"));
 #endif
 	DisplayState::init();
 	relayIdx = 0;
@@ -279,7 +279,7 @@ void Display::DayStatsState::showInfo() {
 
 void Display::DayStatsState::init() {
 #if LOG
-	log(F("DS - day stats"));
+	log(F("DSDS-init"));
 #endif
 	showedInfo = false;
 	display->stats->dit_reset();

@@ -18,8 +18,7 @@
 
 TempSensor::TempSensor() :
 		probeIdx(0), curentTemp(0), lastTemp(0), lastProbeTime(0), oneWire(DIG_PIN_TEMP_SENSOR), dallasTemperature(
-				&oneWire), enabled(true) {
-
+				&oneWire) {
 }
 
 int16_t TempSensor::getTemp() {
@@ -40,19 +39,18 @@ void TempSensor::init() {
 
 void TempSensor::cycle() {
 	uint32_t millis = util_millis();
-	if (!enabled || millis - lastProbeTime < PROBE_FREQ_MS) {
+	if (millis - lastProbeTime < PROBE_FREQ_MS) {
 		return;
 	}
 	lastProbeTime = millis;
-	int8_t temp = readTemp();
+	int16_t temp = readTemp();
 	lastTemp = temp;
 	if (probeIdx == PROBES_SIZE) {
-		util_sort_i8(probes, PROBES_SIZE);
+		util_sort_i16(probes, PROBES_SIZE);
 		curentTemp = probes[PROBES_MED_IDX];
 		probeIdx = 0;
 #if TRACE
-		log(F("Temp: %d, probes: %d %d %d %d %d %d"), temp, probes[0], probes[1], probes[2], probes[3], probes[4],
-				probes[5]);
+		log(F("TS:%d: %d %d %d %d %d %d"), temp, probes[0], probes[1], probes[2], probes[3], probes[4], probes[5]);
 #endif
 
 	} else {
@@ -64,10 +62,11 @@ uint8_t TempSensor::deviceId() {
 	return DEVICE_ID_TEMP_SENSOR;
 }
 
-inline int8_t TempSensor::readTemp() {
-	//dallasTemperature.requestTemperatures();
-	//return (int8_t) (dallasTemperature.getTempCByIndex(0) + 0.5);
-	return 77;
+inline int16_t TempSensor::readTemp() {
+	dallasTemperature.requestTemperatures();
+	int16_t temp = (int16_t) (dallasTemperature.getTempCByIndex(0) + 0.5);
+#if USE_FEHRENHEIT
+	temp = temp * 1.8 + 32;
+#endif
+	return temp;
 }
-
-// TODO support for farenheit

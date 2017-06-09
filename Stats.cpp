@@ -85,9 +85,9 @@ void Stats::probeActualTemp() {
 	actualProbes[actualProbesIdx] = actTemp;
 
 	uint8_t probesSize = actualProbesFull ? ACTUAL_PROBES_SIZE : actualProbesIdx;
-	actualTemp.avg = util_avg_i8(actualProbes, probesSize);
-	actualTemp.min = util_min_i8(actualProbes, probesSize);
-	actualTemp.max = util_max_i8(actualProbes, probesSize);
+	actualTemp.avg = util_avg_i16(actualProbes, probesSize);
+	actualTemp.min = util_min_i16(actualProbes, probesSize);
+	actualTemp.max = util_max_i16(actualProbes, probesSize);
 
 #if TRACE
 	log(F("ST Actual(%d/%d)->%d,%d,%d,%d"), actualProbesIdx, probesSize, actTemp, actualTemp.min,
@@ -103,9 +103,9 @@ void Stats::probeDayTemp() {
 			dayHistoryFull = true;
 		}
 		Temp* temp = &dayHistory[dayHistoryIdx++];
-		temp->avg = util_avg_i8(dayProbes, PROBES_PER_DAY);
-		temp->min = util_min_i8(dayProbes, PROBES_PER_DAY);
-		temp->max = util_max_i8(dayProbes, PROBES_PER_DAY);
+		temp->avg = util_avg_i16(dayProbes, PROBES_PER_DAY);
+		temp->min = util_min_i16(dayProbes, PROBES_PER_DAY);
+		temp->max = util_max_i16(dayProbes, PROBES_PER_DAY);
 		dayProbeIdx = 0;
 #if LOG
 		log(F("ST H(%d)->%d,%d,%d"), dayHistoryIdx, temp->avg, temp->min, temp->max);

@@ -37,7 +37,7 @@ void MachineDriver::changeState(uint8_t state) {
 	}
 
 #if LOG
-	log(F("MD > %d of %d"), state, statesCnt);
+	log(F("MD>%d of %d"), state, statesCnt);
 #endif
 
 	boolean init = true;

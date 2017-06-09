@@ -40,12 +40,14 @@ private:
 		Relay* relay;
 		uint8_t pin;
 		RelayController* controller;
+		Relay::State state;
 	} RelayData;
 	RelayData relays[RELAYS_AMOUNT];
 
 	TempSensor* const tempSensor;
+	uint32_t lastSwitchMs;
 
-	inline void executeRelay(RelayData* rd, uint8_t id);
+	inline void executeRelay(uint8_t id);
 
 	/* In this method you can define your relay setup! */
 	void init();

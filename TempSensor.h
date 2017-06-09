@@ -42,16 +42,15 @@ private:
 	const static uint8_t PROBES_MED_IDX = PROBES_SIZE / 2;
 	const static uint32_t PROBE_FREQ_MS = 1000;
 
-	int8_t probes[PROBES_SIZE] = {};
+	int16_t probes[PROBES_SIZE] = {};
 	uint8_t probeIdx;
-	int8_t curentTemp;
-	int8_t lastTemp;
+	int16_t curentTemp;
+	int16_t lastTemp;
 	uint32_t lastProbeTime;
 	OneWire oneWire;
 	DallasTemperature dallasTemperature;
-	boolean enabled;
 
-	inline int8_t readTemp();
+	inline int16_t readTemp();
 	uint8_t deviceId();
 	void cycle();
 	void init();

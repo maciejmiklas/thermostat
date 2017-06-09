@@ -17,11 +17,12 @@
 #ifndef TEMPSENSOR_H_
 #define TEMPSENSOR_H_
 
-#include "ArdLog.h"
 #include "Arduino.h"
 #include "OneWire.h"
 #include "Util.h"
 #include "DallasTemperature.h"
+
+#include "ArdLogSetup.h"
 #include "Service.h"
 #include "Config.h"
 

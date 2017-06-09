@@ -53,6 +53,7 @@ private:
 	void init();
 	uint8_t deviceId();
 	void cycle();
+	void initRelayData(RelayData* val);
 };
 
 #endif /* RELAYDRIVER_H_ */

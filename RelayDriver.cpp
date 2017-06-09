@@ -27,12 +27,16 @@ void RelayDriver::init() {
 	relays[0].controller = new RelayHysteresisController(tempSensor, THRESHOLD_RELAY_0);
 	relays[0].relay = new Relay(DIG_PIN_RELAY_0);
 	relays[0].pin = DIG_PIN_RELAY_0;
-	relays[0].state = Relay::State::OFF; // TODO can we set this as default ?
+	initRelayData(&relays[0]);
 
 	relays[1].controller = new RelayHysteresisController(tempSensor, THRESHOLD_RELAY_1);
 	relays[1].relay = new Relay(DIG_PIN_RELAY_1);
 	relays[1].pin = DIG_PIN_RELAY_1;
-	relays[1].state = Relay::State::OFF;
+	initRelayData(&relays[1]);
+}
+
+void RelayDriver::initRelayData(RelayData* val) {
+	val->state =  Relay::State::OFF;
 }
 
 boolean RelayDriver::isOn(uint8_t relayId) {
@@ -49,8 +53,7 @@ inline void RelayDriver::executeRelay(uint8_t id) {
 	RelayData& rd = relays[id];
 	Relay::State state = rd.controller->execute();
 	uint32_t time = util_millis();
-	if (state == Relay::State::NO_CHANGE || state == rd.state
-			|| time - lastSwitchMs < RELAY_DELAY_AFTER_SWITCH_MS) {
+	if (state == Relay::State::NO_CHANGE || state == rd.state || time - lastSwitchMs < RELAY_DELAY_AFTER_SWITCH_MS) {
 		return;
 	}
 	lastSwitchMs = time;

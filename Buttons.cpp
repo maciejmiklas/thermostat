@@ -16,28 +16,33 @@
  */
 #include "Buttons.h"
 
-static volatile boolean pressIRQ = false;
+const static uint8_t PRESS_MS = 100;
+const static uint8_t BUTTON_NONE_MASK = B00000000;
+const static uint8_t BUTTON_NEXT_MASK = B00000001;
+const static uint8_t BUTTON_PREV_MASK = B00000010;
 
-//TODO try following:
-// 1) read pin input in IRQ
-// 2) in loop react to this input and reset it
+/* Mask to record pressed button. */
+static volatile uint8_t butPressed = BUTTON_NONE_MASK;
+static volatile uint32_t pressMs = 0;
 
-static void onIRQ() {
-	pressIRQ = true;
+static void onNextIRQ() {
+	uint32_t ms = util_millis();
+	if (ms - pressMs < PRESS_MS) {
+		return;
+	}
+	pressMs = ms;
+
+	butPressed = BUTTON_NEXT_MASK;
 }
 
-inline static void enableIRQ() {
-#if LOG
-	log(F("BT IRQ ON"));
-#endif
-	attachInterrupt(BUTTON_NEXT_IRQ, onIRQ, FALLING);
-}
+static void onPrevIRQ() {
+	uint32_t ms = util_millis();
+	if (ms - pressMs < PRESS_MS) {
+		return;
+	}
+	pressMs = ms;
 
-inline static void disableIRQ() {
-#if LOG
-	log(F("BT IRQ OFF"));
-#endif
-	detachInterrupt(BUTTON_NEXT_IRQ);
+	butPressed = BUTTON_PREV_MASK;
 }
 
 void Buttons::init() {
@@ -45,21 +50,21 @@ void Buttons::init() {
 	log(F("BT init"));
 #endif
 
-	setuButton(DIG_PIN_BUTTON_NEXT);
-	setuButton(DIG_PIN_BUTTON_PREV);
+	setupButton(DIG_PIN_BUTTON_NEXT);
+	setupButton(DIG_PIN_BUTTON_PREV);
 
-	enableIRQ();
+	attachInterrupt(digitalPinToInterrupt(DIG_PIN_BUTTON_NEXT), onNextIRQ, FALLING);
+	attachInterrupt(digitalPinToInterrupt(DIG_PIN_BUTTON_PREV), onPrevIRQ, FALLING);
 }
 
-Buttons::Buttons() :
-		pressMs(0) {
+Buttons::Buttons() {
 }
 
 uint8_t Buttons::listenerId() {
 	return LISTENER_ID_BUTTONS;
 }
 
-void inline Buttons::setuButton(uint8_t pin) {
+void inline Buttons::setupButton(uint8_t pin) {
 	pinMode(pin, INPUT);
 
 	// enable pull-up resistor
@@ -67,37 +72,17 @@ void inline Buttons::setuButton(uint8_t pin) {
 }
 
 inline void Buttons::cycle() {
-	uint32_t ms = util_millis();
-	if (ms - pressMs < PRESS_MS) {
-		return;
-	}
-	pressMs = ms;
-
-	// TODO IRQ processing makes no sense, because we are reading ping inputs within a loop
-	if (pressIRQ) {
-		pressIRQ = false;
-		eb_fire(BusEvent::BUTTON_NEXT);
-	}
-	if (digitalRead(DIG_PIN_BUTTON_NEXT) == 0) {
+	if (butPressed == BUTTON_NEXT_MASK) {
 		eb_fire(BusEvent::BUTTON_NEXT);
 
-	} else if (digitalRead(DIG_PIN_BUTTON_PREV) == 0) {
+	} else if (butPressed == BUTTON_PREV_MASK) {
 		eb_fire(BusEvent::BUTTON_PREV);
 	}
+	butPressed = BUTTON_NONE_MASK;
 }
 
 void Buttons::onEvent(BusEvent event, va_list ap) {
 	if (event == BusEvent::CYCLE) {
 		cycle();
-
-	} else if (eb_inGroup(event, BusEventGroup::SERVICE)) {
-		return;
-
-		if (event == BusEvent::SERVICE_RESUME) {
-			enableIRQ();
-
-		} else if (event == BusEvent::SERVICE_SUSPEND) {
-			disableIRQ();
-		}
 	}
 }

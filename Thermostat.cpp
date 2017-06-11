@@ -36,7 +36,10 @@ static inline uint16_t getFreeRam() {
 
 void setup() {
 	util_setup();
+#if ENABLE_LOGGER
 	log_setup();
+#endif
+
 
 	tempSensor = new TempSensor();
 	stats = new Stats(tempSensor);
@@ -52,13 +55,16 @@ void setup() {
 	init(relayDriver);
 	init(display);
 	init(buttons);
+
+	//Serial.begin(SERIAL_SPEED);
+	//Serial.print(F("RAM:"));Serial.println(getFreeRam());
 }
 
 void loop() {
-	//Serial.print(F("LP:"));Serial.println(getFreeRam());
 	util_cycle();
+#if ENABLE_LOGGER
 	log_cycle();
-
+#endif
 	// Hart beat
 	eb_fire(BusEvent::CYCLE);
 }

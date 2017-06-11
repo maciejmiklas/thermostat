@@ -28,7 +28,6 @@ const static uint8_t THRESHOLD_RELAY_0 = 22;
 /* Temperature threshold to enable second relay (RELAY_PIN_2) and start cooling. */
 const static uint8_t THRESHOLD_RELAY_1 = 27;
 
-const static uint8_t BUTTON_NEXT_IRQ = 0;
 const static uint8_t DIG_PIN_BUTTON_NEXT = 2;
 const static uint8_t DIG_PIN_BUTTON_PREV = 3;
 

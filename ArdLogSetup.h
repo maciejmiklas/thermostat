@@ -21,13 +21,13 @@
 #define LOG_FREE_RAM false
 
 /** Enables logger so taht it can log over serial port. */
-#define ENABLE_LOGGER true
+#define ENABLE_LOGGER false
 
 /** Enables log on Deug level. */
-#define LOG true
+#define LOG false
 
 /** Enables log on Trace level. */
-#define TRACE true
+#define TRACE false
 
 /** Log full time, or shorter version */
 #define LOG_FULL_TIME false

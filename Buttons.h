@@ -29,13 +29,10 @@ public:
 	Buttons();
 
 private:
-	const static uint8_t PRESS_MS = 200;
-	uint32_t pressMs;
-
 	void init();
 	void onEvent(BusEvent event, va_list ap);
 	uint8_t listenerId();
-	void inline setuButton(uint8_t pin);
+	void inline setupButton(uint8_t pin);
 	void inline cycle();
 };
 

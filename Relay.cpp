@@ -19,7 +19,7 @@
 Relay::Relay(uint8_t pin) :
 		pin(pin), state(Relay::State::OFF) {
 	pinMode(pin, OUTPUT);
-	digitalWrite(pin, LOW);
+	digitalWrite(pin, HIGH);
 }
 
 void Relay::onState(State st) {
@@ -31,7 +31,8 @@ void Relay::onState(State st) {
 #if LOG
 		log(F("RE %d ON"), pin);
 #endif
-		digitalWrite(pin, HIGH);
+		digitalWrite(pin, LOW);
+
 	} else if (st == State::OFF) {
 
 #if LOG

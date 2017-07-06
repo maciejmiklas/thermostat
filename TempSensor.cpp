@@ -50,7 +50,7 @@ void TempSensor::cycle() {
 		curentTemp = probes[PROBES_MED_IDX];
 		probeIdx = 0;
 #if TRACE
-		log(F("TS:%d: %d %d %d %d %d %d"), temp, probes[0], probes[1], probes[2], probes[3], probes[4], probes[5]);
+		log(F("TS:%d: %d %d %d %d"), temp, probes[0], probes[1], probes[2], probes[3]);
 #endif
 
 	} else {

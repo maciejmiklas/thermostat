@@ -47,7 +47,7 @@ private:
 		Display* display;
 		virtual void init();
 	private:
-		const static uint16_t UPDATE_FREQ = 1000;
+		const static uint16_t UPDATE_FREQ = 500;
 		uint32_t lastUpdateMs;
 	};
 

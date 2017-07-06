@@ -36,7 +36,7 @@ void RelayDriver::init() {
 }
 
 void RelayDriver::initRelayData(RelayData* val) {
-	val->state =  Relay::State::OFF;
+	val->state = Relay::State::OFF;
 }
 
 boolean RelayDriver::isOn(uint8_t relayId) {
@@ -50,13 +50,23 @@ void RelayDriver::cycle() {
 }
 
 inline void RelayDriver::executeRelay(uint8_t id) {
-	RelayData& rd = relays[id];
-	Relay::State state = rd.controller->execute();
 	uint32_t time = util_millis();
-	if (state == Relay::State::NO_CHANGE || state == rd.state || time - lastSwitchMs < RELAY_DELAY_AFTER_SWITCH_MS) {
+	if (lastSwitchMs != 0 && (time - lastSwitchMs) < RELAY_DELAY_AFTER_SWITCH_MS) {
 		return;
 	}
+
+	RelayData& rd = relays[id];
+	Relay::State state = rd.controller->execute();
+
+	if (state == Relay::State::NO_CHANGE || state == rd.state) {
+		return;
+	}
+
 	lastSwitchMs = time;
+#if LOG
+	log(F("RD CS %d->%d"), rd.state, state);
+#endif
+
 	rd.state = state;
 	rd.relay->onState(state);
 

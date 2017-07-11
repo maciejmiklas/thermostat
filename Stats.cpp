@@ -18,7 +18,7 @@
 
 Stats::Stats(TempSensor* tempSensor) :
 		tempSensor(tempSensor), systemTimer(), dayProbeIdx(0), lastProbeMs(0), dayHistoryIdx(0), dayHistoryFull(false), dit_idx(
-				0), actualProbesIdx(0), actualProbesFull(false) {
+				0) {
 }
 
 void Stats::init(){
@@ -26,7 +26,12 @@ void Stats::init(){
 	log(F("ST init"));
 #endif
 	systemTimer.start();
+
 	actualTemp.day = 0;
+	actualTemp.avg = 0;
+	actualTemp.min = 90;
+	actualTemp.max = -30;
+
 	probeDayTemp();
 	probeActualTemp();
 }
@@ -74,26 +79,14 @@ uint8_t Stats::deviceId() {
 }
 
 void Stats::probeActualTemp() {
-	if (actualProbesIdx == ACTUAL_PROBES_SIZE) {
-		actualProbesIdx = 0;
-		actualProbesFull = true;
-#if TRACE
-		log(F("ST day stats"));
-#endif
-	}
 	int8_t actTemp = tempSensor->getTemp();
-	actualProbes[actualProbesIdx] = actTemp;
 
-	uint8_t probesSize = actualProbesFull ? ACTUAL_PROBES_SIZE : actualProbesIdx;
-	actualTemp.avg = util_avg_i16(actualProbes, probesSize);
-	actualTemp.min = util_min_i16(actualProbes, probesSize);
-	actualTemp.max = util_max_i16(actualProbes, probesSize);
+	actualTemp.min = min(actualTemp.min, actTemp);
+	actualTemp.max = min(actualTemp.max, actTemp);
 
 #if TRACE
-	log(F("ST Actual(%d/%d)->%d,%d,%d,%d"), actualProbesIdx, probesSize, actTemp, actualTemp.min,
-			actualTemp.max, actualTemp.avg);
+	log(F("ST ACT:%d,%d,%d"), actTemp, actualTemp.min, actualTemp.max);
 #endif
-	actualProbesIdx++;
 }
 
 void Stats::probeDayTemp() {

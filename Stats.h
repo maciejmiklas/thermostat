@@ -68,8 +68,6 @@ private:
 	 */
 	const static uint32_t DAY_PROBE_MS = 1000; // 240000 = 1000 * 60 * 60 * 2;
 
-	const static uint8_t ACTUAL_PROBES_SIZE = 24;
-
 	TempSensor* tempSensor;
 
 	Timer systemTimer;
@@ -83,12 +81,7 @@ private:
 	Temp dayHistory[DAY_HISTORY_SIZE];
 	uint8_t dayHistoryIdx;
 	boolean dayHistoryFull;
-
 	uint8_t dit_idx;
-
-	int16_t actualProbes[ACTUAL_PROBES_SIZE];
-	uint8_t actualProbesIdx;
-	boolean actualProbesFull;
 	Temp actualTemp;
 
 	uint8_t deviceId();

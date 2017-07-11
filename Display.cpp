@@ -113,7 +113,7 @@ Display::MainState::~MainState() {
 inline void Display::MainState::update() {
 	int8_t tempNow = display->tempSensor->getQuickTemp();
 	Temp* actual = display->stats->getActual();
-	display->println(1, "%3d|%3d|%3d|%3d", tempNow, actual->min, actual->max, actual->avg);
+	display->println(1, "%3d|%3d|%3d", tempNow, actual->min, actual->max);
 }
 
 uint8_t Display::MainState::execute(BusEvent event) {
@@ -137,7 +137,7 @@ void Display::MainState::init() {
 	log(F("DSMS-init"));
 #endif
 	DisplayState::init();
-	display->printlnNa(0, "NOW|MIN|MAX|AVG");
+	display->printlnNa(0, "NOW|MIN|MAX");
 	update();
 }
 

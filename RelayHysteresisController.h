@@ -28,6 +28,7 @@ public:
 
 private:
 	uint32_t lastSwitchMs;
+	Relay::State state;
 };
 
 #endif /* RELAYHYSTERESISCONTROLLER_H_ */

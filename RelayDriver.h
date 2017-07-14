@@ -32,9 +32,6 @@ public:
 	~RelayDriver();
 	boolean isOn(uint8_t relayId);
 
-protected:
-
-
 private:
 	typedef struct {
 		Relay* relay;
@@ -54,6 +51,7 @@ private:
 	uint8_t deviceId();
 	void cycle();
 	void initRelayData(RelayData* val);
+	void initRelayHysteresisController(uint8_t relayId, uint8_t pin, int16_t tempSetPoint);
 };
 
 #endif /* RELAYDRIVER_H_ */

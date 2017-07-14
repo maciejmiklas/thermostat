@@ -24,15 +24,16 @@ void RelayDriver::init() {
 #if TRACE
 	log(F("RD init"));
 #endif
-	relays[0].controller = new RelayHysteresisController(tempSensor, THRESHOLD_RELAY_0);
-	relays[0].relay = new Relay(DIG_PIN_RELAY_0);
-	relays[0].pin = DIG_PIN_RELAY_0;
-	initRelayData(&relays[0]);
+	initRelayHysteresisController(0, DIG_PIN_RELAY_0, RELAY_TEMP_SET_POINT_0);
+	initRelayHysteresisController(1, DIG_PIN_RELAY_1, RELAY_TEMP_SET_POINT_1);
+}
 
-	relays[1].controller = new RelayHysteresisController(tempSensor, THRESHOLD_RELAY_1);
-	relays[1].relay = new Relay(DIG_PIN_RELAY_1);
-	relays[1].pin = DIG_PIN_RELAY_1;
-	initRelayData(&relays[1]);
+void RelayDriver::initRelayHysteresisController(uint8_t relayId, uint8_t pin, int16_t tempSetPoint) {
+	RelayData* relay = &relays[relayId];
+	relay->controller = new RelayHysteresisController(tempSensor, tempSetPoint);
+	relay->relay = new Relay(pin);
+	relay->pin = pin;
+	initRelayData(relay);
 }
 
 void RelayDriver::initRelayData(RelayData* val) {

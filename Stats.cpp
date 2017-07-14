@@ -17,23 +17,31 @@
 #include "Stats.h"
 
 Stats::Stats(TempSensor* tempSensor) :
-		tempSensor(tempSensor), systemTimer(), dayProbeIdx(0), lastProbeMs(0), dayHistoryIdx(0), dayHistoryFull(false), dit_idx(
-				0) {
+		tempSensor(tempSensor), systemTimer(), dayProbeIdx(0), lastProbeMs(0), dayHistoryIdx(0), dayHistoryFull(
+		false), dit_idx(0) {
 }
 
-void Stats::init(){
+void Stats::init() {
 #if TRACE
 	log(F("ST init"));
 #endif
 	systemTimer.start();
 
-	actualTemp.day = 0;
-	actualTemp.avg = 0;
-	actualTemp.min = 90;
-	actualTemp.max = -30;
+	initTemp(&actualTemp);
+
+	for (uint8_t i = 0; i < DAY_HISTORY_SIZE; i++) {
+		initTemp(&dayHistory[i]);
+	}
 
 	probeDayTemp();
 	probeActualTemp();
+}
+
+void Stats::initTemp(Temp* temp) {
+	temp->day = 0;
+	temp->avg = 0;
+	temp->min = 90;
+	temp->max = -30;
 }
 
 void Stats::onEvent(BusEvent event, va_list ap) {
@@ -49,7 +57,7 @@ void Stats::onEvent(BusEvent event, va_list ap) {
 		relayTimer[relayId].suspend();
 	}
 }
-uint8_t Stats::listenerId(){
+uint8_t Stats::listenerId() {
 	return deviceId();
 }
 
@@ -82,7 +90,7 @@ void Stats::probeActualTemp() {
 	int8_t actTemp = tempSensor->getTemp();
 
 	actualTemp.min = min(actualTemp.min, actTemp);
-	actualTemp.max = min(actualTemp.max, actTemp);
+	actualTemp.max = max(actualTemp.max, actTemp);
 
 #if TRACE
 	log(F("ST ACT:%d,%d,%d"), actTemp, actualTemp.min, actualTemp.max);

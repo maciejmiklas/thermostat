@@ -23,10 +23,10 @@ const static uint8_t DAY_HISTORY_SIZE = 14;
 const static uint8_t RELAYS_AMOUNT = 2;
 
 /* Temperature threshold to enable first relay (DIG_PIN_RELAY_0) and start cooling. */
-const static uint8_t THRESHOLD_RELAY_0 = 38;
+const static int16_t RELAY_TEMP_SET_POINT_0 = 23;
 
 /* Temperature threshold to enable second relay (DIG_PIN_RELAY_1) and start cooling. */
-const static uint8_t THRESHOLD_RELAY_1 = 45;
+const static int16_t RELAY_TEMP_SET_POINT_1 = 27;
 
 const static uint8_t DIG_PIN_BUTTON_NEXT = 2;
 const static uint8_t DIG_PIN_BUTTON_PREV = 3;
@@ -56,8 +56,8 @@ const static uint8_t LISTENER_ID_STATUS = 203;
 
 #define USE_FEHRENHEIT false
 
-/* Minimum time to switch next relay. 60000 - 1 minute */
-const static uint16_t RELAY_DELAY_AFTER_SWITCH_MS = 60000;
+/* Minimum time to switch next relay. 300000 - 5 minutes */
+const static uint16_t RELAY_DELAY_AFTER_SWITCH_MS = 300000;
 
 /* Prevents frequent switches of the particular relay. 3600000 - 1 hour*/
 const static uint32_t RELAY_MIN_SWITCH_MS = 3600000;

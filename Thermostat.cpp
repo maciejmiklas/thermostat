@@ -28,12 +28,6 @@ static void init(Initializable* ini){
 	ini->init();
 }
 
-static inline uint16_t getFreeRam() {
-	extern int __heap_start, *__brkval;
-	int v;
-	return (uint16_t) &v - (__brkval == 0 ? (int) &__heap_start : (int) __brkval);
-}
-
 void setup() {
 	util_setup();
 #if ENABLE_LOGGER
@@ -55,9 +49,6 @@ void setup() {
 	init(relayDriver);
 	init(display);
 	init(buttons);
-
-	//Serial.begin(SERIAL_SPEED);
-	//Serial.print(F("RAM:"));Serial.println(getFreeRam());
 }
 
 void loop() {

@@ -26,7 +26,7 @@ uint8_t Display::listenerId() {
 	return LISTENER_ID_DISPLAY;
 }
 
-void Display::init(){
+void Display::init() {
 #if TRACE
 	log(F("DS init"));
 #endif
@@ -65,8 +65,6 @@ inline void Display::lcdBufClRight(uint8_t from) {
 	for (uint8_t i = from; i < LINE_LENGTH; i++) {
 		lcdBuf[i] = ' ';
 	}
-
-	// #lcdBuf length =  #LINE_LENGTH + 1
 	lcdBuf[LINE_LENGTH] = '\n';
 }
 
@@ -113,7 +111,7 @@ Display::MainState::~MainState() {
 inline void Display::MainState::update() {
 	int8_t tempNow = display->tempSensor->getQuickTemp();
 	Temp* actual = display->stats->getActual();
-	display->println(1, "%3d|%3d|%3d", tempNow, actual->min, actual->max);
+	display->println(1, "%4d|%5d|%5d", tempNow, actual->min, actual->max);
 }
 
 uint8_t Display::MainState::execute(BusEvent event) {
@@ -137,7 +135,7 @@ void Display::MainState::init() {
 	log(F("DSMS-init"));
 #endif
 	DisplayState::init();
-	display->printlnNa(0, "NOW|MIN|MAX");
+	display->printlnNa(0, " NOW|  MIN|  MAX");
 	update();
 }
 
@@ -230,7 +228,7 @@ void Display::RelayTimeState::init() {
 
 // ##################### DayStatsState #####################
 Display::DayStatsState::DayStatsState(Display* display) :
-		display(display), daySize(0), showedInfo(false) {
+		display(display), daySize(0) {
 }
 
 Display::DayStatsState::~DayStatsState() {
@@ -244,17 +242,13 @@ uint8_t Display::DayStatsState::execute(BusEvent event) {
 		if (daySize == 0) {
 			return STATE_MAIN;
 		}
-		if (!showedInfo) {
-			showedInfo = true;
-			showInfo();
-		} else {
-			if (!display->stats->dit_hasNext()) {
-				return STATE_MAIN;
-			}
-			updateDisplay(display->stats->dit_next());
+
+		if (!display->stats->dit_hasNext()) {
+			return STATE_MAIN;
 		}
+		updateDisplay(display->stats->dit_next());
 	} else if (event == BusEvent::BUTTON_PREV) {
-		if (daySize == 0 || !showedInfo || !display->stats->dit_hasPrev()) {
+		if (daySize == 0 || !display->stats->dit_hasPrev()) {
 			return STATE_RELAY_TIME;
 		}
 		updateDisplay(display->stats->dit_prev());
@@ -263,25 +257,22 @@ uint8_t Display::DayStatsState::execute(BusEvent event) {
 }
 
 inline void Display::DayStatsState::updateDisplay(Temp* temp) {
-	display->println(0, "%2d-> %2d|%2d|%2d", temp->day, temp->min, temp->max, temp->avg);
-
-	// TODO support flexible amount of relays
-	if (RELAYS_AMOUNT == 2) {
-		display->println(1, "%2d:%2d, %2d:%2d", temp->realyOnHH[0], temp->realyOnMM[0], temp->realyOnHH[1],
-				temp->realyOnMM[1]);
-	}
+	display->printlnNa(0, "DDD->MIN|MAX|AVG");
+	display->println(1, "%3d->%3d|%3d|%3d", temp->day, temp->min, temp->max, temp->avg);
 }
 
-void Display::DayStatsState::showInfo() {
-	display->printlnNa(0, "DD-> MIN|MAX|AVG");
-	display->printlnNa(1, "ON times[HH:MM,]");
+inline uint8_t Display::DayStatsState::getMM(uint32_t durationMs) {
+	return (durationMs / MS_MM) % MM_HH;
+}
+
+inline uint8_t Display::DayStatsState::getHH(uint32_t durationMs) {
+	return durationMs / MS_HH;
 }
 
 void Display::DayStatsState::init() {
 #if LOG
 	log(F("DSDS-init"));
 #endif
-	showedInfo = false;
 	display->stats->dit_reset();
 	daySize = display->stats->dit_size();
 	if (daySize == 0) {

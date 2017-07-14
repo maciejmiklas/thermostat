@@ -52,9 +52,10 @@ uint8_t SystemStatus::listenerId() {
 	return LISTENER_ID_STATUS;
 }
 void SystemStatus::doSwitch(uint16_t duration) {
-	if (util_millis() - switchMs >= duration) {
+	uint32_t ms = millis();
+	if (ms - switchMs >= duration) {
 		state++;
-		switchMs = util_millis();
+		switchMs = ms;
 	}
 }
 // States:
@@ -70,6 +71,29 @@ void SystemStatus::doSwitch(uint16_t duration) {
 // 10 - LED OFF
 // 11 - LED ON for short time
 // 12 - LED OFF
+
+//   1 - '.' -> LED ON for SOS_ON_SHORT_DURATION
+//   2 - ' ' -> LED OFF for SOS_OFF_DURATION
+//   3 - '.' -> LED ON for SOS_ON_SHORT_DURATION
+//   4 - ' ' -> LED OFF for SOS_OFF_DURATION
+//   5 - '.' -> LED ON for SOS_ON_SHORT_DURATION
+//   6 - ' ' -> LED OFF for SOS_OFF_DURATION
+//
+//   7 - '_' -> LED ON for SOS_ON_LONG_DURATION
+//   8 - ' ' -> LED OFF for SOS_OFF_DURATION
+//   9 - '_' -> LED ON for SOS_ON_LONG_DURATION
+//  10 - ' ' -> LED OFF for SOS_OFF_DURATION
+//  11 - '_' -> LED ON for SOS_ON_LONG_DURATION
+//  12 - ' ' -> LED OFF for SOS_OFF_DURATION
+//
+//  13 - '.' -> LED ON for SOS_ON_SHORT_DURATION
+//  14 - ' ' -> LED OFF for SOS_OFF_DURATION
+//  15 - '.' -> LED ON for SOS_ON_SHORT_DURATION
+//  16 - ' ' -> LED OFF for SOS_OFF_DURATION
+//  17 - '.' -> LED ON for SOS_ON_SHORT_DURATION
+//  18 - ' ' -> LED OFF for SOS_OFF_DURATION
+//
+//  19 - ' ' -> LED OFF for SOS_PAUSE_DONE
 inline void SystemStatus::cycle() {
 	if (!sosEnabled) {
 		return;
@@ -78,44 +102,40 @@ inline void SystemStatus::cycle() {
 
 	switch (state) {
 
-	// led off long duration
-	case 2:
-	case 4:
-		doSwitch(SOS_OFF_LONG_DURATION);
-		pinVal = LOW;
-		break;
-
-		// pause between 3x long and 3x short
-	case 6:
-		doSwitch(SOS_PAUSE_MIDLE);
-		pinVal = LOW;
-		break;
-
-		// led off short duration
-	case 8:
-	case 10:
-		doSwitch(SOS_OFF_SHORT_DURATION);
-		pinVal = LOW;
-		break;
-
-		// led on for long time
+	// '.' -> LED ON for SOS_ON_SHORT_DURATION
 	case 1:
 	case 3:
 	case 5:
-		doSwitch(SOS_ON_LONG_DURATION);
-		pinVal = HIGH;
-		break;
-
-		// led on for short time
-	case 7:
-	case 9:
-	case 11:
+	case 13:
+	case 15:
+	case 17:
 		doSwitch(SOS_ON_SHORT_DURATION);
 		pinVal = HIGH;
 		break;
 
-		// pause after whole SOS
+	// '_' -> LED ON for SOS_ON_LONG_DURATION
+	case 7:
+	case 9:
+	case 11:
+		doSwitch(SOS_ON_LONG_DURATION);
+		pinVal = HIGH;
+		break;
+
+	// ' ' -> LED OFF for SOS_OFF_DURATION
+	case 2:
+	case 4:
+	case 6:
+	case 8:
+	case 10:
 	case 12:
+	case 14:
+	case 16:
+	case 18:
+		doSwitch(SOS_OFF_DURATION);
+		pinVal = LOW;
+		break;
+
+	case 19:
 		doSwitch(SOS_PAUSE_DONE);
 		pinVal = LOW;
 		break;
@@ -131,4 +151,5 @@ inline void SystemStatus::cycle() {
 	lastPinVal = pinVal;
 
 }
+
 

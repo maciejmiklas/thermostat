@@ -28,22 +28,16 @@ public:
 
 private:
 	/* LED on time for 3x long flash. */
-	static const uint16_t SOS_ON_LONG_DURATION = 1200;
-
-	/* LED off time for 3x long flash. */
-	static const uint16_t SOS_OFF_LONG_DURATION = 300;
+	static const uint16_t SOS_ON_LONG_DURATION = 1000;
 
 	/* LED on time for 3x short flash. */
-	static const uint16_t SOS_ON_SHORT_DURATION = 150;
+	static const uint16_t SOS_ON_SHORT_DURATION = 500;
 
-	/* LED off time for 3x short flash. */
-	static const uint16_t SOS_OFF_SHORT_DURATION = 50;
+	/* LED off time between signs. */
+	static const uint16_t SOS_OFF_DURATION = 100;
 
 	/** Pause time after single SOS message (3x long, 3x short). */
 	static const uint16_t SOS_PAUSE_DONE = 3000;
-
-	/* Pause time between 3x long and 3x short flash. */
-	static const uint16_t SOS_PAUSE_MIDLE = 200;
 
 	uint8_t state;
 	uint32_t switchMs;

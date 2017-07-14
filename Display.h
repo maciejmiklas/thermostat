@@ -95,10 +95,15 @@ private:
 	private:
 		Display* display;
 		uint8_t daySize;
-		boolean showedInfo;
 		virtual void init();
 		inline void updateDisplay(Temp* temp);
-		void showInfo();
+
+		const static uint32_t MS_HH = 3600000; // 1000 * 60 * 60
+		const static uint32_t MS_MM = 60000; // 1000 * 60
+		const static uint32_t MM_HH = 60;
+
+		inline uint8_t getMM(uint32_t durationMs);
+		inline uint8_t getHH(uint32_t durationMs);
 	};
 
 	LiquidCrystal lcd;

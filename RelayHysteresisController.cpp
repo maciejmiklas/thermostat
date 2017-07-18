@@ -26,7 +26,7 @@ RelayHysteresisController::~RelayHysteresisController() {
 Relay::State RelayHysteresisController::execute() {
 	uint32_t millis = util_millis();
 
-	if (lastSwitchMs != 0 && (millis - lastSwitchMs) < RELAY_MIN_SWITCH_MS) {
+	if (lastSwitchMs != 0 && (millis - lastSwitchMs) < RHC_RELAY_MIN_SWITCH_MS) {
 		return Relay::State::NO_CHANGE;
 	}
 

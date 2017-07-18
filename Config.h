@@ -57,9 +57,18 @@ const static uint8_t LISTENER_ID_STATUS = 203;
 #define USE_FEHRENHEIT false
 
 /* Minimum time to switch next relay. 300000 - 5 minutes */
-const static uint16_t RELAY_DELAY_AFTER_SWITCH_MS = 300000;
+const static uint32_t RELAY_DELAY_AFTER_SWITCH_MS = 300000;
 
+// RHC - Relay Hysteresis Controller
 /* Prevents frequent switches of the particular relay. 3600000 - 1 hour*/
-const static uint32_t RELAY_MIN_SWITCH_MS = 3600000;
+const static uint32_t RHC_RELAY_MIN_SWITCH_MS = 3600000;
+
+// RPC - Relay PID Controller
+const static float RPC_AMP_P = 1.0;
+const static float RPC_AMP_I = 2.0;
+const static float RPC_AMP_D = 0.3;
+
+// PID threshold when relay should be switched on
+const static float RPC_PID_SWITCH_THRESHOLD = -10;
 
 #endif /* CONFIG_H_ */

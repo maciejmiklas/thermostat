@@ -45,8 +45,8 @@ void Display::onEvent(BusEvent event, va_list ap) {
 }
 
 inline void Display::printlnNa(uint8_t row, const char *fmt) {
-	// TODO implement it without sprintf
-	println(row, fmt);
+	lcd.setCursor(0, row);
+	lcd.print(fmt);
 }
 
 inline void Display::println(uint8_t row, const char *fmt, ...) {
@@ -65,7 +65,7 @@ inline void Display::lcdBufClRight(uint8_t from) {
 	for (uint8_t i = from; i < LINE_LENGTH; i++) {
 		lcdBuf[i] = ' ';
 	}
-	lcdBuf[LINE_LENGTH] = '\n';
+	lcdBuf[LINE_LENGTH] = '\0';
 }
 
 inline void Display::clrow(uint8_t row) {
@@ -109,7 +109,7 @@ Display::MainState::~MainState() {
 }
 
 inline void Display::MainState::update() {
-	int8_t tempNow = display->tempSensor->getQuickTemp();
+	int16_t tempNow = display->tempSensor->getQuickTemp();
 	Temp* actual = display->stats->getActual();
 	display->println(1, "%4d|%5d|%5d", tempNow, actual->min, actual->max);
 }
@@ -173,7 +173,7 @@ void Display::RuntimeState::init() {
 	log(F("DSRS-init"));
 #endif
 	DisplayState::init();
-	display->printlnNa(0, "System on time");
+	display->printlnNa(0, "System on time  ");
 	update();
 }
 
@@ -276,10 +276,10 @@ void Display::DayStatsState::init() {
 	display->stats->dit_reset();
 	daySize = display->stats->dit_size();
 	if (daySize == 0) {
-		display->println(0, "Day statistics");
-		display->println(1, "  is empty");
+		display->printlnNa(0, "Day statistics  ");
+		display->printlnNa(1, "  is empty      ");
 	} else {
-		display->println(0, "Statistics");
+		display->printlnNa(0, "Statistics      ");
 		display->println(1, "  for %d days", daySize);
 	}
 }

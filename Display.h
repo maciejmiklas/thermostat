@@ -111,7 +111,10 @@ private:
 	Stats* const stats;
 	RelayDriver* const relayDriver;
 	const static uint8_t LINE_LENGTH = 16;
-	char lcdBuf[LINE_LENGTH + 1];
+
+	// buffer has to be at lest 1 character larger than line due to terminating character.
+	// we add few more bytes in case one string would be a bit longer than expected.
+	char lcdBuf[LINE_LENGTH + 4];
 	MainState mainState;
 	RuntimeState runtimeState;
 	RelayTimeState relayTimeState;

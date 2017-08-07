@@ -17,7 +17,7 @@
 #include "Stats.h"
 
 Stats::Stats(TempSensor* tempSensor) :
-		tempSensor(tempSensor), systemTimer(), dayProbeIdx(0), lastProbeMs(0), dayHistoryIdx(0), dayHistoryFull(
+		tempSensor(tempSensor), systemTimer(), dayProbeIdx(0), lastDayProbeMs(0), lastActualProbeMs(0), dayHistoryIdx(0), dayHistoryFull(
 		false), dit_idx(0) {
 }
 
@@ -32,9 +32,6 @@ void Stats::init() {
 	for (uint8_t i = 0; i < DAY_HISTORY_SIZE; i++) {
 		initTemp(&dayHistory[i]);
 	}
-
-	probeDayTemp();
-	probeActualTemp();
 }
 
 void Stats::initTemp(Temp* temp) {
@@ -74,12 +71,8 @@ Temp* Stats::getActual() {
 }
 
 void Stats::cycle() {
-	uint32_t currentMillis = util_millis();
-	if (currentMillis - lastProbeMs >= DAY_PROBE_MS) {
-		probeDayTemp();
-		probeActualTemp();
-		lastProbeMs = currentMillis;
-	}
+	probeActualTemp();
+	probeDayTemp();
 }
 
 uint8_t Stats::deviceId() {
@@ -87,7 +80,13 @@ uint8_t Stats::deviceId() {
 }
 
 void Stats::probeActualTemp() {
-	int8_t actTemp = tempSensor->getTemp();
+	uint32_t currentMillis = util_millis();
+	if (currentMillis - lastActualProbeMs < ACTUAL_PROBE_MS) {
+		return;
+	}
+	lastActualProbeMs = currentMillis;
+
+	int16_t actTemp = tempSensor->getTemp();
 
 	actualTemp.min = min(actualTemp.min, actTemp);
 	actualTemp.max = max(actualTemp.max, actTemp);
@@ -98,6 +97,12 @@ void Stats::probeActualTemp() {
 }
 
 void Stats::probeDayTemp() {
+	uint32_t currentMillis = util_millis();
+	if (currentMillis - lastDayProbeMs < DAY_PROBE_MS) {
+		return;
+	}
+	lastDayProbeMs = currentMillis;
+
 	if (dayProbeIdx == PROBES_PER_DAY) {
 		if (dayHistoryIdx == DAY_HISTORY_SIZE) {
 			dayHistoryIdx = 0;

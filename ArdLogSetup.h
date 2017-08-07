@@ -20,10 +20,10 @@
 /** Logs free RAM if it has changed on every log_cycle() call. */
 #define LOG_FREE_RAM false
 
-/** Enables logger so taht it can log over serial port. */
+/** Enables logger so that it can log over serial port. */
 #define ENABLE_LOGGER false
 
-/** Enables log on Deug level. */
+/** Enables log on Debug level. */
 #define LOG false
 
 /** Enables log on Trace level. */

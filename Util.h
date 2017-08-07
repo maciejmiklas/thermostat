@@ -49,7 +49,6 @@ inline int16_t util_avg_i16(int16_t arr[], uint8_t size) {
 	return tmp / size;
 }
 
-
 inline int16_t util_max_i16(int16_t arr[], uint8_t size) {
 	if (size == 0) {
 		return 0;

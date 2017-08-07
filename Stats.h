@@ -66,6 +66,8 @@ private:
 	 */
 	const static uint32_t DAY_PROBE_MS = 1000; // 240000 = 1000 * 60 * 60 * 2;
 
+	const static uint32_t ACTUAL_PROBE_MS = 1000;
+
 	TempSensor* tempSensor;
 
 	Timer systemTimer;
@@ -74,12 +76,15 @@ private:
 	/** FIFO Queue containing statistics for each day. Top of the queue has the oldest day, bottom most recent. */
 	int16_t dayProbes[PROBES_PER_DAY];
 	uint8_t dayProbeIdx;
-	uint32_t lastProbeMs;
+	uint32_t lastDayProbeMs;
+	uint32_t lastActualProbeMs;
 
 	Temp dayHistory[DAY_HISTORY_SIZE];
 	uint8_t dayHistoryIdx;
 	boolean dayHistoryFull;
 	uint8_t dit_idx;
+
+	// only min and max are updated.
 	Temp actualTemp;
 
 	uint8_t deviceId();

@@ -7,8 +7,8 @@ You can control any reasonable amount of units, it's all configurable. You have 
 
 <img src="/doc/img/hardware_2.jpg" width="320px" alt="Runtime of whole system"/>
 <img src="/doc/img/hardware_3.jpg" width="320px" alt="Running time for each relay"/>
-<img src="/doc/img/hardware_4.jpg" width="320px" alt="Statistics for few days" />
-<img src="/doc/img/hardware_5.jpg" width="320px" alt="Statistics for few days" />
+<img src="/doc/img/hardware_5.jpg" width="320px" alt="Statistics for 14 days" />
+<img src="/doc/img/hardware_4.jpg" width="320px" alt="Statistics for 7th day" />
 
 # Hardware
 

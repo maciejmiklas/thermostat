@@ -5,15 +5,10 @@ That gives you possibility to drive multiple devices in order to control tempera
 
 You can control any reasonable amount of units, it's all configurable. You have also access to basic statistics:
 
-Runtime of whole system:
-<img src="/doc/img/hardware_2.jpg" width="640px"/>
-
-Running time for each relay:
-<img src="/doc/img/hardware_3.jpg" width="640px"/>
-
-Statistics for few days:
-<img src="/doc/img/hardware_4.jpg" width="640px"/>
-<img src="/doc/img/hardware5.jpg" width="640px"/>
+<img src="/doc/img/hardware_2.jpg" width="640px" alt="Runtime of whole system"/>
+<img src="/doc/img/hardware_3.jpg" width="640px" alt="Running time for each relay"/>
+<img src="/doc/img/hardware_4.jpg" width="640px" alt="Statistics for few days" />
+<img src="/doc/img/hardware_5.jpg" width="640px" alt="Statistics for few days" />
 
 # Hardware
 
@@ -59,19 +54,19 @@ There two controllers available Hysteresis and PID
 ### Hysteresis Controller
 It's the one chosen in example above, it has few additional configurations:
 ```cpp
-const static uint32_t RELAY_DELAY_AFTER_SWITCH_MS = 300000;
+const static uint32_t RELAY_DELAY_AFTER_SWITCH_MS = 300000; // 5 minutes
 const static uint32_t RHC_RELAY_MIN_SWITCH_MS = 3600000;
 ```
-*RELAY_DELAY_AFTER_SWITCH_MS* gives wait time for switching next relay. Imagine that configuration from our example would start working in 40 degrees environment. This would result in enabling of all three relays at the same time. This could eventually lead to high power consumption - depending on what you are controlling, electric engine for example consumes more power for start. Switch time forces wait time, so that switching relays has following flow: first relay goes, wait 5 minutes, second goes on, wait 5 minutes, third goes on.
+*RELAY_DELAY_AFTER_SWITCH_MS* gives wait time for switching next relay. Imagine that configuration from our example would start working in 40 degrees environment. This would result in enabling of all three relays at the same time. This could eventually lead to high power consumption - depending on what you are controlling, electric engine for example consumes more power during start. In our case switching relays has following flow: first relay goes, wait 5 minutes, second goes on, wait 5 minutes, third goes on.
 
-*RHC_RELAY_MIN_SWITCH_MS* defines hysteresis, it's the minimum frequency for particular relay to change it's state. Once its on, it will remain on for alt least this period of time, in-depending of temperature changes. This is quiet useful it you are controlling electric motors, since each switch has negative impact on live time.
+*RHC_RELAY_MIN_SWITCH_MS* defines hysteresis, it's the minimum frequency for particular relay to change it's state. Once its on, it will remain on for alt least this period of time, ignoring temperature changes. This is quiet useful it you are controlling electric motors, since each switch has negative impact on live time.
 
 ### PID Controller
 This is advanced topic. Implementing such controller is simple task, finding right amplitude settings is a different story. 
 
 In order to use PID controller you have to change *initRelayHysteresisController(.....)* to *initRelayPiDController(....)* and you need to find right settings for it. As usual you will find them in *Config.h* 
 
-I've implemented simple simulator in Java, so that it's possible to visualize the results. It can be found in *pidsimulator*. 
+I've implemented simple simulator in Java, so that it's possible to visualize the results. It can be found in folder: *pidsimulator*. 
 
 Below you can see simulations for two controllers PID a P. PID is not perfectly stable because I did not apply any sophisticated algorithm to find right values.
 <img src="/doc/img/controller_PID.png" width="640px"/>
@@ -96,7 +91,7 @@ Every module is connected to Message Bus and can register for particular events,
 For example pressing Next button results in following flow:
 <img src="/doc/img/Button_NEXT.png" width="640px"/>
 
-Some components have some task than needs to be executed periodically. We could call their corresponding methods from main loop, since we have Message Bus it's only necessary to propagate right event:
+Some components have some tasks than needs to be executed periodically. We could call their corresponding methods from main loop, since we have Message Bus it's only necessary to propagate right event:
 <img src="/doc/img/CYCLE_Event.png" width="640px"/>
 
 # LIBS

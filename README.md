@@ -50,7 +50,8 @@ void RelayDriver::init() {
 
 ## Choosing Controller
 There two controllers available Hysteresis and PID
-<img src="/doc/img/Relay.png" width="320px" />
+
+<img src="/doc/img/Relay.png" width="640px" />
 
 ### Hysteresis Controller
 It's the one chosen in example above, it has few additional configurations:

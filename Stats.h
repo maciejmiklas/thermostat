@@ -24,13 +24,8 @@
 #include "Service.h"
 #include "TempSensor.h"
 #include "ArdLog.h"
-
-typedef struct {
-	int16_t avg;
-	int16_t min;
-	int16_t max;
-	uint8_t day; // day number in history. 0 - now, 1 - yesterday, 2 - before yesterday, and so on.
-} Temp;
+#include "Storage.h"
+#include "StatsData.h"
 
 class Stats: public Service, public BusListener {
 public:
@@ -69,7 +64,6 @@ private:
 	const static uint32_t ACTUAL_PROBE_MS = 1000;
 
 	TempSensor* tempSensor;
-
 	Timer systemTimer;
 	Timer relayTimer[RELAYS_AMOUNT];
 
@@ -78,16 +72,13 @@ private:
 	uint8_t dayProbeIdx;
 	uint32_t lastDayProbeMs;
 	uint32_t lastActualProbeMs;
-
-	Temp dayHistory[DAY_HISTORY_SIZE];
-	uint8_t dayHistoryIdx;
-	boolean dayHistoryFull;
+	StatsHistory history;
 	uint8_t dit_idx;
-
-	// only min and max are updated.
-	Temp actualTemp;
+	Temp actualTemp; // only min and max are updated.
+	Storage storage;
 
 	uint8_t deviceId();
+	void clearStats();
 	void init();
 	void cycle();
 	uint8_t listenerId();

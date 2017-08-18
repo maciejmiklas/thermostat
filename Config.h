@@ -28,6 +28,7 @@ const static int16_t RELAY_TEMP_SET_POINT_0 = 23;
 /* Temperature threshold to enable second relay (DIG_PIN_RELAY_1) and start cooling. */
 const static int16_t RELAY_TEMP_SET_POINT_1 = 27;
 
+const static uint8_t DIG_PIN_BUTTON_CLEAR_STATS = 1;
 const static uint8_t DIG_PIN_BUTTON_NEXT = 2;
 const static uint8_t DIG_PIN_BUTTON_PREV = 3;
 

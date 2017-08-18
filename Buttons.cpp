@@ -20,6 +20,7 @@ const static uint8_t PRESS_MS = 50;
 const static uint8_t BUTTON_NONE_MASK = B00000000;
 const static uint8_t BUTTON_NEXT_MASK = B00000001;
 const static uint8_t BUTTON_PREV_MASK = B00000010;
+const static uint8_t BUTTON_CLEAR_STATS_MASK = B00000011;
 
 /* Mask to record pressed button. */
 static volatile uint8_t butPressed = BUTTON_NONE_MASK;
@@ -45,6 +46,16 @@ static void onPrevIRQ() {
 	butPressed = BUTTON_PREV_MASK;
 }
 
+static void onClearStatsIRQ() {
+	uint32_t ms = util_millis();
+	if (ms - pressMs < PRESS_MS) {
+		return;
+	}
+	pressMs = ms;
+
+	butPressed = BUTTON_CLEAR_STATS_MASK;
+}
+
 void Buttons::init() {
 #if TRACE
 	log(F("BT init"));
@@ -52,9 +63,11 @@ void Buttons::init() {
 
 	setupButton(DIG_PIN_BUTTON_NEXT);
 	setupButton(DIG_PIN_BUTTON_PREV);
+	setupButton(DIG_PIN_BUTTON_RESET);
 
 	attachInterrupt(digitalPinToInterrupt(DIG_PIN_BUTTON_NEXT), onNextIRQ, FALLING);
 	attachInterrupt(digitalPinToInterrupt(DIG_PIN_BUTTON_PREV), onPrevIRQ, FALLING);
+	attachInterrupt(digitalPinToInterrupt(DIG_PIN_BUTTON_CLEAR_STATS), onClearStatsIRQ, FALLING);
 }
 
 Buttons::Buttons() {
@@ -77,6 +90,9 @@ inline void Buttons::cycle() {
 
 	} else if (butPressed == BUTTON_PREV_MASK) {
 		eb_fire(BusEvent::BUTTON_PREV);
+
+	} else if (butPressed == BUTTON_CLEAR_STATS_MASK) {
+		eb_fire(BusEvent::CLEAR_STATS);
 	}
 	butPressed = BUTTON_NONE_MASK;
 }

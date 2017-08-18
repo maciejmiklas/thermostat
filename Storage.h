@@ -14,54 +14,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#ifndef EVENTBUS_H_
-#define EVENTBUS_H_
+#ifndef STORAGE_H_
+#define STORAGE_H_
 
 #include "Arduino.h"
+#include "StatsData.h"
+#include "EEPROM.h"
 #include "ArdLog.h"
 
-enum class BusEvent {
-	/** Parameters: 0 - relay ID */
-	RELAY_ON = 10,
-
-	/** Parameters: 0 - relay ID */
-	RELAY_OFF = 11,
-
-	/** Parameters: none */
-	BUTTON_NEXT = 20,
-
-	/** Parameters: none */
-	BUTTON_PREV = 21,
-
-	/** Parameters: none */
-	SERVICE_SUSPEND = 30,
-
-	/** Parameters: none */
-	SERVICE_RESUME = 31,
-
-	/** Parameters: none */
-	CLEAR_STATS= 32,
-
-	/** Parameters: none */
-	CYCLE = 255,
-};
-
-enum class BusEventGroup {
-	RELAY, BUTTON, SERVICE
-};
-
-class BusListener {
+class Storage {
 public:
-	virtual void onEvent(BusEvent event, va_list ap) = 0;
-	virtual uint8_t listenerId() = 0;
+	Storage();
+	virtual ~Storage();
 
-protected:
-	virtual ~BusListener();
-	BusListener();
+	void storeStats(StatsHistory* history);
+	void readStats(StatsHistory* history);
+	void clear();
+
 };
 
-boolean eb_inGroup(BusEvent event, BusEventGroup group);
-void eb_register(BusListener* listener);
-void eb_fire(BusEvent event, ...);
-
-#endif /* EVENTBUS_H_ */
+#endif /* STORAGE_H_ */

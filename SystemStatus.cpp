@@ -44,8 +44,8 @@ void SystemStatus::sosOff() {
 		state = 1;
 		digitalWrite(DIG_PIN_SYSTEM_STATUS_LED, LOW);
 		switchMs = util_millis();
+		sosEnabled = false;
 	}
-	sosEnabled = false;
 }
 
 uint8_t SystemStatus::listenerId() {

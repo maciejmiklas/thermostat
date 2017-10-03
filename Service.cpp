@@ -30,7 +30,7 @@ void Service::ServiceBusListener::onEvent(BusEvent event, va_list ap) {
 		if (event == BusEvent::SERVICE_RESUME) {
 			service->enabled = true;
 
-		} else if (event == BusEvent::SERVICE_SUSPEND) {
+		} else if (event == BusEvent::SERVICE_SUSPEND && service->enabled) {
 			service->enabled = false;
 		}
 #if LOG

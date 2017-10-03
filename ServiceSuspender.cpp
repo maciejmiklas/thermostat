@@ -33,6 +33,12 @@ void ServiceSuspender::onEvent(BusEvent event, va_list ap) {
 		}
 
 		suspendStart = util_millis();
+
+	} else if (event == BusEvent::SERVICE_RESUME) {
+#if LOG
+		log(F("SU drop resume"));
+#endif
+		suspendStart = 0;
 	}
 }
 

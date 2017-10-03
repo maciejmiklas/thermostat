@@ -19,7 +19,8 @@
 Display::Display(TempSensor *tempSensor, Stats *stats, RelayDriver* relayDriver) :
 		lcd(DIG_PIN_LCD_RS, DIG_PIN_LCD_ENABLE, DIG_PIN_LCD_D4, DIG_PIN_LCD_D5, DIG_PIN_LCD_D6, DIG_PIN_LCD_D7), tempSensor(
 				tempSensor), stats(stats), relayDriver(relayDriver), mainState(this), runtimeState(this), relayTimeState(
-				this), dayStatsState(this), driver(4, &mainState, &runtimeState, &relayTimeState, &dayStatsState) {
+				this), dayStatsState(this), clearStatsState(this), driver(5, &mainState, &runtimeState, &relayTimeState,
+				&dayStatsState, &clearStatsState) {
 }
 
 uint8_t Display::listenerId() {
@@ -40,6 +41,9 @@ void Display::init() {
 void Display::onEvent(BusEvent event, va_list ap) {
 	if (event == BusEvent::SERVICE_RESUME) {
 		driver.changeState(STATE_MAIN);
+
+	} else if (event == BusEvent::CLEAR_STATS) {
+		driver.changeState(STATE_CLEAR_STATS);
 	}
 	driver.execute(event);
 }
@@ -137,6 +141,27 @@ void Display::MainState::init() {
 	DisplayState::init();
 	display->printlnNa(0, " NOW|  MIN|  MAX");
 	update();
+}
+
+// ##################### ClearStatsState #####################
+Display::ClearStatsState::ClearStatsState(Display* display) :
+		DisplayState(display) {
+}
+
+Display::ClearStatsState::~ClearStatsState() {
+}
+
+uint8_t Display::ClearStatsState::execute(BusEvent event) {
+	if (event == BusEvent::CYCLE) {
+		return STATE_NOCHANGE;
+	}
+	if (event == BusEvent::BUTTON_NEXT || event == BusEvent::BUTTON_PREV) {
+		eb_fire(BusEvent::SERVICE_RESUME);
+		return STATE_MAIN;
+	}
+	display->printlnNa(0, "Statistics      ");
+	display->println(1, "      cleared.  ");
+	return STATE_NOCHANGE;
 }
 
 // ##################### RuntimeState #####################

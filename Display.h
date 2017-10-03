@@ -35,7 +35,7 @@ public:
 private:
 
 	enum DisplayStates {
-		STATE_MAIN = 0, STATE_RUNTIME = 1, STATE_RELAY_TIME = 2, STATE_DAY_STATS = 3
+		STATE_MAIN = 0, STATE_RUNTIME = 1, STATE_RELAY_TIME = 2, STATE_DAY_STATS = 3, STATE_CLEAR_STATS = 4
 	};
 
 	class DisplayState: public StateMachine {
@@ -106,6 +106,16 @@ private:
 		inline uint8_t getHH(uint32_t durationMs);
 	};
 
+	/** Clears Statistics. */
+	class ClearStatsState: public DisplayState {
+	public:
+		ClearStatsState(Display* display);
+		virtual ~ClearStatsState();
+		virtual uint8_t execute(BusEvent event);
+	private:
+		virtual void init();
+	};
+
 	LiquidCrystal lcd;
 	TempSensor* const tempSensor;
 	Stats* const stats;
@@ -119,6 +129,7 @@ private:
 	RuntimeState runtimeState;
 	RelayTimeState relayTimeState;
 	DayStatsState dayStatsState;
+	ClearStatsState clearStatsState;
 	MachineDriver driver;
 
 	void init();

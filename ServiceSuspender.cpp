@@ -27,7 +27,7 @@ void ServiceSuspender::onEvent(BusEvent event, va_list ap) {
 
 		if (suspendStart == 0) {
 #if LOG
-			log(F("SU Suspending"));
+			log(F("SU SU"));
 #endif
 			eb_fire(BusEvent::SERVICE_SUSPEND);
 		}
@@ -36,7 +36,7 @@ void ServiceSuspender::onEvent(BusEvent event, va_list ap) {
 
 	} else if (event == BusEvent::SERVICE_RESUME) {
 #if LOG
-		log(F("SU drop resume"));
+		log(F("SU D RS"));
 #endif
 		suspendStart = 0;
 	}
@@ -49,7 +49,7 @@ uint8_t ServiceSuspender::listenerId() {
 inline void ServiceSuspender::cycle() {
 	if (suspendStart != 0 && util_ms() - suspendStart >= SUSPEND_SERVICE_MS) {
 #if LOG
-		log(F("SU Resuming"));
+		log(F("SU RS"));
 #endif
 		eb_fire(BusEvent::SERVICE_RESUME);
 		suspendStart = 0;

@@ -21,6 +21,7 @@
 #include "StatsData.h"
 #include "EEPROM.h"
 #include "ArdLog.h"
+#include "Config.h"
 
 class Storage {
 public:
@@ -30,6 +31,9 @@ public:
 	void storeStats(StatsHistory* history);
 	void readStats(StatsHistory* history);
 	void clear();
+
+private:
+	const static uint8_t STORAGE_BYTES = 2 + 3 * ST_DAY_HISTORY_SIZE;
 
 };
 

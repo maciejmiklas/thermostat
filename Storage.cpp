@@ -26,6 +26,10 @@ Storage::~Storage() {
 void Storage::storeStats(StatsHistory* history) {
 	uint8_t eIdx = 0;
 
+#if LOG
+	log(F("ST SA %u"), history->dayHistoryIdx);
+#endif
+
 	EEPROM.write(eIdx++, history->dayHistoryIdx);
 	EEPROM.write(eIdx++, history->dayHistoryFull ? 1 : 0);
 
@@ -34,11 +38,14 @@ void Storage::storeStats(StatsHistory* history) {
 		EEPROM.write(eIdx++, temp.avg);
 		EEPROM.write(eIdx++, temp.min);
 		EEPROM.write(eIdx++, temp.max);
-		EEPROM.write(eIdx++, temp.day);
+
+#if LOG
+		log(F("ST SD %u->%u %u %u"), hIdx, temp.avg, temp.min, temp.max);
+#endif
 	}
 }
 void Storage::clear() {
-	for (uint8_t i = 0; i < EEPROM.length(); i++) {
+	for (uint8_t i = 0; i < STORAGE_BYTES; i++) {
 		EEPROM.write(i, 0);
 	}
 }
@@ -48,23 +55,20 @@ void Storage::readStats(StatsHistory* history) {
 	}
 
 	uint8_t eIdx = 0;
+	uint8_t _dayHistoryIdx = EEPROM.read(eIdx++);
+	uint8_t _dayHistoryFull = EEPROM.read(eIdx++);
+#if LOG
+	log(F("ST RD %u %u"), _dayHistoryIdx, _dayHistoryFull);
+#endif
 
 	// dayHistoryIdx
-	uint8_t _dayHistoryIdx = EEPROM.read(eIdx++);
 	if (_dayHistoryIdx > ST_DAY_HISTORY_SIZE || _dayHistoryIdx == 0) {
-#if TRACE
-		log(F("ST HIST EMP"));
-#endif
 		return;
 	}
 	history->dayHistoryIdx = _dayHistoryIdx;
 
 	// dayHistoryFull
-	uint8_t _dayHistoryFull = EEPROM.read(eIdx++);
 	if (_dayHistoryFull != 1 && _dayHistoryFull != 0) {
-#if TRACE
-		log(F("ST HF ERR"));
-#endif
 		return;
 	}
 	history->dayHistoryFull = _dayHistoryFull == 1;
@@ -74,7 +78,11 @@ void Storage::readStats(StatsHistory* history) {
 		temp.avg = EEPROM.read(eIdx++);
 		temp.min = EEPROM.read(eIdx++);
 		temp.max = EEPROM.read(eIdx++);
-		temp.day = EEPROM.read(eIdx++);
+		temp.day = hIdx;
+
+#if LOG
+		log(F("ST RD %u->%u %u %u"), temp.day, temp.avg, temp.min, temp.max);
+#endif
 	}
 }
 

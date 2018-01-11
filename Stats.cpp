@@ -28,7 +28,7 @@ void Stats::init() {
 
 	initTemp(&actualTemp);
 	clearStats();
-	//storage.readStats(&history);
+	storage.readStats(&history);
 }
 
 void Stats::clearStats() {
@@ -59,7 +59,7 @@ void Stats::onEvent(BusEvent event, va_list ap) {
 		}
 	} else if (event == BusEvent::CLEAR_STATS) {
 		clearStats();
-		//storage.clear();
+		storage.clear();
 	}
 }
 

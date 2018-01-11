@@ -51,9 +51,9 @@ void Storage::readStats(StatsHistory* history) {
 
 	// dayHistoryIdx
 	uint8_t _dayHistoryIdx = EEPROM.read(eIdx++);
-	if (_dayHistoryIdx > DAY_HISTORY_SIZE || _dayHistoryIdx == 0) {
+	if (_dayHistoryIdx > ST_DAY_HISTORY_SIZE || _dayHistoryIdx == 0) {
 #if TRACE
-		log(F("ST HIST ERR"));
+		log(F("ST HIST EMP"));
 #endif
 		return;
 	}
@@ -70,7 +70,7 @@ void Storage::readStats(StatsHistory* history) {
 	history->dayHistoryFull = _dayHistoryFull == 1;
 
 	for (uint8_t hIdx = 0; hIdx < _dayHistoryIdx; hIdx++) {
-		Temp temp = history->dayHistory[hIdx];
+		Temp& temp = history->dayHistory[hIdx];
 		temp.avg = EEPROM.read(eIdx++);
 		temp.min = EEPROM.read(eIdx++);
 		temp.max = EEPROM.read(eIdx++);

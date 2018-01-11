@@ -51,7 +51,7 @@ void RelayDriver::cycle() {
 }
 
 inline void RelayDriver::executeRelay(uint8_t id) {
-	uint32_t time = util_millis();
+	uint32_t time = util_ms();
 	if (lastSwitchMs != 0 && (time - lastSwitchMs) < RELAY_DELAY_AFTER_SWITCH_MS) {
 		return;
 	}

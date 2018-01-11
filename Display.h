@@ -114,6 +114,7 @@ private:
 		virtual uint8_t execute(BusEvent event);
 	private:
 		virtual void init();
+		uint32_t showMs;
 	};
 
 	LiquidCrystal lcd;

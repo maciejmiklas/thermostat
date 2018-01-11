@@ -32,7 +32,7 @@ void ServiceSuspender::onEvent(BusEvent event, va_list ap) {
 			eb_fire(BusEvent::SERVICE_SUSPEND);
 		}
 
-		suspendStart = util_millis();
+		suspendStart = util_ms();
 
 	} else if (event == BusEvent::SERVICE_RESUME) {
 #if LOG
@@ -47,7 +47,7 @@ uint8_t ServiceSuspender::listenerId() {
 }
 
 inline void ServiceSuspender::cycle() {
-	if (suspendStart != 0 && util_millis() - suspendStart >= SUSPEND_SERVICE_MS) {
+	if (suspendStart != 0 && util_ms() - suspendStart >= SUSPEND_SERVICE_MS) {
 #if LOG
 		log(F("SU Resuming"));
 #endif

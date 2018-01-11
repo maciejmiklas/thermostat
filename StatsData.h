@@ -27,7 +27,7 @@ typedef struct {
 } Temp;
 
 typedef struct {
-	Temp dayHistory[DAY_HISTORY_SIZE];
+	Temp dayHistory[ST_DAY_HISTORY_SIZE];
 	uint8_t dayHistoryIdx;
 	boolean dayHistoryFull;
 } StatsHistory;

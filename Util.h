@@ -23,7 +23,7 @@
 void util_setup();
 void util_cycle();
 
-uint32_t util_millis();
+uint32_t util_ms();
 
 inline void util_sort_i16(int16_t arr[], uint8_t size) {
 	int16_t i, temp, j;

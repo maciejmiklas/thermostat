@@ -51,24 +51,12 @@ public:
 	uint8_t dit_size();
 
 private:
-
-	/** Take 12 probes per day to calculate agv/min/max per day*/
-	const static uint8_t PROBES_PER_DAY = 12;
-
-	/**
-	 * Take probe every second hour - 12 probes gives us full day:
-	 * #PROBES_PER_DAY * #DAY_PROBE_MS = 24h.
-	 */
-	const static uint32_t DAY_PROBE_MS = 1000; // 240000 = 1000 * 60 * 60 * 2;
-
-	const static uint32_t ACTUAL_PROBE_MS = 1000;
-
 	TempSensor* tempSensor;
 	Timer systemTimer;
 	Timer relayTimer[RELAYS_AMOUNT];
 
 	/** FIFO Queue containing statistics for each day. Top of the queue has the oldest day, bottom most recent. */
-	int16_t dayProbes[PROBES_PER_DAY];
+	int16_t dayProbes[ST_PROBES_PER_DAY];
 	uint8_t dayProbeIdx;
 	uint32_t lastDayProbeMs;
 	uint32_t lastActualProbeMs;

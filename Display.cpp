@@ -92,7 +92,7 @@ Display::DisplayState::~DisplayState() {
 
 boolean Display::DisplayState::shouldUpdate() {
 	boolean should = false;
-	uint32_t millis = util_millis();
+	uint32_t millis = util_ms();
 	if (millis - lastUpdateMs >= UPDATE_FREQ) {
 		should = true;
 		lastUpdateMs = millis;
@@ -145,23 +145,27 @@ void Display::MainState::init() {
 
 // ##################### ClearStatsState #####################
 Display::ClearStatsState::ClearStatsState(Display* display) :
-		DisplayState(display) {
+		DisplayState(display), showMs(0) {
 }
 
 Display::ClearStatsState::~ClearStatsState() {
 }
 
 uint8_t Display::ClearStatsState::execute(BusEvent event) {
-	if (event == BusEvent::CYCLE) {
-		return STATE_NOCHANGE;
-	}
-	if (event == BusEvent::BUTTON_NEXT || event == BusEvent::BUTTON_PREV) {
+	if (event == BusEvent::CLEAR_STATS) {
+		display->printlnNa(0, "Statistics      ");
+		display->println(1, "      cleared.  ");
+
+	} else if (util_ms() - showMs > DISP_SHOW_INFO_MS || event == BusEvent::BUTTON_NEXT
+			|| event == BusEvent::BUTTON_PREV) {
 		eb_fire(BusEvent::SERVICE_RESUME);
 		return STATE_MAIN;
 	}
-	display->printlnNa(0, "Statistics      ");
-	display->println(1, "      cleared.  ");
 	return STATE_NOCHANGE;
+}
+
+void Display::ClearStatsState::init() {
+	showMs = util_ms();
 }
 
 // ##################### RuntimeState #####################

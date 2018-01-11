@@ -27,7 +27,7 @@ static volatile uint8_t butPressed = BUTTON_NONE_MASK;
 static volatile uint32_t pressMs = 0;
 
 static void onNextIRQ() {
-	uint32_t ms = util_millis();
+	uint32_t ms = util_ms();
 	if (ms - pressMs < PRESS_MS) {
 		return;
 	}
@@ -37,7 +37,7 @@ static void onNextIRQ() {
 }
 
 static void onPrevIRQ() {
-	uint32_t ms = util_millis();
+	uint32_t ms = util_ms();
 	if (ms - pressMs < PRESS_MS) {
 		return;
 	}
@@ -47,7 +47,7 @@ static void onPrevIRQ() {
 }
 
 static void onClearStatsIRQ() {
-	uint32_t ms = util_millis();
+	uint32_t ms = util_ms();
 	if (ms - pressMs < PRESS_MS) {
 		return;
 	}
@@ -67,7 +67,7 @@ void Buttons::init() {
 
 	attachInterrupt(digitalPinToInterrupt(DIG_PIN_BUTTON_NEXT), onNextIRQ, FALLING);
 	attachInterrupt(digitalPinToInterrupt(DIG_PIN_BUTTON_PREV), onPrevIRQ, FALLING);
-	attachInterrupt(digitalPinToInterrupt(DIG_PIN_BUTTON_CLEAR_STATS), onClearStatsIRQ, FALLING);
+	attachInterrupt(digitalPinToInterrupt(DIG_PIN_BUTTON_RESET), onClearStatsIRQ, FALLING);
 }
 
 Buttons::Buttons() {
@@ -89,7 +89,8 @@ inline void Buttons::cycle() {
 		eb_fire(BusEvent::BUTTON_NEXT);
 
 	} else if (butPressed == BUTTON_PREV_MASK) {
-		eb_fire(BusEvent::BUTTON_PREV);
+		//eb_fire(BusEvent::BUTTON_PREV);
+		eb_fire(BusEvent::CLEAR_STATS);
 
 	} else if (butPressed == BUTTON_CLEAR_STATS_MASK) {
 		eb_fire(BusEvent::CLEAR_STATS);

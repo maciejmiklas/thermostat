@@ -28,13 +28,13 @@ void Stats::init() {
 
 	initTemp(&actualTemp);
 	clearStats();
-	storage.readStats(&history);
+	//storage.readStats(&history);
 }
 
 void Stats::clearStats() {
 	history.dayHistoryFull = false;
 	history.dayHistoryIdx = 0;
-	for (uint8_t i = 0; i < DAY_HISTORY_SIZE; i++) {
+	for (uint8_t i = 0; i < ST_DAY_HISTORY_SIZE; i++) {
 		initTemp(&history.dayHistory[i]);
 	}
 }
@@ -47,20 +47,19 @@ void Stats::initTemp(Temp* temp) {
 }
 
 void Stats::onEvent(BusEvent event, va_list ap) {
-	if (!eb_inGroup(event, BusEventGroup::RELAY)) {
-		return;
-	}
-	int relayId = va_arg(ap, int);
+	if (eb_inGroup(event, BusEventGroup::RELAY)) {
+		int relayId = va_arg(ap, int);
 
-	if (event == BusEvent::RELAY_ON) {
-		relayTimer[relayId].start();
+		if (event == BusEvent::RELAY_ON) {
+			relayTimer[relayId].start();
 
-	} else if (event == BusEvent::RELAY_OFF) {
-		relayTimer[relayId].suspend();
+		} else if (event == BusEvent::RELAY_OFF) {
+			relayTimer[relayId].suspend();
 
+		}
 	} else if (event == BusEvent::CLEAR_STATS) {
 		clearStats();
-		storage.clear();
+		//storage.clear();
 	}
 }
 
@@ -90,8 +89,8 @@ uint8_t Stats::deviceId() {
 }
 
 void Stats::probeActualTemp() {
-	uint32_t currentMillis = util_millis();
-	if (currentMillis - lastActualProbeMs < ACTUAL_PROBE_MS) {
+	uint32_t currentMillis = util_ms();
+	if (currentMillis - lastActualProbeMs < ST_ACTUAL_PROBE_MS) {
 		return;
 	}
 	lastActualProbeMs = currentMillis;
@@ -107,21 +106,21 @@ void Stats::probeActualTemp() {
 }
 
 void Stats::probeDayTemp() {
-	uint32_t currentMillis = util_millis();
-	if (currentMillis - lastDayProbeMs < DAY_PROBE_MS) {
+	uint32_t currentMillis = util_ms();
+	if (currentMillis - lastDayProbeMs < ST_DAY_PROBE_MS) {
 		return;
 	}
 	lastDayProbeMs = currentMillis;
 
-	if (dayProbeIdx == PROBES_PER_DAY) {
-		if (history.dayHistoryIdx == DAY_HISTORY_SIZE) {
+	if (dayProbeIdx == ST_PROBES_PER_DAY) {
+		if (history.dayHistoryIdx == ST_DAY_HISTORY_SIZE) {
 			history.dayHistoryIdx = 0;
 			history.dayHistoryFull = true;
 		}
 		Temp* temp = &history.dayHistory[history.dayHistoryIdx++];
-		temp->avg = util_avg_i16(dayProbes, PROBES_PER_DAY);
-		temp->min = util_min_i16(dayProbes, PROBES_PER_DAY);
-		temp->max = util_max_i16(dayProbes, PROBES_PER_DAY);
+		temp->avg = util_avg_i16(dayProbes, ST_PROBES_PER_DAY);
+		temp->min = util_min_i16(dayProbes, ST_PROBES_PER_DAY);
+		temp->max = util_max_i16(dayProbes, ST_PROBES_PER_DAY);
 		dayProbeIdx = 0;
 		storage.storeStats(&history);
 #if LOG
@@ -179,7 +178,7 @@ void Stats::dit_reset() {
 }
 
 uint8_t Stats::_dit_size() {
-	return history.dayHistoryFull ? DAY_HISTORY_SIZE : history.dayHistoryIdx;
+	return history.dayHistoryFull ? ST_DAY_HISTORY_SIZE : history.dayHistoryIdx;
 }
 
 uint8_t Stats::dit_size() {

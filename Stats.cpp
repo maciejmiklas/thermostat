@@ -89,11 +89,11 @@ uint8_t Stats::deviceId() {
 }
 
 void Stats::probeActualTemp() {
-	uint32_t currentMillis = util_ms();
-	if (currentMillis - lastActualProbeMs < ST_ACTUAL_PROBE_MS) {
+	uint32_t currentMs = util_ms();
+	if (currentMs - lastActualProbeMs < ST_ACTUAL_PROBE_MS) {
 		return;
 	}
-	lastActualProbeMs = currentMillis;
+	lastActualProbeMs = currentMs;
 
 	int16_t actTemp = tempSensor->getTemp();
 

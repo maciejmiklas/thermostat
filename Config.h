@@ -20,10 +20,10 @@
 const static uint8_t RELAYS_AMOUNT = 2;
 
 /* Temperature threshold to enable first relay (DIG_PIN_RELAY_0) and start cooling. */
-const static int16_t RELAY_TEMP_SET_POINT_0 = 24;
+const static int16_t RELAY_TEMP_SET_POINT_0 = 21;
 
 /* Temperature threshold to enable second relay (DIG_PIN_RELAY_1) and start cooling. */
-const static int16_t RELAY_TEMP_SET_POINT_1 = 27;
+const static int16_t RELAY_TEMP_SET_POINT_1 = 25;
 
 const static uint8_t DIG_PIN_BUTTON_RESET = 1;
 const static uint8_t DIG_PIN_BUTTON_NEXT = 2;
@@ -57,7 +57,7 @@ const static uint16_t DISP_SHOW_INFO_MS = 1000;
 #define USE_FEHRENHEIT false
 
 /* Minimum time to switch next relay. 300000 - 5 minutes */
-const static uint32_t RELAY_DELAY_AFTER_SWITCH_MS = 5000;
+const static uint32_t RELAY_DELAY_AFTER_SWITCH_MS = 300000;
 
 // RHC - Relay Hysteresis Controller
 /* Prevents frequent switches of the particular relay. 3600000 - 1 hour*/
@@ -78,7 +78,7 @@ const static uint8_t ST_PROBES_PER_DAY = 12;
  * Take probe every second hour - 12 probes gives us full day:
  * #PROBES_PER_DAY * #DAY_PROBE_MS = 24h.
  */
-const static uint32_t ST_DAY_PROBE_MS = 2000; // 240000 = 1000 * 60 * 60 * 2;
+const static uint32_t ST_DAY_PROBE_MS = 7200000; // 7200000 = 1000 * 60 * 60 * 2;
 
 // Frequency to probe for current temp, min and max
 const static uint32_t ST_ACTUAL_PROBE_MS = 1000;

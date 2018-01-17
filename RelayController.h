@@ -25,6 +25,7 @@ public:
 	RelayController(TempSensor* tempSensor, int16_t tempSetPoint);
 	virtual ~RelayController();
 	virtual Relay::State execute() = 0;
+	int16_t getSetPoint();
 
 protected:
 	TempSensor* const tempSensor;

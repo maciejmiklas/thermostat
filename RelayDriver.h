@@ -31,6 +31,7 @@ public:
 	RelayDriver(TempSensor* ts);
 	~RelayDriver();
 	boolean isOn(uint8_t relayId);
+	int16_t getSetPoint(uint8_t relayId);
 
 private:
 	typedef struct {

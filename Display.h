@@ -35,7 +35,12 @@ public:
 private:
 
 	enum DisplayStates {
-		STATE_MAIN = 0, STATE_RUNTIME = 1, STATE_RELAY_TIME = 2, STATE_DAY_STATS = 3, STATE_CLEAR_STATS = 4
+		STATE_MAIN = 0,
+		STATE_RUNTIME = 1,
+		STATE_RELAY_TIME = 2,
+		RELAY_SET_POINT = 3,
+		STATE_DAY_STATS = 4,
+		STATE_CLEAR_STATS = 5
 	};
 
 	class DisplayState: public StateMachine {
@@ -86,6 +91,18 @@ private:
 		inline void updateDisplayTime();
 	};
 
+	/** Shows temp set point for each relay. */
+	class RelaSetPointdState: public DisplayState {
+	public:
+		RelaSetPointdState(Display* display);
+		virtual ~RelaSetPointdState();
+		virtual uint8_t execute(BusEvent event);
+	private:
+		virtual void init();
+		uint8_t relayIdx;
+		inline void updateDisplay();
+	};
+
 	/** Shows statistics for each last xx days. */
 	class DayStatsState: public StateMachine {
 	public:
@@ -129,6 +146,7 @@ private:
 	MainState mainState;
 	RuntimeState runtimeState;
 	RelayTimeState relayTimeState;
+	RelaSetPointdState relaSetPointdState;
 	DayStatsState dayStatsState;
 	ClearStatsState clearStatsState;
 	MachineDriver driver;

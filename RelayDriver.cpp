@@ -44,6 +44,10 @@ boolean RelayDriver::isOn(uint8_t relayId) {
 	return relays[relayId].relay->getState() == Relay::State::ON;
 }
 
+int16_t RelayDriver::getSetPoint(uint8_t relayId) {
+	return relays[relayId].controller->getSetPoint();
+}
+
 void RelayDriver::cycle() {
 	for (uint8_t i = 0; i < RELAYS_AMOUNT; i++) {
 		executeRelay(i);

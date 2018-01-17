@@ -19,8 +19,8 @@
 Display::Display(TempSensor *tempSensor, Stats *stats, RelayDriver* relayDriver) :
 		lcd(DIG_PIN_LCD_RS, DIG_PIN_LCD_ENABLE, DIG_PIN_LCD_D4, DIG_PIN_LCD_D5, DIG_PIN_LCD_D6, DIG_PIN_LCD_D7), tempSensor(
 				tempSensor), stats(stats), relayDriver(relayDriver), mainState(this), runtimeState(this), relayTimeState(
-				this), dayStatsState(this), clearStatsState(this), driver(5, &mainState, &runtimeState, &relayTimeState,
-				&dayStatsState, &clearStatsState) {
+				this), relaSetPointdState(this), dayStatsState(this), clearStatsState(this), driver(6, &mainState,
+				&runtimeState, &relayTimeState, &relaSetPointdState, &dayStatsState, &clearStatsState) {
 }
 
 uint8_t Display::listenerId() {
@@ -90,7 +90,7 @@ Display::DisplayState::DisplayState(Display* display) :
 Display::DisplayState::~DisplayState() {
 }
 
-boolean Display::DisplayState::shouldUpdate() {
+inline boolean Display::DisplayState::shouldUpdate() {
 	boolean should = false;
 	uint32_t millis = util_ms();
 	if (millis - lastUpdateMs >= UPDATE_FREQ) {
@@ -218,7 +218,7 @@ uint8_t Display::RelayTimeState::execute(BusEvent event) {
 	if (event == BusEvent::BUTTON_NEXT) {
 		relayIdx++;
 		if (relayIdx == RELAYS_AMOUNT) {
-			return STATE_DAY_STATS;
+			return RELAY_SET_POINT;
 		}
 		updateDisplay();
 
@@ -251,6 +251,44 @@ void Display::RelayTimeState::init() {
 	log(F("DSRT-init"));
 #endif
 	DisplayState::init();
+	relayIdx = 0;
+	updateDisplay();
+}
+
+// ##################### RelaSetPointdState #####################
+Display::RelaSetPointdState::RelaSetPointdState(Display* display) :
+		DisplayState(display), relayIdx(0) {
+}
+
+Display::RelaSetPointdState::~RelaSetPointdState() {
+}
+
+uint8_t Display::RelaSetPointdState::execute(BusEvent event) {
+	if (event == BusEvent::BUTTON_NEXT) {
+		relayIdx++;
+		if (relayIdx == RELAYS_AMOUNT) {
+			return STATE_DAY_STATS;
+		}
+		updateDisplay();
+
+	} else if (event == BusEvent::BUTTON_PREV) {
+		// cannot decrease before checking because it's unsigned int
+		if (relayIdx == 0) {
+			return STATE_RELAY_TIME;
+		}
+		relayIdx--;
+		updateDisplay();
+
+	}
+	return STATE_NOCHANGE;
+}
+
+inline void Display::RelaSetPointdState::updateDisplay() {
+	display->println(0, "Relay %d set", relayIdx + 1);
+	display->println(1, "point on %d%c", display->relayDriver->getSetPoint(relayIdx), (USE_FEHRENHEIT ? 'f': 0xDF));
+}
+
+void Display::RelaSetPointdState::init() {
 	relayIdx = 0;
 	updateDisplay();
 }

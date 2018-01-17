@@ -89,8 +89,7 @@ inline void Buttons::cycle() {
 		eb_fire(BusEvent::BUTTON_NEXT);
 
 	} else if (butPressed == BUTTON_PREV_MASK) {
-		//eb_fire(BusEvent::BUTTON_PREV);
-		eb_fire(BusEvent::CLEAR_STATS);
+		eb_fire(BusEvent::BUTTON_PREV);
 
 	} else if (butPressed == BUTTON_CLEAR_STATS_MASK) {
 		eb_fire(BusEvent::CLEAR_STATS);

@@ -125,7 +125,7 @@ void Stats::probeDayTemp() {
 		temp->min = util_min_i16(dayProbes, ST_PROBES_PER_DAY);
 		temp->max = util_max_i16(dayProbes, ST_PROBES_PER_DAY);
 		dayProbeIdx = 0;
-		//storage.storeStats(&history);
+		storage.storeStats(&history);
 #if LOG
 		log(F("ST H(%d)->%d,%d,%d"), dayHistoryIdx, temp->avg, temp->min, temp->max);
 #endif

@@ -11,7 +11,7 @@ You can control any reasonable amount of units, it's all configurable. You have 
 <img src="/doc/img/hardware_4.jpg" width="320px" title="Statistics for 7th day" />
 
 # Hardware
-
+<img src="/doc/fritzing/Thermostat_schem.png" width="640px" />
 # Configuration
 Whole configuration is stored in *Config.h*. You can change PINs controlling relays, reading temperature, thresholds or timings. 
 

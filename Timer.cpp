@@ -22,6 +22,7 @@ Timer::Timer() :
 
 void Timer::start() {
 	running = true;
+	runtimeMs = util_ms();
 	sample();
 }
 
@@ -63,7 +64,7 @@ inline void Timer::update() {
 }
 
 inline void Timer::sample() {
-	uint32_t ms = util_millis();
+	uint32_t ms = util_ms();
 	timeMs += ms - runtimeMs;
 	runtimeMs = ms;
 }

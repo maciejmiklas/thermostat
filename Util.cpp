@@ -26,7 +26,7 @@ void util_cycle() {
 	cycleMs = millis();
 }
 
-uint32_t util_millis() {
+uint32_t util_ms() {
 	return cycleMs;
 }
 

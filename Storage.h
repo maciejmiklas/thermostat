@@ -14,26 +14,27 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#ifndef MAINCONTROLLER_H_
-#define MAINCONTROLLER_H_
+#ifndef STORAGE_H_
+#define STORAGE_H_
 
-#include "RelayDriver.h"
-#include "Display.h"
-#include "TempSensor.h"
-#include "Util.h"
-#include "EventBus.h"
+#include "Arduino.h"
+#include "StatsData.h"
+#include "EEPROM.h"
+#include "ArdLog.h"
+#include "Config.h"
 
-class ServiceSuspender: public BusListener {
+class Storage {
 public:
-	ServiceSuspender();
-private:
-	inline void cycle();
-	void onEvent(BusEvent event, va_list ap);
-	uint8_t listenerId();
+	Storage();
+	virtual ~Storage();
 
-	/** After button has been pressed suspend all services but display to provide fluent user feedback in GUI */
-	const static uint16_t SUSPEND_SERVICE_MS = 20000;
-	uint32_t suspendStart;
+	void storeStats(StatsHistory* history);
+	void readStats(StatsHistory* history);
+	void clear();
+
+private:
+	const static uint8_t STORAGE_BYTES = 2 + 3 * ST_DAY_HISTORY_SIZE;
+
 };
 
-#endif /* MAINCONTROLLER_H_ */
+#endif /* STORAGE_H_ */

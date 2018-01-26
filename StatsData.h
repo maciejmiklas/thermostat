@@ -14,26 +14,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#ifndef MAINCONTROLLER_H_
-#define MAINCONTROLLER_H_
+#ifndef STATSDATA_H_
+#define STATSDATA_H_
 
-#include "RelayDriver.h"
-#include "Display.h"
-#include "TempSensor.h"
-#include "Util.h"
-#include "EventBus.h"
+#include "Config.h"
 
-class ServiceSuspender: public BusListener {
-public:
-	ServiceSuspender();
-private:
-	inline void cycle();
-	void onEvent(BusEvent event, va_list ap);
-	uint8_t listenerId();
+typedef struct {
+	int16_t avg;
+	int16_t min;
+	int16_t max;
+	uint8_t day; // day number in history. 0 - now, 1 - yesterday, 2 - before yesterday, and so on.
+} Temp;
 
-	/** After button has been pressed suspend all services but display to provide fluent user feedback in GUI */
-	const static uint16_t SUSPEND_SERVICE_MS = 20000;
-	uint32_t suspendStart;
-};
+typedef struct {
+	Temp dayHistory[ST_DAY_HISTORY_SIZE];
+	uint8_t dayHistoryIdx;
+	boolean dayHistoryFull;
+} StatsHistory;
 
-#endif /* MAINCONTROLLER_H_ */
+#endif /* STATSDATA_H_ */

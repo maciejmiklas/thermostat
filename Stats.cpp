@@ -17,8 +17,7 @@
 #include "Stats.h"
 
 Stats::Stats(TempSensor* tempSensor) :
-		tempSensor(tempSensor), systemTimer(), dayProbeIdx(0), lastDayProbeMs(0), lastActualProbeMs(0), dayHistoryIdx(0), dayHistoryFull(
-		false), dit_idx(0) {
+		tempSensor(tempSensor), dayProbeIdx(0), lastDayProbeMs(0), lastActualProbeMs(0), dit_idx(0) {
 }
 
 void Stats::init() {
@@ -28,9 +27,15 @@ void Stats::init() {
 	systemTimer.start();
 
 	initTemp(&actualTemp);
+	clearStats();
+	storage.readStats(&history);
+}
 
-	for (uint8_t i = 0; i < DAY_HISTORY_SIZE; i++) {
-		initTemp(&dayHistory[i]);
+void Stats::clearStats() {
+	history.dayHistoryFull = false;
+	history.dayHistoryIdx = 0;
+	for (uint8_t i = 0; i < ST_DAY_HISTORY_SIZE; i++) {
+		initTemp(&history.dayHistory[i]);
 	}
 }
 
@@ -42,18 +47,25 @@ void Stats::initTemp(Temp* temp) {
 }
 
 void Stats::onEvent(BusEvent event, va_list ap) {
-	if (!eb_inGroup(event, BusEventGroup::RELAY)) {
-		return;
-	}
-	int relayId = va_arg(ap, int);
+	if (eb_inGroup(event, BusEventGroup::RELAY)) {
+		int relayId = va_arg(ap, int);
 
-	if (event == BusEvent::RELAY_ON) {
-		relayTimer[relayId].start();
+#if TRACE
+	log(F("ST RT:%d,%d"), relayId, event);
+#endif
+	Time* rt = relayTimer[relayId].getTime();
+		if (event == BusEvent::RELAY_ON) {
+			relayTimer[relayId].start();
 
-	} else if (event == BusEvent::RELAY_OFF) {
-		relayTimer[relayId].suspend();
+		} else if (event == BusEvent::RELAY_OFF) {
+			relayTimer[relayId].suspend();
+		}
+	} else if (event == BusEvent::CLEAR_STATS) {
+		clearStats();
+		storage.clear();
 	}
 }
+
 uint8_t Stats::listenerId() {
 	return deviceId();
 }
@@ -80,11 +92,11 @@ uint8_t Stats::deviceId() {
 }
 
 void Stats::probeActualTemp() {
-	uint32_t currentMillis = util_millis();
-	if (currentMillis - lastActualProbeMs < ACTUAL_PROBE_MS) {
+	uint32_t currentMs = util_ms();
+	if (currentMs - lastActualProbeMs < ST_ACTUAL_PROBE_MS) {
 		return;
 	}
-	lastActualProbeMs = currentMillis;
+	lastActualProbeMs = currentMs;
 
 	int16_t actTemp = tempSensor->getTemp();
 
@@ -97,22 +109,23 @@ void Stats::probeActualTemp() {
 }
 
 void Stats::probeDayTemp() {
-	uint32_t currentMillis = util_millis();
-	if (currentMillis - lastDayProbeMs < DAY_PROBE_MS) {
+	uint32_t currentMillis = util_ms();
+	if (currentMillis - lastDayProbeMs < ST_DAY_PROBE_MS) {
 		return;
 	}
 	lastDayProbeMs = currentMillis;
 
-	if (dayProbeIdx == PROBES_PER_DAY) {
-		if (dayHistoryIdx == DAY_HISTORY_SIZE) {
-			dayHistoryIdx = 0;
-			dayHistoryFull = true;
+	if (dayProbeIdx == ST_PROBES_PER_DAY) {
+		if (history.dayHistoryIdx == ST_DAY_HISTORY_SIZE) {
+			history.dayHistoryIdx = 0;
+			history.dayHistoryFull = true;
 		}
-		Temp* temp = &dayHistory[dayHistoryIdx++];
-		temp->avg = util_avg_i16(dayProbes, PROBES_PER_DAY);
-		temp->min = util_min_i16(dayProbes, PROBES_PER_DAY);
-		temp->max = util_max_i16(dayProbes, PROBES_PER_DAY);
+		Temp* temp = &history.dayHistory[history.dayHistoryIdx++];
+		temp->avg = util_avg_i16(dayProbes, ST_PROBES_PER_DAY);
+		temp->min = util_min_i16(dayProbes, ST_PROBES_PER_DAY);
+		temp->max = util_max_i16(dayProbes, ST_PROBES_PER_DAY);
 		dayProbeIdx = 0;
+		storage.storeStats(&history);
 #if LOG
 		log(F("ST H(%d)->%d,%d,%d"), dayHistoryIdx, temp->avg, temp->min, temp->max);
 #endif
@@ -143,7 +156,7 @@ Temp* Stats::dit_next() {
 #if TRACE
 	log(F("ST NE %d"), histIdx);
 #endif
-	Temp* temp = &dayHistory[histIdx];
+	Temp* temp = &history.dayHistory[histIdx];
 	updateDayTemp(temp);
 	return temp;
 }
@@ -154,7 +167,7 @@ Temp* Stats::dit_prev() {
 	log(F("ST PRE %d"), histIdx);
 #endif
 
-	Temp* temp = &dayHistory[histIdx];
+	Temp* temp = &history.dayHistory[histIdx];
 	updateDayTemp(temp);
 	return temp;
 }
@@ -168,7 +181,7 @@ void Stats::dit_reset() {
 }
 
 uint8_t Stats::_dit_size() {
-	return dayHistoryFull ? DAY_HISTORY_SIZE : dayHistoryIdx;
+	return history.dayHistoryFull ? ST_DAY_HISTORY_SIZE : history.dayHistoryIdx;
 }
 
 uint8_t Stats::dit_size() {

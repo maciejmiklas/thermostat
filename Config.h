@@ -17,17 +17,15 @@
 #ifndef CONFIG_H_
 #define CONFIG_H_
 
-/** Keep history for last 14 days. */
-const static uint8_t DAY_HISTORY_SIZE = 14;
-
 const static uint8_t RELAYS_AMOUNT = 2;
 
 /* Temperature threshold to enable first relay (DIG_PIN_RELAY_0) and start cooling. */
-const static int16_t RELAY_TEMP_SET_POINT_0 = 23;
+const static int16_t RELAY_TEMP_SET_POINT_0 = 21;
 
 /* Temperature threshold to enable second relay (DIG_PIN_RELAY_1) and start cooling. */
-const static int16_t RELAY_TEMP_SET_POINT_1 = 27;
+const static int16_t RELAY_TEMP_SET_POINT_1 = 25;
 
+const static uint8_t DIG_PIN_BUTTON_RESET = 1;
 const static uint8_t DIG_PIN_BUTTON_NEXT = 2;
 const static uint8_t DIG_PIN_BUTTON_PREV = 3;
 
@@ -54,6 +52,9 @@ const static uint8_t LISTENER_ID_DISPLAY = 201;
 const static uint8_t LISTENER_ID_SUSPENDER = 202;
 const static uint8_t LISTENER_ID_STATUS = 203;
 
+/* Time to resume normal operation after pause for user input. */
+const static uint16_t DISP_SHOW_INFO_MS = 1000;
+
 #define USE_FEHRENHEIT false
 
 /* Minimum time to switch next relay. 300000 - 5 minutes */
@@ -70,5 +71,20 @@ const static float RPC_AMP_D = 0.3;
 
 // PID threshold when relay should be switched on
 const static float RPC_PID_SWITCH_THRESHOLD = -10;
+
+/** Take 12 probes per day to calculate agv/min/max per day*/
+const static uint8_t ST_PROBES_PER_DAY = 12;
+
+/**
+ * Take probe every second hour - 12 probes gives us full day:
+ * #PROBES_PER_DAY * #DAY_PROBE_MS = 24h.
+ */
+const static uint32_t ST_DAY_PROBE_MS = 7200000; // 7200000 = 1000 * 60 * 60 * 2;
+
+// Frequency to probe for current temp, min and max
+const static uint32_t ST_ACTUAL_PROBE_MS = 1000;
+
+/** Keep history for last 14 days. */
+const static uint8_t ST_DAY_HISTORY_SIZE = 14;
 
 #endif /* CONFIG_H_ */

@@ -40,6 +40,9 @@ enum class BusEvent {
 	SERVICE_RESUME = 31,
 
 	/** Parameters: none */
+	CLEAR_STATS= 32,
+
+	/** Parameters: none */
 	CYCLE = 255,
 };
 

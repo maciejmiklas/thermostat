@@ -24,13 +24,8 @@
 #include "Service.h"
 #include "TempSensor.h"
 #include "ArdLog.h"
-
-typedef struct {
-	int16_t avg;
-	int16_t min;
-	int16_t max;
-	uint8_t day; // day number in history. 0 - now, 1 - yesterday, 2 - before yesterday, and so on.
-} Temp;
+#include "Storage.h"
+#include "StatsData.h"
 
 class Stats: public Service, public BusListener {
 public:
@@ -56,38 +51,22 @@ public:
 	uint8_t dit_size();
 
 private:
-
-	/** Take 12 probes per day to calculate agv/min/max per day*/
-	const static uint8_t PROBES_PER_DAY = 12;
-
-	/**
-	 * Take probe every second hour - 12 probes gives us full day:
-	 * #PROBES_PER_DAY * #DAY_PROBE_MS = 24h.
-	 */
-	const static uint32_t DAY_PROBE_MS = 1000; // 240000 = 1000 * 60 * 60 * 2;
-
-	const static uint32_t ACTUAL_PROBE_MS = 1000;
-
 	TempSensor* tempSensor;
-
 	Timer systemTimer;
 	Timer relayTimer[RELAYS_AMOUNT];
 
 	/** FIFO Queue containing statistics for each day. Top of the queue has the oldest day, bottom most recent. */
-	int16_t dayProbes[PROBES_PER_DAY];
+	int16_t dayProbes[ST_PROBES_PER_DAY];
 	uint8_t dayProbeIdx;
 	uint32_t lastDayProbeMs;
 	uint32_t lastActualProbeMs;
-
-	Temp dayHistory[DAY_HISTORY_SIZE];
-	uint8_t dayHistoryIdx;
-	boolean dayHistoryFull;
+	StatsHistory history;
 	uint8_t dit_idx;
-
-	// only min and max are updated.
-	Temp actualTemp;
+	Temp actualTemp; // only min and max are updated.
+	Storage storage;
 
 	uint8_t deviceId();
+	void clearStats();
 	void init();
 	void cycle();
 	uint8_t listenerId();

@@ -38,7 +38,7 @@ void TempSensor::init() {
 }
 
 void TempSensor::cycle() {
-	uint32_t millis = util_millis();
+	uint32_t millis = util_ms();
 	if (millis - lastProbeTime < PROBE_FREQ_MS) {
 		return;
 	}

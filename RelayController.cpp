@@ -23,3 +23,7 @@ RelayController::RelayController(TempSensor* ts, int16_t tempSetPoint) :
 RelayController::~RelayController() {
 }
 
+int16_t RelayController::getSetPoint() {
+	return tempSetPoint;
+}
+

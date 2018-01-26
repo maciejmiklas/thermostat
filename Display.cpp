@@ -19,7 +19,8 @@
 Display::Display(TempSensor *tempSensor, Stats *stats, RelayDriver* relayDriver) :
 		lcd(DIG_PIN_LCD_RS, DIG_PIN_LCD_ENABLE, DIG_PIN_LCD_D4, DIG_PIN_LCD_D5, DIG_PIN_LCD_D6, DIG_PIN_LCD_D7), tempSensor(
 				tempSensor), stats(stats), relayDriver(relayDriver), mainState(this), runtimeState(this), relayTimeState(
-				this), dayStatsState(this), driver(4, &mainState, &runtimeState, &relayTimeState, &dayStatsState) {
+				this), relaSetPointdState(this), dayStatsState(this), clearStatsState(this), driver(6, &mainState,
+				&runtimeState, &relayTimeState, &relaSetPointdState, &dayStatsState, &clearStatsState) {
 }
 
 uint8_t Display::listenerId() {
@@ -40,6 +41,9 @@ void Display::init() {
 void Display::onEvent(BusEvent event, va_list ap) {
 	if (event == BusEvent::SERVICE_RESUME) {
 		driver.changeState(STATE_MAIN);
+
+	} else if (event == BusEvent::CLEAR_STATS) {
+		driver.changeState(STATE_CLEAR_STATS);
 	}
 	driver.execute(event);
 }
@@ -86,9 +90,9 @@ Display::DisplayState::DisplayState(Display* display) :
 Display::DisplayState::~DisplayState() {
 }
 
-boolean Display::DisplayState::shouldUpdate() {
+inline boolean Display::DisplayState::shouldUpdate() {
 	boolean should = false;
-	uint32_t millis = util_millis();
+	uint32_t millis = util_ms();
 	if (millis - lastUpdateMs >= UPDATE_FREQ) {
 		should = true;
 		lastUpdateMs = millis;
@@ -137,6 +141,31 @@ void Display::MainState::init() {
 	DisplayState::init();
 	display->printlnNa(0, " NOW|  MIN|  MAX");
 	update();
+}
+
+// ##################### ClearStatsState #####################
+Display::ClearStatsState::ClearStatsState(Display* display) :
+		DisplayState(display), showMs(0) {
+}
+
+Display::ClearStatsState::~ClearStatsState() {
+}
+
+uint8_t Display::ClearStatsState::execute(BusEvent event) {
+	if (event == BusEvent::CLEAR_STATS) {
+		display->printlnNa(0, "Statistics      ");
+		display->println(1, "      cleared.  ");
+
+	} else if (util_ms() - showMs > DISP_SHOW_INFO_MS || event == BusEvent::BUTTON_NEXT
+			|| event == BusEvent::BUTTON_PREV) {
+		eb_fire(BusEvent::SERVICE_RESUME);
+		return STATE_MAIN;
+	}
+	return STATE_NOCHANGE;
+}
+
+void Display::ClearStatsState::init() {
+	showMs = util_ms();
 }
 
 // ##################### RuntimeState #####################
@@ -189,7 +218,7 @@ uint8_t Display::RelayTimeState::execute(BusEvent event) {
 	if (event == BusEvent::BUTTON_NEXT) {
 		relayIdx++;
 		if (relayIdx == RELAYS_AMOUNT) {
-			return STATE_DAY_STATS;
+			return RELAY_SET_POINT;
 		}
 		updateDisplay();
 
@@ -222,6 +251,44 @@ void Display::RelayTimeState::init() {
 	log(F("DSRT-init"));
 #endif
 	DisplayState::init();
+	relayIdx = 0;
+	updateDisplay();
+}
+
+// ##################### RelaySetPointdState #####################
+Display::RelaySetPointdState::RelaySetPointdState(Display* display) :
+		DisplayState(display), relayIdx(0) {
+}
+
+Display::RelaySetPointdState::~RelaySetPointdState() {
+}
+
+uint8_t Display::RelaySetPointdState::execute(BusEvent event) {
+	if (event == BusEvent::BUTTON_NEXT) {
+		relayIdx++;
+		if (relayIdx == RELAYS_AMOUNT) {
+			return STATE_DAY_STATS;
+		}
+		updateDisplay();
+
+	} else if (event == BusEvent::BUTTON_PREV) {
+		// cannot decrease before checking because it's unsigned int
+		if (relayIdx == 0) {
+			return STATE_RELAY_TIME;
+		}
+		relayIdx--;
+		updateDisplay();
+
+	}
+	return STATE_NOCHANGE;
+}
+
+inline void Display::RelaySetPointdState::updateDisplay() {
+	display->println(0, "Relay %d set", relayIdx + 1);
+	display->println(1, "  point on %d%c", display->relayDriver->getSetPoint(relayIdx), (USE_FEHRENHEIT ? 'f': 0xDF));
+}
+
+void Display::RelaySetPointdState::init() {
 	relayIdx = 0;
 	updateDisplay();
 }

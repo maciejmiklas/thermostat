@@ -35,7 +35,12 @@ public:
 private:
 
 	enum DisplayStates {
-		STATE_MAIN = 0, STATE_RUNTIME = 1, STATE_RELAY_TIME = 2, STATE_DAY_STATS = 3
+		STATE_MAIN = 0,
+		STATE_RUNTIME = 1,
+		STATE_RELAY_TIME = 2,
+		RELAY_SET_POINT = 3,
+		STATE_DAY_STATS = 4,
+		STATE_CLEAR_STATS = 5
 	};
 
 	class DisplayState: public StateMachine {
@@ -86,6 +91,18 @@ private:
 		inline void updateDisplayTime();
 	};
 
+	/** Shows temp set point for each relay. */
+	class RelaySetPointdState: public DisplayState {
+	public:
+		RelaySetPointdState(Display* display);
+		virtual ~RelaySetPointdState();
+		virtual uint8_t execute(BusEvent event);
+	private:
+		virtual void init();
+		uint8_t relayIdx;
+		inline void updateDisplay();
+	};
+
 	/** Shows statistics for each last xx days. */
 	class DayStatsState: public StateMachine {
 	public:
@@ -106,6 +123,17 @@ private:
 		inline uint8_t getHH(uint32_t durationMs);
 	};
 
+	/** Clears Statistics. */
+	class ClearStatsState: public DisplayState {
+	public:
+		ClearStatsState(Display* display);
+		virtual ~ClearStatsState();
+		virtual uint8_t execute(BusEvent event);
+	private:
+		virtual void init();
+		uint32_t showMs;
+	};
+
 	LiquidCrystal lcd;
 	TempSensor* const tempSensor;
 	Stats* const stats;
@@ -118,7 +146,9 @@ private:
 	MainState mainState;
 	RuntimeState runtimeState;
 	RelayTimeState relayTimeState;
+	RelaySetPointdState relaSetPointdState;
 	DayStatsState dayStatsState;
+	ClearStatsState clearStatsState;
 	MachineDriver driver;
 
 	void init();

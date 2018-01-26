@@ -50,12 +50,15 @@ void Stats::onEvent(BusEvent event, va_list ap) {
 	if (eb_inGroup(event, BusEventGroup::RELAY)) {
 		int relayId = va_arg(ap, int);
 
+#if TRACE
+	log(F("ST RT:%d,%d"), relayId, event);
+#endif
+	Time* rt = relayTimer[relayId].getTime();
 		if (event == BusEvent::RELAY_ON) {
 			relayTimer[relayId].start();
 
 		} else if (event == BusEvent::RELAY_OFF) {
 			relayTimer[relayId].suspend();
-
 		}
 	} else if (event == BusEvent::CLEAR_STATS) {
 		clearStats();
@@ -122,7 +125,7 @@ void Stats::probeDayTemp() {
 		temp->min = util_min_i16(dayProbes, ST_PROBES_PER_DAY);
 		temp->max = util_max_i16(dayProbes, ST_PROBES_PER_DAY);
 		dayProbeIdx = 0;
-		storage.storeStats(&history);
+		//storage.storeStats(&history);
 #if LOG
 		log(F("ST H(%d)->%d,%d,%d"), dayHistoryIdx, temp->avg, temp->min, temp->max);
 #endif

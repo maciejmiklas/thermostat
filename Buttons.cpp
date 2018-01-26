@@ -26,34 +26,31 @@ const static uint8_t BUTTON_CLEAR_STATS_MASK = B00000011;
 static volatile uint8_t butPressed = BUTTON_NONE_MASK;
 static volatile uint32_t pressMs = 0;
 
-static void onNextIRQ() {
-	uint32_t ms = util_ms();
+static inline boolean process() {
+	uint32_t ms = millis();
 	if (ms - pressMs < PRESS_MS) {
-		return;
+		return false;
 	}
 	pressMs = ms;
+	return true;
+}
 
-	butPressed = BUTTON_NEXT_MASK;
+static void onNextIRQ() {
+	if (process()) {
+		butPressed = BUTTON_NEXT_MASK;
+	}
 }
 
 static void onPrevIRQ() {
-	uint32_t ms = util_ms();
-	if (ms - pressMs < PRESS_MS) {
-		return;
+	if (process()) {
+		butPressed = BUTTON_PREV_MASK;
 	}
-	pressMs = ms;
-
-	butPressed = BUTTON_PREV_MASK;
 }
 
 static void onClearStatsIRQ() {
-	uint32_t ms = util_ms();
-	if (ms - pressMs < PRESS_MS) {
-		return;
+	if (process()) {
+		butPressed = BUTTON_CLEAR_STATS_MASK;
 	}
-	pressMs = ms;
-
-	butPressed = BUTTON_CLEAR_STATS_MASK;
 }
 
 void Buttons::init() {
@@ -79,9 +76,7 @@ uint8_t Buttons::listenerId() {
 
 void inline Buttons::setupButton(uint8_t pin) {
 	pinMode(pin, INPUT);
-
-	// enable pull-up resistor
-	digitalWrite(pin, HIGH);
+	digitalWrite(pin, HIGH); // enable pull-up resistor
 }
 
 inline void Buttons::cycle() {

@@ -255,15 +255,15 @@ void Display::RelayTimeState::init() {
 	updateDisplay();
 }
 
-// ##################### RelaSetPointdState #####################
-Display::RelaSetPointdState::RelaSetPointdState(Display* display) :
+// ##################### RelaySetPointdState #####################
+Display::RelaySetPointdState::RelaySetPointdState(Display* display) :
 		DisplayState(display), relayIdx(0) {
 }
 
-Display::RelaSetPointdState::~RelaSetPointdState() {
+Display::RelaySetPointdState::~RelaySetPointdState() {
 }
 
-uint8_t Display::RelaSetPointdState::execute(BusEvent event) {
+uint8_t Display::RelaySetPointdState::execute(BusEvent event) {
 	if (event == BusEvent::BUTTON_NEXT) {
 		relayIdx++;
 		if (relayIdx == RELAYS_AMOUNT) {
@@ -283,12 +283,12 @@ uint8_t Display::RelaSetPointdState::execute(BusEvent event) {
 	return STATE_NOCHANGE;
 }
 
-inline void Display::RelaSetPointdState::updateDisplay() {
+inline void Display::RelaySetPointdState::updateDisplay() {
 	display->println(0, "Relay %d set", relayIdx + 1);
-	display->println(1, "point on %d%c", display->relayDriver->getSetPoint(relayIdx), (USE_FEHRENHEIT ? 'f': 0xDF));
+	display->println(1, "  point on %d%c", display->relayDriver->getSetPoint(relayIdx), (USE_FEHRENHEIT ? 'f': 0xDF));
 }
 
-void Display::RelaSetPointdState::init() {
+void Display::RelaySetPointdState::init() {
 	relayIdx = 0;
 	updateDisplay();
 }

@@ -22,6 +22,7 @@ Timer::Timer() :
 
 void Timer::start() {
 	running = true;
+	runtimeMs = util_ms();
 	sample();
 }
 

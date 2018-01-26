@@ -92,10 +92,10 @@ private:
 	};
 
 	/** Shows temp set point for each relay. */
-	class RelaSetPointdState: public DisplayState {
+	class RelaySetPointdState: public DisplayState {
 	public:
-		RelaSetPointdState(Display* display);
-		virtual ~RelaSetPointdState();
+		RelaySetPointdState(Display* display);
+		virtual ~RelaySetPointdState();
 		virtual uint8_t execute(BusEvent event);
 	private:
 		virtual void init();
@@ -146,7 +146,7 @@ private:
 	MainState mainState;
 	RuntimeState runtimeState;
 	RelayTimeState relayTimeState;
-	RelaSetPointdState relaSetPointdState;
+	RelaySetPointdState relaSetPointdState;
 	DayStatsState dayStatsState;
 	ClearStatsState clearStatsState;
 	MachineDriver driver;

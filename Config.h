@@ -52,6 +52,7 @@ const static uint8_t LISTENER_ID_DISPLAY = 201;
 const static uint8_t LISTENER_ID_SUSPENDER = 202;
 const static uint8_t LISTENER_ID_STATUS = 203;
 
+/* Time to resume normal operation after pause for user input. */
 const static uint16_t DISP_SHOW_INFO_MS = 1000;
 
 #define USE_FEHRENHEIT false

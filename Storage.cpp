@@ -17,72 +17,93 @@
 #include "Storage.h"
 #include "StatsData.h"
 
-Storage::Storage() {
+Storage::Storage() :
+		dh_days(0) {
 }
 
 Storage::~Storage() {
 }
 
-void Storage::storeStats(StatsHistory* history) {
-	uint8_t eIdx = 0;
+inline uint8_t Storage::dh_eIdx(uint8_t dIdx) {
+	uint8_t eIdx = EIDX_SIZE + dIdx * TEMP_SIZE;
+	return eIdx;
+}
+
+inline void Storage::dh_dShift() {
+	uint8_t minEidx = dh_eIdx(0);
+	uint8_t maxEidx = dh_eIdx(dh_days) - 1;
 
 #if LOG
-	log(F("ST SA %u"), history->dayHistoryIdx);
+	log(F("ST SD %d %d"), minEidx, maxEidx);
 #endif
 
-	EEPROM.write(eIdx++, history->dayHistoryIdx);
-	EEPROM.write(eIdx++, history->dayHistoryFull ? 1 : 0);
-
-	for (uint8_t hIdx = 0; hIdx < history->dayHistoryIdx; hIdx++) {
-		Temp temp = history->dayHistory[hIdx];
-		EEPROM.write(eIdx++, temp.avg);
-		EEPROM.write(eIdx++, temp.min);
-		EEPROM.write(eIdx++, temp.max);
-
-#if LOG
-		log(F("ST SD %u->%u %u %u"), hIdx, temp.avg, temp.min, temp.max);
-#endif
+	for (uint8_t eIdx = maxEidx; eIdx >= minEidx; eIdx--) {
+		uint8_t val = EEPROM.read(eIdx);
+		EEPROM.write(eIdx + TEMP_SIZE, val);
 	}
 }
-void Storage::clear() {
-	for (uint8_t i = 0; i < STORAGE_BYTES; i++) {
-		EEPROM.write(i, 0);
-	}
+
+inline uint8_t Storage::dh_eRead(Temp* temp, uint8_t eIdx) {
+	temp->avg = EEPROM.read(eIdx++);
+	temp->min = EEPROM.read(eIdx++);
+	temp->max = EEPROM.read(eIdx++);
+	return eIdx;
 }
-void Storage::readStats(StatsHistory* history) {
-	if (EEPROM.length() == 0) {
-		return;
-	}
 
-	uint8_t eIdx = 0;
-	uint8_t _dayHistoryIdx = EEPROM.read(eIdx++);
-	uint8_t _dayHistoryFull = EEPROM.read(eIdx++);
+inline uint8_t Storage::dh_eStore(Temp* temp, uint8_t eIdx) {
+	EEPROM.write(eIdx++, temp->avg);
+	EEPROM.write(eIdx++, temp->min);
+	EEPROM.write(eIdx++, temp->max);
+	return eIdx;
+}
+
+void Storage::dh_store(Temp* temp) {
 #if LOG
-	log(F("ST RD %u %u"), _dayHistoryIdx, _dayHistoryFull);
+	log(F("ST WD(%d) %d,%d,%d"), dh_days, temp->min, temp->max, temp->avg);
 #endif
+	DAY = dh_days * 10;
+	DAY_CNT = 0;
 
-	// dayHistoryIdx
-	if (_dayHistoryIdx > ST_DAY_HISTORY_SIZE || _dayHistoryIdx == 0) {
-		return;
+	// shift days by one, so that position 0 is free
+	dh_dShift();
+
+	// increase days after shift, so that we do not shift empty day.
+	EEPROM.write(EIDX_DAYS, ++dh_days);
+
+	// store current day on 0
+	uint8_t eIdx = dh_eIdx(0);
+	dh_eStore(temp, eIdx);
+}
+
+uint8_t Storage::dh_readDays() {
+	if (EEPROM.read(EIDX_INIT_BYTE) != INIT_BYTE) {
+		dh_clear();
+		return 0;
 	}
-	history->dayHistoryIdx = _dayHistoryIdx;
-
-	// dayHistoryFull
-	if (_dayHistoryFull != 1 && _dayHistoryFull != 0) {
-		return;
-	}
-	history->dayHistoryFull = _dayHistoryFull == 1;
-
-	for (uint8_t hIdx = 0; hIdx < _dayHistoryIdx; hIdx++) {
-		Temp& temp = history->dayHistory[hIdx];
-		temp.avg = EEPROM.read(eIdx++);
-		temp.min = EEPROM.read(eIdx++);
-		temp.max = EEPROM.read(eIdx++);
-		temp.day = hIdx;
+	uint8_t size = EEPROM.read(EIDX_DAYS);
 
 #if LOG
-		log(F("ST RD %u->%u %u %u"), temp.day, temp.avg, temp.min, temp.max);
+	log(F("ST DS %u"), size);
 #endif
-	}
+	return size;
+}
+
+void Storage::dh_read(Temp* temp, uint8_t dIdx) {
+	uint8_t eIdx = dh_eIdx(dIdx);
+	temp->avg = EEPROM.read(eIdx++);
+	temp->min = EEPROM.read(eIdx++);
+	temp->max = EEPROM.read(eIdx);
+
+#if LOG
+	log(F("ST RD %u,%u->%d,%d,%d"), dIdx, eIdx, temp->min, temp->max, temp->avg);
+#endif
+}
+
+void Storage::dh_clear() {
+#if LOG
+	log(F("ST CLR"));
+#endif
+	EEPROM.write(EIDX_INIT_BYTE, INIT_BYTE);
+	EEPROM.write(EIDX_DAYS, 0);
 }
 

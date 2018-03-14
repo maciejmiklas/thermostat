@@ -46,6 +46,7 @@ const static uint8_t DIG_PIN_SYSTEM_STATUS_LED = 13;
 const static uint8_t DEVICE_ID_TEMP_SENSOR = 1;
 const static uint8_t DEVICE_ID_RELAY_DRIVER = 2;
 const static uint8_t DEVICE_ID_STATS = 3;
+const static uint8_t DEVICE_ID_TIME_STATS = 4;
 
 const static uint8_t LISTENER_ID_BUTTONS = 200;
 const static uint8_t LISTENER_ID_DISPLAY = 201;
@@ -72,19 +73,24 @@ const static float RPC_AMP_D = 0.3;
 // PID threshold when relay should be switched on
 const static float RPC_PID_SWITCH_THRESHOLD = -10;
 
-/** Take 12 probes per day to calculate agv/min/max per day*/
-const static uint8_t ST_PROBES_PER_DAY = 12;
+/** Take 24 temp probes per day to calculate agv/min/max per day*/
+const static uint8_t ST_PROBES_PER_DAY = 24;
 
 /**
- * Take probe every second hour - 12 probes gives us full day:
+ * Take probe every hour - 24 probes gives us full day:
  * #PROBES_PER_DAY * #DAY_PROBE_MS = 24h.
  */
-const static uint32_t ST_DAY_PROBE_MS = 7200000; // 7200000 = 1000 * 60 * 60 * 2;
+const static uint32_t ST_DAY_PROBE_MS = 1000; // 3600000 = 1000 * 60 * 60; //TODO
 
-// Frequency to probe for current temp, min and max
-const static uint32_t ST_ACTUAL_PROBE_MS = 1000;
+// Frequency to probe for current temp, min and max (info on main screen)
+const static uint32_t ST_ACTUAL_PROBE_MS = 300;
 
-/** Keep history for last 14 days. */
-const static uint8_t ST_DAY_HISTORY_SIZE = 14;
+/** Keep history for last 21 days. */
+const static uint8_t ST_DAY_HISTORY_SIZE = 10;//TODO
+
+// TODO
+extern uint8_t DAY;
+extern uint8_t DAY_CNT;
+// TODO
 
 #endif /* CONFIG_H_ */

@@ -19,10 +19,20 @@
 TempSensor::TempSensor() :
 		probeIdx(0), curentTemp(0), lastTemp(0), lastProbeTime(0), oneWire(DIG_PIN_TEMP_SENSOR), dallasTemperature(
 				&oneWire) {
+	//TODO
+	log(F("TS IN %d %d %d"), probes[0], probes[1], probes[2]);
 }
 
 int16_t TempSensor::getTemp() {
-	return curentTemp;
+	//TODO
+	DAY_CNT++;
+	if (DAY_CNT > 7) {
+		DAY_CNT = 0;
+	}
+	uint8_t temp1 = DAY + DAY_CNT;
+	log(F("TS T %d"), temp1);
+	return temp1;
+	//return curentTemp;
 }
 
 int16_t TempSensor::getQuickTemp() {
@@ -30,27 +40,25 @@ int16_t TempSensor::getQuickTemp() {
 }
 
 void TempSensor::init() {
-#if TRACE
-	log(F("TS init"));
-#endif
 	dallasTemperature.begin();
 	curentTemp = readTemp();
 }
 
 void TempSensor::cycle() {
-	uint32_t millis = util_ms();
-	if (millis - lastProbeTime < PROBE_FREQ_MS) {
+	uint32_t ms = util_ms();
+	if (ms - lastProbeTime < PROBE_FREQ_MS) {
 		return;
 	}
-	lastProbeTime = millis;
+	lastProbeTime = ms;
 	int16_t temp = readTemp();
 	lastTemp = temp;
 	if (probeIdx == PROBES_SIZE) {
 		util_sort_i16(probes, PROBES_SIZE);
 		curentTemp = probes[PROBES_MED_IDX];
 		probeIdx = 0;
-#if TRACE
-		log(F("TS:%d: %d %d %d %d"), temp, probes[0], probes[1], probes[2], probes[3]);
+#if TRACE_//TODO
+		log(F("####### %d  #######"), DAY);//TODO
+		log(F("TS CY %d->%d %d %d"), curentTemp, probes[0], probes[1], probes[2]);
 #endif
 
 	} else {
@@ -63,6 +71,15 @@ uint8_t TempSensor::deviceId() {
 }
 
 inline int16_t TempSensor::readTemp() {
+	//TODO
+	DAY_CNT++;
+	if (DAY_CNT > 7) {
+		DAY_CNT = 0;
+	}
+	uint8_t temp1 = DAY + DAY_CNT;
+	log(F("TS T %d"), temp1);
+	return temp1;
+
 	dallasTemperature.requestTemperatures();
 	int16_t temp = (int16_t) (dallasTemperature.getTempCByIndex(0) + 0.5);
 #if USE_FEHRENHEIT

@@ -14,21 +14,30 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#ifndef STATSDATA_H_
-#define STATSDATA_H_
+#ifndef TIMERSTATS_H_
+#define TIMERSTATS_H_
 
+#include "Arduino.h"
+#include "Timer.h"
+#include "EventBus.h"
 #include "Config.h"
+#include "Service.h"
 
-typedef struct {
-	int16_t avg;
-	int16_t min;
-	int16_t max;
-	uint8_t day; // day number in history. 0 - now, 1 - yesterday, 2 - before yesterday, and so on.
-} Temp;
+class TimerStats: public BusListener {
+public:
+	TimerStats();
+	virtual ~TimerStats();
+	Time* getRelayTime(uint8_t relayId);
+	Time* getUpTime();
+	void init();
 
-typedef struct {
-	uint8_t size;
-	boolean full;
-} DayHistory;
+private:
+	Timer systemTimer;
+	Timer relayTimer[RELAYS_AMOUNT];
 
-#endif /* STATSDATA_H_ */
+	void clearStats();
+	uint8_t listenerId();
+	void onEvent(BusEvent event, va_list ap);
+};
+
+#endif /* TIMERSTATS_H_ */

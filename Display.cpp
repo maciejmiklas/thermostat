@@ -16,11 +16,11 @@
  */
 #include "Display.h"
 
-Display::Display(TempSensor *tempSensor, Stats *stats, RelayDriver* relayDriver) :
+Display::Display(TempSensor *tempSensor, TempStats *tempStats, TimerStats* timerStats, RelayDriver* relayDriver) :
 		lcd(DIG_PIN_LCD_RS, DIG_PIN_LCD_ENABLE, DIG_PIN_LCD_D4, DIG_PIN_LCD_D5, DIG_PIN_LCD_D6, DIG_PIN_LCD_D7), tempSensor(
-				tempSensor), stats(stats), relayDriver(relayDriver), mainState(this), runtimeState(this), relayTimeState(
-				this), relaSetPointdState(this), dayStatsState(this), clearStatsState(this), driver(6, &mainState,
-				&runtimeState, &relayTimeState, &relaSetPointdState, &dayStatsState, &clearStatsState) {
+				tempSensor), tempStats(tempStats), timerStats(timerStats), relayDriver(relayDriver), mainState(this), runtimeState(
+				this), relayTimeState(this), relaSetPointdState(this), dayStatsState(this), clearStatsState(this), driver(
+				6, &mainState, &runtimeState, &relayTimeState, &relaSetPointdState, &dayStatsState, &clearStatsState) {
 }
 
 uint8_t Display::listenerId() {
@@ -48,12 +48,25 @@ void Display::onEvent(BusEvent event, va_list ap) {
 	driver.execute(event);
 }
 
-inline void Display::printlnNa(uint8_t row, const char *fmt) {
-	lcd.setCursor(0, row);
-	lcd.print(fmt);
+inline void Display::println(uint8_t row, const __FlashStringHelper *ifsh) {
+	PGM_P p = reinterpret_cast<PGM_P>(ifsh);
+	uint8_t lidx = 0;
+	for(; lidx < 16; lidx++) {
+		unsigned char c = pgm_read_byte(p++);
+		if (c == 0) {
+			break;
+		}
+		lcd.setCursor(lidx, row);
+		lcd.write(c);
+	}
+
+	for(; lidx < 16; lidx++) {
+		lcd.setCursor(lidx, row);
+		lcd.print(' ');
+	}
 }
 
-inline void Display::println(uint8_t row, const char *fmt, ...) {
+inline void Display::println(uint8_t row, char *fmt, ...) {
 	lcd.setCursor(0, row);
 
 	va_list va;
@@ -113,8 +126,9 @@ Display::MainState::~MainState() {
 }
 
 inline void Display::MainState::update() {
+	return; //TODO
 	int16_t tempNow = display->tempSensor->getQuickTemp();
-	Temp* actual = display->stats->getActual();
+	Temp* actual = display->tempStats->actual();
 	display->println(1, "%4d|%5d|%5d", tempNow, actual->min, actual->max);
 }
 
@@ -139,7 +153,7 @@ void Display::MainState::init() {
 	log(F("DSMS-init"));
 #endif
 	DisplayState::init();
-	display->printlnNa(0, " NOW|  MIN|  MAX");
+	display->println(0, F(" NOW|  MIN|  MAX"));
 	update();
 }
 
@@ -153,8 +167,8 @@ Display::ClearStatsState::~ClearStatsState() {
 
 uint8_t Display::ClearStatsState::execute(BusEvent event) {
 	if (event == BusEvent::CLEAR_STATS) {
-		display->printlnNa(0, "Statistics      ");
-		display->println(1, "      cleared.  ");
+		display->println(0, F("Statistics"));
+		display->println(1, F("      cleared."));
 
 	} else if (util_ms() - showMs > DISP_SHOW_INFO_MS || event == BusEvent::BUTTON_NEXT
 			|| event == BusEvent::BUTTON_PREV) {
@@ -194,7 +208,7 @@ uint8_t Display::RuntimeState::execute(BusEvent event) {
 }
 
 inline void Display::RuntimeState::update() {
-	display->printTime(1, display->stats->getUpTime());
+	display->printTime(1, display->timerStats->getUpTime());
 }
 
 void Display::RuntimeState::init() {
@@ -202,7 +216,7 @@ void Display::RuntimeState::init() {
 	log(F("DSRS-init"));
 #endif
 	DisplayState::init();
-	display->printlnNa(0, "System on time  ");
+	display->println(0, F("System on time  "));
 	update();
 }
 
@@ -242,7 +256,7 @@ inline void Display::RelayTimeState::updateDisplay() {
 }
 
 inline void Display::RelayTimeState::updateDisplayTime() {
-	Time* rt = display->stats->getRelayTime(relayIdx);
+	Time* rt = display->timerStats->getRelayTime(relayIdx);
 	display->printTime(1, rt);
 }
 
@@ -285,7 +299,7 @@ uint8_t Display::RelaySetPointdState::execute(BusEvent event) {
 
 inline void Display::RelaySetPointdState::updateDisplay() {
 	display->println(0, "Relay %d set", relayIdx + 1);
-	display->println(1, "  point on %d%c", display->relayDriver->getSetPoint(relayIdx), (USE_FEHRENHEIT ? 'f': 0xDF));
+	display->println(1, "  point on %d%c", display->relayDriver->getSetPoint(relayIdx), (USE_FEHRENHEIT ? 'f' : 0xDF));
 }
 
 void Display::RelaySetPointdState::init() {
@@ -305,26 +319,27 @@ uint8_t Display::DayStatsState::execute(BusEvent event) {
 	if (event == BusEvent::CYCLE) {
 		return STATE_NOCHANGE;
 	}
+	return STATE_MAIN; //TODO
+
 	if (event == BusEvent::BUTTON_NEXT) {
 		if (daySize == 0) {
 			return STATE_MAIN;
 		}
-
-		if (!display->stats->dit_hasNext()) {
+		if (!display->tempStats->di()->hasNext()) {
 			return STATE_MAIN;
 		}
-		updateDisplay(display->stats->dit_next());
+		updateDisplay(display->tempStats->di()->next());
 	} else if (event == BusEvent::BUTTON_PREV) {
-		if (daySize == 0 || !display->stats->dit_hasPrev()) {
+		if (daySize == 0 || !display->tempStats->di()->hasPrev()) {
 			return STATE_RELAY_TIME;
 		}
-		updateDisplay(display->stats->dit_prev());
+		updateDisplay(display->tempStats->di()->prev());
 	}
 	return STATE_NOCHANGE;
 }
 
 inline void Display::DayStatsState::updateDisplay(Temp* temp) {
-	display->printlnNa(0, "DDD->MIN|MAX|AVG");
+	display->println(0, F("DDD->MIN|MAX|AVG"));
 	display->println(1, "%3d->%3d|%3d|%3d", temp->day, temp->min, temp->max, temp->avg);
 }
 
@@ -340,13 +355,14 @@ void Display::DayStatsState::init() {
 #if LOG
 	log(F("DSDS-init"));
 #endif
-	display->stats->dit_reset();
-	daySize = display->stats->dit_size();
+	return; //TODO
+	display->tempStats->di()->reset();
+	daySize = display->tempStats->di()->size();
 	if (daySize == 0) {
-		display->printlnNa(0, "Day statistics  ");
-		display->printlnNa(1, "  is empty      ");
+		display->println(0, F("Day statistics"));
+		display->println(1, F("  is empty"));
 	} else {
-		display->printlnNa(0, "Statistics      ");
+		display->println(0, F("Statistics"));
 		display->println(1, "  for %d days", daySize);
 	}
 }

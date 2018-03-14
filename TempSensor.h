@@ -38,9 +38,9 @@ private:
 	 * After collecting all required probes we calculate median and this is the temperature.
 	 */
 	// log statement assumes at least 4 probes - adopt it after changing size!
-	const static uint8_t PROBES_SIZE = 4;
-	const static uint8_t PROBES_MED_IDX = PROBES_SIZE / 2;
-	const static uint32_t PROBE_FREQ_MS = 10;
+	const static uint8_t PROBES_SIZE = 3;
+	const static uint8_t PROBES_MED_IDX = 1; // it's an array index, starting from 0
+	const static uint32_t PROBE_FREQ_MS = 200;
 
 	int16_t probes[PROBES_SIZE] = {};
 	uint8_t probeIdx;

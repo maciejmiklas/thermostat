@@ -22,13 +22,14 @@
 #include "ArdLog.h"
 #include "TempSensor.h"
 #include "RelayDriver.h"
-#include "Stats.h"
 #include "Buttons.h"
 #include "ServiceSuspender.h"
 #include "Timer.h"
 #include "EventBus.h"
 #include "SystemStatus.h"
 #include "Initializable.h"
+#include "TempStats.h"
+#include "TimerStats.h"
 
 #ifdef __cplusplus
 extern "C" {

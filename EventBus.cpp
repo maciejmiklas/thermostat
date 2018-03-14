@@ -36,7 +36,7 @@ void eb_register(BusListener* listener) {
 	}
 
 #if TRACE
-	log(F("EB Reg %d"), listenersAmount);
+	log(F("EB REG %d"), listenersAmount);
 #endif
 	listeners[listenersAmount++] = listener;
 }
@@ -44,7 +44,7 @@ void eb_register(BusListener* listener) {
 void eb_fire(BusEvent event, ...) {
 #if LOG
 	if (event != BusEvent::CYCLE) {
-		log(F("EB Fire: %d"), event);
+		log(F("EB FR: %d"), event);
 	}
 #endif
 
@@ -53,7 +53,7 @@ void eb_fire(BusEvent event, ...) {
 		va_start(ap, event);
 #if TRACE
 		if (event != BusEvent::CYCLE) {
-			log(F("EB NOT: %d"), listeners[idx]->listenerId());
+			log(F("EB LT: %d"), listeners[idx]->listenerId());
 		}
 #endif
 		listeners[idx]->onEvent(event, ap);

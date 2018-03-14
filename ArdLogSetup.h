@@ -17,21 +17,27 @@
 #ifndef ARD_LOG_DEFSETUP_H
 #define ARD_LOG_DEFSETUP_H
 
+#include "Arduino.h"
+
 /** Logs free RAM if it has changed on every log_cycle() call. */
 #define LOG_FREE_RAM false
 
 /** Enables logger so that it can log over serial port. */
-#define ENABLE_LOGGER false
+#define ENABLE_LOGGER true
 
 /** Enables log on Debug level. */
-#define LOG false
+#define LOG true
 
 /** Enables log on Trace level. */
-#define TRACE false
+#define TRACE true
+
+//TODO
+#define LOG_ true
+#define TRACE_ true
 
 /** Log full time, or shorter version */
 #define LOG_FULL_TIME false
-#define LOG_MIN_TIME false
+#define LOG_SHORT_TIME false
 
 /** log time. When off, time will not be logged at all. */
 #define LOG_TIME false

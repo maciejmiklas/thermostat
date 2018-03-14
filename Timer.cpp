@@ -8,7 +8,7 @@
  *
  *      http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing, software
+ * Unless required by appLlicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
@@ -16,8 +16,10 @@
  */
 #include "Timer.h"
 
+uint8_t Timer::_id = 1;
+
 Timer::Timer() :
-		runtimeMs(0), timeMs(0), time(), running(false) {
+		runtimeMs(0), timeMs(0), running(false), id(_id++) {
 }
 
 void Timer::start() {
@@ -32,7 +34,7 @@ void Timer::suspend() {
 	update();
 
 #if TRACE
-	log(F("TI suspend %lu"), timeMs);
+	log(F("TI(%d) SP %lu"), id, timeMs);
 #endif
 }
 
@@ -41,6 +43,9 @@ Time* Timer::getTime() {
 		sample();
 		update();
 	}
+#if TRACE
+	log(F("TI(%d) G %d %d %d %d"), id, time.hh, time.mm, time.ss, running ? 1 : 0);
+#endif
 	return &time;
 }
 

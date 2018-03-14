@@ -21,16 +21,17 @@
 #include "ArdLog.h"
 #include "LiquidCrystal.h"
 #include "TempSensor.h"
-#include "Stats.h"
 #include "Config.h"
 #include "StateMachine.h"
 #include "MachineDriver.h"
 #include "RelayDriver.h"
 #include "Initializable.h"
+#include "TempStats.h"
+#include "TimerStats.h"
 
 class Display: public BusListener, public Initializable {
 public:
-	Display(TempSensor* tempSensor, Stats* stats, RelayDriver* relayDriver);
+	Display(TempSensor* tempSensor, TempStats* tempStats, TimerStats* timerStats, RelayDriver* relayDriver);
 	uint8_t listenerId();
 private:
 
@@ -136,7 +137,8 @@ private:
 
 	LiquidCrystal lcd;
 	TempSensor* const tempSensor;
-	Stats* const stats;
+	TempStats* const tempStats;
+	TimerStats* const timerStats;
 	RelayDriver* const relayDriver;
 	const static uint8_t LINE_LENGTH = 16;
 
@@ -154,8 +156,8 @@ private:
 	void init();
 	void onEvent(BusEvent event, va_list ap);
 	inline void clrow(uint8_t row);
-	inline void println(uint8_t row, const char *fmt, ...);
-	inline void printlnNa(uint8_t row, const char *fmt);
+	inline void println(uint8_t row, char *fmt, ...);
+	inline void println(uint8_t row, const __FlashStringHelper *ifsh);
 	inline void lcdBufClRight(uint8_t from);
 	void printTime(uint8_t row, Time* time);
 };

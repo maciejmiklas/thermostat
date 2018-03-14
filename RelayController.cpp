@@ -16,14 +16,14 @@
  */
 #include "RelayController.h"
 
-RelayController::RelayController(TempSensor* ts, int16_t tempSetPoint) :
+RelayController::RelayController(TempSensor* ts, int8_t tempSetPoint) :
 		tempSensor(ts), tempSetPoint(tempSetPoint) {
 }
 
 RelayController::~RelayController() {
 }
 
-int16_t RelayController::getSetPoint() {
+int8_t RelayController::getSetPoint() {
 	return tempSetPoint;
 }
 

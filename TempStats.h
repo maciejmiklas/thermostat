@@ -66,7 +66,7 @@ public:
 private:
 	typedef struct {
 		/** FIFO Queue containing statistics for each day. Top of the queue has the oldest day, bottom most recent. */
-		int16_t probes[ST_PROBES_PER_DAY];
+		int8_t probes[ST_PROBES_PER_DAY];
 		uint8_t probeIdx;
 		uint32_t lastProbeMs;
 	} DayProbe;

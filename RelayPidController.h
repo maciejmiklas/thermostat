@@ -22,7 +22,7 @@
 
 class RelayPidController : public RelayController {
 public:
-	RelayPidController(TempSensor* ts, int16_t tempSetPoint);
+	RelayPidController(TempSensor* ts, int8_t tempSetPoint);
 	virtual ~RelayPidController();
 	Relay::State execute();
 

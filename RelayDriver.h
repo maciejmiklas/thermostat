@@ -31,7 +31,7 @@ public:
 	RelayDriver(TempSensor* ts);
 	~RelayDriver();
 	boolean isOn(uint8_t relayId);
-	int16_t getSetPoint(uint8_t relayId);
+	int8_t getSetPoint(uint8_t relayId);
 
 private:
 	typedef struct {
@@ -52,7 +52,7 @@ private:
 	uint8_t deviceId();
 	void cycle();
 	void initRelayData(RelayData* val);
-	void initRelayHysteresisController(uint8_t relayId, uint8_t pin, int16_t tempSetPoint);
+	void initRelayHysteresisController(uint8_t relayId, uint8_t pin, int8_t tempSetPoint);
 };
 
 #endif /* RELAYDRIVER_H_ */

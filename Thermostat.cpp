@@ -63,8 +63,8 @@ void setup() {
 	Temp* tt = new Temp();
 	for (uint8_t i = 0; i < 60; i++) {
 		tt->avg = i;
-		tt->min = 100+i;
-		tt->max = 200+i;
+		tt->min = 10+i;
+		tt->max = 20+i;
 		storage->dh_store(tt);
 	}
 

@@ -28,7 +28,7 @@ void RelayDriver::init() {
 	initRelayHysteresisController(1, DIG_PIN_RELAY_1, RELAY_TEMP_SET_POINT_1);
 }
 
-void RelayDriver::initRelayHysteresisController(uint8_t relayId, uint8_t pin, int16_t tempSetPoint) {
+void RelayDriver::initRelayHysteresisController(uint8_t relayId, uint8_t pin, int8_t tempSetPoint) {
 	RelayData* relay = &relays[relayId];
 	relay->controller = new RelayHysteresisController(tempSensor, tempSetPoint);
 	relay->relay = new Relay(pin);
@@ -44,7 +44,7 @@ boolean RelayDriver::isOn(uint8_t relayId) {
 	return relays[relayId].relay->getState() == Relay::State::ON;
 }
 
-int16_t RelayDriver::getSetPoint(uint8_t relayId) {
+int8_t RelayDriver::getSetPoint(uint8_t relayId) {
 	return relays[relayId].controller->getSetPoint();
 }
 

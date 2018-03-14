@@ -22,7 +22,7 @@
 
 class RelayHysteresisController: public RelayController {
 public:
-	RelayHysteresisController(TempSensor* ts, int16_t tempSetPoint);
+	RelayHysteresisController(TempSensor* ts, int8_t tempSetPoint);
 	virtual ~RelayHysteresisController();
 	Relay::State execute();
 

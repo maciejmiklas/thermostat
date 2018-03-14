@@ -70,7 +70,7 @@ void TempStats::probeActualTemp() {
 	}
 	ap.lastProbeMs = ms;
 
-	int16_t actTemp = tempSensor->getTemp();
+	int8_t actTemp = tempSensor->getTemp();
 	ap.temp.min = min(ap.temp.min, actTemp);
 	ap.temp.max = max(ap.temp.max, actTemp);
 
@@ -88,13 +88,13 @@ void TempStats::probeDayTemp() {
 
 	if (dp.probeIdx == ST_PROBES_PER_DAY) {
 		Temp temp = { 0, 0, 0, 0 };
-		temp.avg = util_avg_i16(dp.probes, ST_PROBES_PER_DAY);
-		temp.min = util_min_i16(dp.probes, ST_PROBES_PER_DAY);
-		temp.max = util_max_i16(dp.probes, ST_PROBES_PER_DAY);
+		temp.avg = util_avg_i8(dp.probes, ST_PROBES_PER_DAY);
+		temp.min = util_min_i8(dp.probes, ST_PROBES_PER_DAY);
+		temp.max = util_max_i8(dp.probes, ST_PROBES_PER_DAY);
 		dp.probeIdx = 0;
 		storage->dh_store(&temp);
 	} else {
-		int16_t temp = tempSensor->getTemp();
+		int8_t temp = tempSensor->getTemp();
 		dp.probes[dp.probeIdx++] = temp;
 #if TRACE_//TODO
 		log(F("TES DP[%d]=%d"), dp.probeIdx, temp);

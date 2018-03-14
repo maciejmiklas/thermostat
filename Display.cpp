@@ -127,7 +127,7 @@ Display::MainState::~MainState() {
 
 inline void Display::MainState::update() {
 	return; //TODO
-	int16_t tempNow = display->tempSensor->getQuickTemp();
+	int8_t tempNow = display->tempSensor->getQuickTemp();
 	Temp* actual = display->tempStats->actual();
 	display->println(1, "%4d|%5d|%5d", tempNow, actual->min, actual->max);
 }

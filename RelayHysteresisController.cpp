@@ -16,7 +16,7 @@
  */
 #include "RelayHysteresisController.h"
 
-RelayHysteresisController::RelayHysteresisController(TempSensor* ts, int16_t tempSetPoint) :
+RelayHysteresisController::RelayHysteresisController(TempSensor* ts, int8_t tempSetPoint) :
 		RelayController(ts, tempSetPoint), lastSwitchMs(0), state(Relay::State::OFF) {
 }
 
@@ -31,7 +31,7 @@ Relay::State RelayHysteresisController::execute() {
 	}
 
 	Relay::State newState = Relay::State::NO_CHANGE;
-	int16_t temp = tempSensor->getQuickTemp();
+	int8_t temp = tempSensor->getQuickTemp();
 
 	if (temp <= tempSetPoint) {
 		newState = Relay::State::OFF;

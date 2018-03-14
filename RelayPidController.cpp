@@ -16,7 +16,7 @@
  */
 #include "RelayPidController.h"
 
-RelayPidController::RelayPidController(TempSensor* ts, int16_t tempSetPoint) :
+RelayPidController::RelayPidController(TempSensor* ts, int8_t tempSetPoint) :
 		RelayController(ts, tempSetPoint), iDerivationSum(0), dPrevDerivation(0) {
 }
 

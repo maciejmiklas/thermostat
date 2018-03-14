@@ -20,10 +20,10 @@
 const static uint8_t RELAYS_AMOUNT = 2;
 
 /* Temperature threshold to enable first relay (DIG_PIN_RELAY_0) and start cooling. */
-const static int16_t RELAY_TEMP_SET_POINT_0 = 21;
+const static int8_t RELAY_TEMP_SET_POINT_0 = 21;
 
 /* Temperature threshold to enable second relay (DIG_PIN_RELAY_1) and start cooling. */
-const static int16_t RELAY_TEMP_SET_POINT_1 = 25;
+const static int8_t RELAY_TEMP_SET_POINT_1 = 25;
 
 const static uint8_t DIG_PIN_BUTTON_RESET = 1;
 const static uint8_t DIG_PIN_BUTTON_NEXT = 2;
@@ -86,7 +86,7 @@ const static uint32_t ST_DAY_PROBE_MS = 1000; // 3600000 = 1000 * 60 * 60; //TOD
 const static uint32_t ST_ACTUAL_PROBE_MS = 300;
 
 /** Keep history for last 21 days. */
-const static uint8_t ST_DAY_HISTORY_SIZE = 10;//TODO
+const static uint8_t ST_DAY_HISTORY_SIZE = 10; //TODO
 
 // TODO
 extern uint8_t DAY;

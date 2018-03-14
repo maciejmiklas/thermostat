@@ -25,8 +25,8 @@ void util_cycle();
 
 uint32_t util_ms();
 
-inline void util_sort_i16(int16_t arr[], uint8_t size) {
-	int16_t i, temp, j;
+inline void util_sort_i8(int8_t arr[], uint8_t size) {
+	int8_t i, temp, j;
 	for (i = 1; i < size; i++) {
 		temp = arr[i];
 		j = i - 1;
@@ -38,24 +38,24 @@ inline void util_sort_i16(int16_t arr[], uint8_t size) {
 	}
 }
 
-inline int16_t util_avg_i16(int16_t arr[], uint8_t size) {
+inline int8_t util_avg_i8(int8_t arr[], uint8_t size) {
 	if (size == 0) {
 		return 0;
 	}
-	int16_t tmp = 0;
+	int8_t tmp = 0;
 	for (uint8_t i = 0; i < size; i++) {
 		tmp += arr[i];
 	}
 	return tmp / size;
 }
 
-inline int16_t util_max_i16(int16_t arr[], uint8_t size) {
+inline int8_t util_max_i8(int8_t arr[], uint8_t size) {
 	if (size == 0) {
 		return 0;
 	}
-	int16_t tmp = arr[0];
+	int8_t tmp = arr[0];
 	for (uint8_t i = 1; i < size; i++) {
-		int16_t next = arr[i];
+		int8_t next = arr[i];
 		if (next > tmp) {
 			tmp = next;
 		}
@@ -63,13 +63,13 @@ inline int16_t util_max_i16(int16_t arr[], uint8_t size) {
 	return tmp;
 }
 
-inline int16_t util_min_i16(int16_t arr[], uint8_t size) {
+inline int8_t util_min_i8(int8_t arr[], uint8_t size) {
 	if (size == 0) {
 		return 0;
 	}
-	int16_t tmp = arr[0];
+	int8_t tmp = arr[0];
 	for (uint8_t i = 1; i < size; i++) {
-		int16_t next = arr[i];
+		int8_t next = arr[i];
 		if (next < tmp) {
 			tmp = next;
 		}
@@ -83,7 +83,7 @@ inline uint16_t util_freeRam() {
 	return (uint16_t) &v - (__brkval == 0 ? (int) &__heap_start : (int) __brkval);
 }
 
-inline uint16_t util_abs16(int16_t val) {
+inline uint16_t util_abs16(int8_t val) {
 	return val > 0 ? val : val * -1;
 }
 

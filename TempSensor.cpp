@@ -23,7 +23,7 @@ TempSensor::TempSensor() :
 	log(F("TS IN %d %d %d"), probes[0], probes[1], probes[2]);
 }
 
-int16_t TempSensor::getTemp() {
+int8_t TempSensor::getTemp() {
 	//TODO
 	DAY_CNT++;
 	if (DAY_CNT > 7) {
@@ -35,7 +35,7 @@ int16_t TempSensor::getTemp() {
 	//return curentTemp;
 }
 
-int16_t TempSensor::getQuickTemp() {
+int8_t TempSensor::getQuickTemp() {
 	return lastTemp;
 }
 
@@ -50,10 +50,10 @@ void TempSensor::cycle() {
 		return;
 	}
 	lastProbeTime = ms;
-	int16_t temp = readTemp();
+	int8_t temp = readTemp();
 	lastTemp = temp;
 	if (probeIdx == PROBES_SIZE) {
-		util_sort_i16(probes, PROBES_SIZE);
+		util_sort_i8(probes, PROBES_SIZE);
 		curentTemp = probes[PROBES_MED_IDX];
 		probeIdx = 0;
 #if TRACE_//TODO
@@ -70,7 +70,7 @@ uint8_t TempSensor::deviceId() {
 	return DEVICE_ID_TEMP_SENSOR;
 }
 
-inline int16_t TempSensor::readTemp() {
+inline int8_t TempSensor::readTemp() {
 	//TODO
 	DAY_CNT++;
 	if (DAY_CNT > 7) {
@@ -81,7 +81,7 @@ inline int16_t TempSensor::readTemp() {
 	return temp1;
 
 	dallasTemperature.requestTemperatures();
-	int16_t temp = (int16_t) (dallasTemperature.getTempCByIndex(0) + 0.5);
+	int8_t temp = (int8_t) (dallasTemperature.getTempCByIndex(0) + 0.5);
 #if USE_FEHRENHEIT
 	temp = temp * 1.8 + 32;
 #endif

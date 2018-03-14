@@ -29,8 +29,8 @@
 class TempSensor: public Service {
 public:
 	TempSensor();
-	int16_t getTemp();
-	int16_t getQuickTemp();
+	int8_t getTemp();
+	int8_t getQuickTemp();
 
 private:
 	/**
@@ -42,15 +42,15 @@ private:
 	const static uint8_t PROBES_MED_IDX = 1; // it's an array index, starting from 0
 	const static uint32_t PROBE_FREQ_MS = 200;
 
-	int16_t probes[PROBES_SIZE] = {};
+	int8_t probes[PROBES_SIZE] = {};
 	uint8_t probeIdx;
-	int16_t curentTemp;
-	int16_t lastTemp;
+	int8_t curentTemp;
+	int8_t lastTemp;
 	uint32_t lastProbeTime;
 	OneWire oneWire;
 	DallasTemperature dallasTemperature;
 
-	inline int16_t readTemp();
+	inline int8_t readTemp();
 	uint8_t deviceId();
 	void cycle();
 	void init();

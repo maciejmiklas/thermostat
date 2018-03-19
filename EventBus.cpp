@@ -16,7 +16,7 @@
  */
 #include "EventBus.h"
 
-const static uint8_t LISTNERS_MAX = 8;
+const static uint8_t LISTNERS_MAX = 10;
 static BusListener* listeners[LISTNERS_MAX];
 static uint8_t listenersAmount = 0;
 

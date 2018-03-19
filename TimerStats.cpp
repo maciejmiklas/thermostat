@@ -23,9 +23,6 @@ TimerStats::~TimerStats() {
 }
 
 void TimerStats::init() {
-#if TRACE
-	log(F("TSA init"));
-#endif
 	systemTimer.start();
 }
 

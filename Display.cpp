@@ -29,7 +29,7 @@ uint8_t Display::listenerId() {
 
 void Display::init() {
 #if TRACE
-	log(F("DS init"));
+	log(F("DS IN"));
 #endif
 	lcd.begin(16, 2);
 	lcd.noAutoscroll();
@@ -126,7 +126,6 @@ Display::MainState::~MainState() {
 }
 
 inline void Display::MainState::update() {
-	return; //TODO
 	int8_t tempNow = display->tempSensor->getQuickTemp();
 	Temp* actual = display->tempStats->actual();
 	display->println(1, "%4d|%5d|%5d", tempNow, actual->min, actual->max);
@@ -149,9 +148,6 @@ uint8_t Display::MainState::execute(BusEvent event) {
 }
 
 void Display::MainState::init() {
-#if LOG
-	log(F("DSMS-init"));
-#endif
 	DisplayState::init();
 	display->println(0, F(" NOW|  MIN|  MAX"));
 	update();
@@ -319,7 +315,6 @@ uint8_t Display::DayStatsState::execute(BusEvent event) {
 	if (event == BusEvent::CYCLE) {
 		return STATE_NOCHANGE;
 	}
-	return STATE_MAIN; //TODO
 
 	if (event == BusEvent::BUTTON_NEXT) {
 		if (daySize == 0) {
@@ -355,7 +350,6 @@ void Display::DayStatsState::init() {
 #if LOG
 	log(F("DSDS-init"));
 #endif
-	return; //TODO
 	display->tempStats->di()->reset();
 	daySize = display->tempStats->di()->size();
 	if (daySize == 0) {

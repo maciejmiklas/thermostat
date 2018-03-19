@@ -19,8 +19,6 @@
 TempSensor::TempSensor() :
 		probeIdx(0), curentTemp(0), lastTemp(0), lastProbeTime(0), oneWire(DIG_PIN_TEMP_SENSOR), dallasTemperature(
 				&oneWire) {
-	//TODO
-	log(F("TS IN %d %d %d"), probes[0], probes[1], probes[2]);
 }
 
 int8_t TempSensor::getTemp() {
@@ -46,17 +44,17 @@ void TempSensor::init() {
 
 void TempSensor::cycle() {
 	uint32_t ms = util_ms();
-	if (ms - lastProbeTime < PROBE_FREQ_MS) {
+	if (ms - lastProbeTime < TS_PROBE_FREQ_MS) {
 		return;
 	}
 	lastProbeTime = ms;
 	int8_t temp = readTemp();
 	lastTemp = temp;
-	if (probeIdx == PROBES_SIZE) {
-		util_sort_i8(probes, PROBES_SIZE);
-		curentTemp = probes[PROBES_MED_IDX];
+	if (probeIdx == TS_PROBES_SIZE) {
+		util_sort_i8(probes, TS_PROBES_SIZE);
+		curentTemp = probes[TS_PROBES_MED_IDX];
 		probeIdx = 0;
-#if TRACE_//TODO
+#if TRACE
 		log(F("####### %d  #######"), DAY);//TODO
 		log(F("TS CY %d->%d %d %d"), curentTemp, probes[0], probes[1], probes[2]);
 #endif

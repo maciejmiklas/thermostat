@@ -54,10 +54,6 @@ static void onClearStatsIRQ() {
 }
 
 void Buttons::init() {
-#if TRACE
-	log(F("BT init"));
-#endif
-
 	setupButton(DIG_PIN_BUTTON_NEXT);
 	setupButton(DIG_PIN_BUTTON_PREV);
 	setupButton(DIG_PIN_BUTTON_RESET);

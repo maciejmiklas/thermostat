@@ -17,6 +17,7 @@
 #ifndef CONFIG_H_
 #define CONFIG_H_
 
+// ############### Relays ###############
 const static uint8_t RELAYS_AMOUNT = 2;
 
 /* Temperature threshold to enable first relay (DIG_PIN_RELAY_0) and start cooling. */
@@ -25,6 +26,10 @@ const static int8_t RELAY_TEMP_SET_POINT_0 = 21;
 /* Temperature threshold to enable second relay (DIG_PIN_RELAY_1) and start cooling. */
 const static int8_t RELAY_TEMP_SET_POINT_1 = 25;
 
+/* Minimum time to switch next relay. 300000 - 5 minutes */
+const static uint32_t RELAY_DELAY_AFTER_SWITCH_MS = 300000;
+
+// ############### Pins ###############
 const static uint8_t DIG_PIN_BUTTON_RESET = 1;
 const static uint8_t DIG_PIN_BUTTON_NEXT = 2;
 const static uint8_t DIG_PIN_BUTTON_PREV = 3;
@@ -43,25 +48,25 @@ const static uint8_t DIG_PIN_TEMP_SENSOR = 12;
 
 const static uint8_t DIG_PIN_SYSTEM_STATUS_LED = 13;
 
+// ############### Devices ###############
 const static uint8_t DEVICE_ID_TEMP_SENSOR = 1;
 const static uint8_t DEVICE_ID_RELAY_DRIVER = 2;
 const static uint8_t DEVICE_ID_STATS = 3;
 const static uint8_t DEVICE_ID_TIME_STATS = 4;
 
+// ############### Listeners ###############
 const static uint8_t LISTENER_ID_BUTTONS = 200;
 const static uint8_t LISTENER_ID_DISPLAY = 201;
 const static uint8_t LISTENER_ID_SUSPENDER = 202;
 const static uint8_t LISTENER_ID_STATUS = 203;
 
+// ############### Display ###############
 /* Time to resume normal operation after pause for user input. */
 const static uint16_t DISP_SHOW_INFO_MS = 1000;
 
 #define USE_FEHRENHEIT false
 
-/* Minimum time to switch next relay. 300000 - 5 minutes */
-const static uint32_t RELAY_DELAY_AFTER_SWITCH_MS = 300000;
-
-// RHC - Relay Hysteresis Controller
+// ############### Relay Hysteresis Controller ###############
 /* Prevents frequent switches of the particular relay. 3600000 - 1 hour*/
 const static uint32_t RHC_RELAY_MIN_SWITCH_MS = 3600000;
 
@@ -73,6 +78,7 @@ const static float RPC_AMP_D = 0.3;
 // PID threshold when relay should be switched on
 const static float RPC_PID_SWITCH_THRESHOLD = -10;
 
+// ############### Statistics ###############
 /** Take 24 temp probes per day to calculate agv/min/max per day*/
 const static uint8_t ST_PROBES_PER_DAY = 24;
 
@@ -83,10 +89,20 @@ const static uint8_t ST_PROBES_PER_DAY = 24;
 const static uint32_t ST_DAY_PROBE_MS = 1000; // 3600000 = 1000 * 60 * 60; //TODO
 
 // Frequency to probe for current temp, min and max (info on main screen)
-const static uint32_t ST_ACTUAL_PROBE_MS = 300;
+const static uint32_t ST_ACTUAL_PROBE_MS = 30000;//TODO 300
 
-/** Keep history for last 21 days. */
-const static uint8_t ST_DAY_HISTORY_SIZE = 10; //TODO
+/** Keep history for last 60 days. */
+const static uint8_t ST_DAY_HISTORY_SIZE = 5;//TODO
+
+// ############### Temp Sensor ###############
+/**
+ * We take #TS_PROBES_SIZE probes from temp sensor, each one with delay of #PROBE_DELAY milliseconds.
+ * After collecting all required probes we calculate median and this is the temperature.
+ */
+// log statement assumes at least 4 probes - adopt it after changing size!
+const static uint8_t TS_PROBES_SIZE = 3;
+const static uint8_t TS_PROBES_MED_IDX = 1; // it's an array index, starting from 0
+const static uint32_t TS_PROBE_FREQ_MS = 200;
 
 // TODO
 extern uint8_t DAY;

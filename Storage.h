@@ -64,7 +64,7 @@ private:
 	const static uint8_t STORAGE_BYTES = EIDX_SIZE + TEMP_SIZE * ST_DAY_HISTORY_SIZE;
 
 	/* first byte of EEPROM indicating that it has been already initialised */
-	const static uint8_t INIT_BYTE = 124;
+	const static uint8_t INIT_BYTE = 126;
 
 	/* starting index of EEPROM for given day, counting from 0. */
 	inline uint8_t dh_eIdx(uint8_t dIdx);

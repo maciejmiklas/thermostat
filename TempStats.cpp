@@ -74,7 +74,7 @@ void TempStats::probeActualTemp() {
 	ap.temp.min = min(ap.temp.min, actTemp);
 	ap.temp.max = max(ap.temp.max, actTemp);
 
-#if TRACE_//TODO
+#if TRACE
 	log(F("TES ACT:%d,%d,%d"), actTemp, ap.temp.min, ap.temp.max);
 #endif
 }
@@ -96,7 +96,7 @@ void TempStats::probeDayTemp() {
 	} else {
 		int8_t temp = tempSensor->getTemp();
 		dp.probes[dp.probeIdx++] = temp;
-#if TRACE_//TODO
+#if TRACE
 		log(F("TES DP[%d]=%d"), dp.probeIdx, temp);
 #endif
 	}

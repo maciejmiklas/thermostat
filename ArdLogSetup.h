@@ -20,7 +20,7 @@
 #include "Arduino.h"
 
 /** Logs free RAM if it has changed on every log_cycle() call. */
-#define LOG_FREE_RAM false
+#define LOG_FREE_RAM true
 
 /** Enables logger so that it can log over serial port. */
 #define ENABLE_LOGGER true
@@ -30,10 +30,6 @@
 
 /** Enables log on Trace level. */
 #define TRACE true
-
-//TODO
-#define LOG_ true
-#define TRACE_ true
 
 /** Log full time, or shorter version */
 #define LOG_FULL_TIME false

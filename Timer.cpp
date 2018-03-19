@@ -19,7 +19,7 @@
 uint8_t Timer::_id = 1;
 
 Timer::Timer() :
-		runtimeMs(0), timeMs(0), running(false), id(_id++) {
+		runtimeMs(0), timeMs(0), time( { 0, 0, 0, 0 }), running(false), id(_id++) {
 }
 
 void Timer::start() {

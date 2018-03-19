@@ -21,9 +21,6 @@ RelayDriver::RelayDriver(TempSensor* ts) :
 }
 
 void RelayDriver::init() {
-#if TRACE
-	log(F("RD init"));
-#endif
 	initRelayHysteresisController(0, DIG_PIN_RELAY_0, RELAY_TEMP_SET_POINT_0);
 	initRelayHysteresisController(1, DIG_PIN_RELAY_1, RELAY_TEMP_SET_POINT_1);
 }

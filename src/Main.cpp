@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#include "Thermostat.h"
+#include "Main.h"
 
 static TempSensor* tempSensor;
 static TempStats* tempStats;

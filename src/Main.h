@@ -14,8 +14,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#ifndef Thermostat_H_
-#define Thermostat_H_
+#ifndef Main_H_
+#define Main_H_
 
 #include "Arduino.h"
 #include "Timer.h"
@@ -42,4 +42,4 @@ void setup();
 } // extern "C"
 #endif
 
-#endif /* Thermostat_H_ */
+#endif /* Main_H_ */

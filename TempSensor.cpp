@@ -28,7 +28,7 @@ int8_t TempSensor::getTemp() {
 		DAY_CNT = 0;
 	}
 	uint8_t temp1 = DAY + DAY_CNT;
-	log(F("TS T %d"), temp1);
+	//slog(F("TS T %d"), temp1);
 	return temp1;
 	//return curentTemp;
 }
@@ -75,7 +75,7 @@ inline int8_t TempSensor::readTemp() {
 		DAY_CNT = 0;
 	}
 	uint8_t temp1 = DAY + DAY_CNT;
-	log(F("TS T %d"), temp1);
+	//log(F("TS T %d"), temp1);
 	return temp1;
 
 	dallasTemperature.requestTemperatures();

@@ -47,14 +47,14 @@ static void writeStorage() {//TODO
 }
 
 static void readStorage() {//TODO
-	log(F("###############"));
-	log(F(">B> %d"), storage->dh_readDays());
+	//log(F("###############"));
+	//log(F(">B> %d"), storage->dh_readDays());
 	//Temp* tt = new Temp();
 	for (uint8_t i = 0; i < days; i++) {
 		storage->dh_read(tt, i);
 		//log(F(">C> %d %d %d %d %d"), i, tt->day, tt->min, tt->max, tt->avg);
 	}
-	log(F("###############"));
+	//log(F("###############"));
 }
 void setup() {
 	//Serial.begin(SERIAL_SPEED);
@@ -69,37 +69,37 @@ void setup() {
 	probes[1] = 0;
 	probes[2] = 1;
 	util_sort_i8(probes, 3);
-	log(F(">A> %d %d %d"), probes[0],probes[1],probes[2]);
+	//log(F(">A> %d %d %d"), probes[0],probes[1],probes[2]);
 
 	probes[0] = 1;
 	probes[1] = 2;
 	probes[2] = 3;
 	util_sort_i8(probes, 3);
-	log(F(">B> %d %d %d"), probes[0],probes[1],probes[2]);
+	//log(F(">B> %d %d %d"), probes[0],probes[1],probes[2]);
 
 	probes[0] = 3;
 	probes[1] = 1;
 	probes[2] = 2;
 	util_sort_i8(probes, 3);
-	log(F(">C> %d %d %d"), probes[0],probes[1],probes[2]);
+	//log(F(">C> %d %d %d"), probes[0],probes[1],probes[2]);
 
 	probes[0] = -1;
 	probes[1] = 0;
 	probes[2] = 21;
 	util_sort_i8(probes, 3);
-	log(F(">D> %d %d %d"), probes[0],probes[1],probes[2]);
+	//log(F(">D> %d %d %d"), probes[0],probes[1],probes[2]);
 
 	probes[0] = 4;
 	probes[1] = 6;
 	probes[2] = 2;
 	util_sort_i8(probes, 3);
-	log(F(">E> %d %d %d"), probes[0],probes[1],probes[2]);
+	//log(F(">E> %d %d %d"), probes[0],probes[1],probes[2]);
 
 	probes[0] = 0;
 	probes[1] = -6;
 	probes[2] = -11;
 	util_sort_i8(probes, 3);
-	log(F(">F> %d %d %d"), probes[0],probes[1],probes[2]);
+	//log(F(">F> %d %d %d"), probes[0],probes[1],probes[2]);
 
 	tt = new Temp();//TODO
 	storage = new Storage();

@@ -14,7 +14,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#include "Main.h"
+//#include "_Main.h_"
+
+#include "Arduino.h"
+#include "Timer.h"
+#include "ArdLog.h"
+#include "TempSensor.h"
+#include "RelayDriver.h"
+#include "Buttons.h"
+#include "ServiceSuspender.h"
+#include "Timer.h"
+#include "EventBus.h"
+#include "SystemStatus.h"
+#include "Initializable.h"
+#include "TempStats.h"
+#include "TimerStats.h"
 
 static TempSensor* tempSensor;
 static TempStats* tempStats;
@@ -56,7 +70,7 @@ static void readStorage() {//TODO
 	}
 	//log(F("###############"));
 }
-void setup() {
+void setup_() {
 	//Serial.begin(SERIAL_SPEED);
 	util_setup();
 #if ENABLE_LOGGER
@@ -124,7 +138,7 @@ void setup() {
 }
 
 uint32_t lms = 0;
-void loop() {
+void loop_() {
 	util_cycle();
 #if ENABLE_LOGGER
 	log_cycle();

@@ -89,7 +89,7 @@ const static uint8_t ST_PROBES_PER_DAY = 24;
 const static uint32_t ST_DAY_PROBE_MS = 1000; // 3600000 = 1000 * 60 * 60; //TODO
 
 // Frequency to probe for current temp, min and max (info on main screen)
-const static uint32_t ST_ACTUAL_PROBE_MS = 30000;//TODO 300
+const static uint32_t ST_ACTUAL_PROBE_MS = 300;
 
 /** Keep history for last 60 days. */
 const static uint8_t ST_DAY_HISTORY_SIZE = 5;//TODO

@@ -29,8 +29,9 @@
 class TempSensor: public Service {
 public:
 	TempSensor();
-	int8_t getTemp();
-	int8_t getQuickTemp();
+	virtual int8_t getTemp();
+	virtual int8_t getQuickTemp();
+	void init();
 
 private:
 	int8_t probes[TS_PROBES_SIZE] = {};
@@ -44,7 +45,6 @@ private:
 	inline int8_t readTemp();
 	uint8_t deviceId();
 	void cycle();
-	void init();
 };
 
 #endif /* TEMPSENSOR_H_ */

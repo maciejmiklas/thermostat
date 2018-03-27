@@ -100,3 +100,4 @@ Some components have some tasks than needs to be executed periodically. We could
 Following libs are required to compile Thermostat:
 * https://github.com/milesburton/Arduino-Temperature-Control-Library
 * https://github.com/maciejmiklas/ArdLog.git
+* https://github.com/mmurdoch/arduinounit

@@ -20,10 +20,10 @@
 #include "Arduino.h"
 
 /** Logs free RAM if it has changed on every log_cycle() call. */
-#define LOG_FREE_RAM true
+#define LOG_FREE_RAM false
 
 /** Enables logger so that it can log over serial port. */
-#define ENABLE_LOGGER false
+#define ENABLE_LOGGER true
 
 /** Enables log on Debug level. */
 #define LOG false

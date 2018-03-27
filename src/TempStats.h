@@ -53,7 +53,6 @@ public:
 
 		/** Amount of history entries. */
 		uint8_t size();
-
 	private:
 		TempStats* ts;
 		Temp temp;
@@ -62,7 +61,7 @@ public:
 		inline void updateDayTemp(Temp* temp);
 	};
 	DayIteroator* di();
-
+	void init();
 private:
 	typedef struct {
 		/** FIFO Queue containing statistics for each day. Top of the queue has the oldest day, bottom most recent. */
@@ -85,7 +84,6 @@ private:
 
 	uint8_t deviceId();
 	void clearStats();
-	void init();
 	void cycle();
 	uint8_t listenerId();
 	void onEvent(BusEvent event, va_list ap);

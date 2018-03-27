@@ -18,6 +18,10 @@
 
 static uint32_t cycleMs;
 
+void util_setCycleMs(uint32_t ms) {
+	cycleMs = ms;
+}
+
 void util_setup() {
 	util_cycle();
 }
@@ -29,5 +33,4 @@ void util_cycle() {
 uint32_t util_ms() {
 	return cycleMs;
 }
-
 

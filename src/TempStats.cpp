@@ -17,7 +17,7 @@
 #include "TempStats.h"
 
 TempStats::TempStats(TempSensor* tempSensor, Storage* storage) :
-		tempSensor(tempSensor), storage(storage),_dit(this), _ditp(&_dit), dp( { { }, 0, 0 }) {
+		tempSensor(tempSensor), storage(storage), _dit(this), _ditp(&_dit), dp( { { }, 0, 0 }), ap( { 0, { } }) {
 }
 
 void TempStats::init() {
@@ -27,7 +27,6 @@ void TempStats::init() {
 TempStats::DayIteroator* TempStats::di() {
 	return _ditp;
 }
-
 void TempStats::clearStats() {
 	storage->dh_clear();
 	initTemp(&ap.temp);
@@ -92,6 +91,7 @@ void TempStats::probeDayTemp() {
 		temp.min = util_min_i8(dp.probes, ST_PROBES_PER_DAY);
 		temp.max = util_max_i8(dp.probes, ST_PROBES_PER_DAY);
 		dp.probeIdx = 0;
+
 		storage->dh_store(&temp);
 	} else {
 		int8_t temp = tempSensor->getTemp();

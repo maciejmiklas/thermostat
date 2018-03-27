@@ -22,6 +22,7 @@
 
 void util_setup();
 void util_cycle();
+void util_setCycleMs(uint32_t ms);
 
 uint32_t util_ms();
 
@@ -30,7 +31,7 @@ inline void util_sort_i8(int8_t arr[], uint8_t size) {
 	for (i = 1; i < size; i++) {
 		temp = arr[i];
 		j = i - 1;
-		while (temp < arr[j] && j > 0) {
+		while (temp < arr[j] && j >= 0) {
 			arr[j + 1] = arr[j];
 			j = j - 1;
 		}
@@ -42,11 +43,11 @@ inline int8_t util_avg_i8(int8_t arr[], uint8_t size) {
 	if (size == 0) {
 		return 0;
 	}
-	int8_t tmp = 0;
+	float tmp = 0;
 	for (uint8_t i = 0; i < size; i++) {
 		tmp += arr[i];
 	}
-	return tmp / size;
+	return (int8_t) (tmp / size + 0.5);
 }
 
 inline int8_t util_max_i8(int8_t arr[], uint8_t size) {
@@ -83,7 +84,7 @@ inline uint16_t util_freeRam() {
 	return (uint16_t) &v - (__brkval == 0 ? (int) &__heap_start : (int) __brkval);
 }
 
-inline uint16_t util_abs16(int8_t val) {
+inline uint16_t util_abs16(int16_t val) {
 	return val > 0 ? val : val * -1;
 }
 

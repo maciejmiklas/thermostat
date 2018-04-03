@@ -17,7 +17,7 @@
 #include "TempStats.h"
 
 TempStats::TempStats(TempSensor* tempSensor, Storage* storage) :
-		tempSensor(tempSensor), storage(storage), _dit(this), _ditp(&_dit), dp( { { }, 0, 0 }), ap( { 0, { } }) {
+		tempSensor(tempSensor), storage(storage), dit(this), dp( { { }, 0, 0 }), ap( { 0, { 99, 99, -99, 99 } }) {
 }
 
 void TempStats::init() {
@@ -25,10 +25,11 @@ void TempStats::init() {
 }
 
 TempStats::DayIteroator* TempStats::di() {
-	return _ditp;
+	return &dit;
 }
 void TempStats::clearStats() {
 	storage->dh_clear();
+	dit.reset();
 	initTemp(&ap.temp);
 }
 
@@ -118,7 +119,7 @@ boolean TempStats::DayIteroator::hasPrev() {
 }
 
 Temp* TempStats::DayIteroator::next() {
-	ts->storage->dh_read(&temp, ++dIdx);
+	ts->storage->dh_read(&temp, dIdx++);
 	updateDayTemp(&temp);
 	return &temp;
 }

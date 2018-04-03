@@ -77,8 +77,7 @@ private:
 
 	TempSensor* tempSensor;
 	Storage* storage;
-	DayIteroator _dit;
-	DayIteroator* _ditp;
+	DayIteroator dit;
 	DayProbe dp;
 	ActualProbe ap;
 

@@ -103,6 +103,7 @@ void Storage::dh_clear() {
 #if LOG
 	log(F("ST CLR"));
 #endif
+	dh_days = 0;
 	EEPROM.write(EIDX_INIT_BYTE, INIT_BYTE);
 	EEPROM.write(EIDX_DAYS, 0);
 }

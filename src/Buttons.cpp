@@ -16,7 +16,7 @@
  */
 #include "Buttons.h"
 
-const static uint8_t PRESS_MS = 50;
+const static uint8_t PRESS_MS = 100;
 const static uint8_t BUTTON_NONE_MASK = B00000000;
 const static uint8_t BUTTON_NEXT_MASK = B00000001;
 const static uint8_t BUTTON_PREV_MASK = B00000010;

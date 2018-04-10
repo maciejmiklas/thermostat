@@ -22,15 +22,7 @@ TempSensor::TempSensor() :
 }
 
 int8_t TempSensor::getTemp() {
-	//TODO
-	DAY_CNT++;
-	if (DAY_CNT > 7) {
-		DAY_CNT = 0;
-	}
-	uint8_t temp1 = DAY + DAY_CNT;
-	//slog(F("TS T %d"), temp1);
-	return temp1;
-	//return curentTemp;
+	return curentTemp;
 }
 
 int8_t TempSensor::getQuickTemp() {
@@ -55,7 +47,6 @@ void TempSensor::cycle() {
 		curentTemp = probes[TS_PROBES_MED_IDX];
 		probeIdx = 0;
 #if TRACE
-		log(F("####### %d  #######"), DAY);//TODO
 		log(F("TS CY %d->%d %d %d"), curentTemp, probes[0], probes[1], probes[2]);
 #endif
 
@@ -69,15 +60,6 @@ uint8_t TempSensor::deviceId() {
 }
 
 inline int8_t TempSensor::readTemp() {
-	//TODO
-	DAY_CNT++;
-	if (DAY_CNT > 7) {
-		DAY_CNT = 0;
-	}
-	uint8_t temp1 = DAY + DAY_CNT;
-	//log(F("TS T %d"), temp1);
-	return temp1;
-
 	dallasTemperature.requestTemperatures();
 	int8_t temp = (int8_t) (dallasTemperature.getTempCByIndex(0) + 0.5);
 #if USE_FEHRENHEIT

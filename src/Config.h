@@ -62,7 +62,7 @@ const static uint8_t LISTENER_ID_STATUS = 203;
 
 // ############### Display ###############
 /* Time to resume normal operation after pause for user input. */
-const static uint16_t DISP_SHOW_INFO_MS = 1000;
+const static uint16_t DISP_SHOW_INFO_MS = 3000;
 
 #define USE_FEHRENHEIT false
 
@@ -86,13 +86,13 @@ const static uint8_t ST_PROBES_PER_DAY = 24;
  * Take probe every hour - 24 probes gives us full day:
  * #PROBES_PER_DAY * #DAY_PROBE_MS = 24h.
  */
-const static uint32_t ST_DAY_PROBE_MS = 1000; // 3600000 = 1000 * 60 * 60; //TODO
+const static uint32_t ST_DAY_PROBE_MS = 3600000; // 3600000 = 1000 * 60 * 60; //TODO
 
 // Frequency to probe for current temp, min and max (info on main screen)
 const static uint32_t ST_ACTUAL_PROBE_MS = 300;
 
 /** Keep history for last 60 days. */
-const static uint8_t ST_DAY_HISTORY_SIZE = 5;//TODO
+const static uint8_t ST_DAY_HISTORY_SIZE = 60;
 
 // ############### Temp Sensor ###############
 /**
@@ -103,10 +103,5 @@ const static uint8_t ST_DAY_HISTORY_SIZE = 5;//TODO
 const static uint8_t TS_PROBES_SIZE = 3;
 const static uint8_t TS_PROBES_MED_IDX = 1; // it's an array index, starting from 0
 const static uint32_t TS_PROBE_FREQ_MS = 200;
-
-// TODO
-extern uint8_t DAY;
-extern uint8_t DAY_CNT;
-// TODO
 
 #endif /* CONFIG_H_ */

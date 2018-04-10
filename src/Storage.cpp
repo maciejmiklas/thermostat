@@ -19,6 +19,9 @@
 
 Storage::Storage() :
 		dh_days(0) {
+	if (EEPROM.read(EIDX_INIT_BYTE) != INIT_BYTE) {
+		dh_clear();
+	}
 }
 
 Storage::~Storage() {
@@ -61,8 +64,6 @@ void Storage::dh_store(Temp* temp) {
 #if LOG
 	log(F("ST WD(%d) %d,%d,%d"), dh_days, temp->min, temp->max, temp->avg);
 #endif
-	DAY = dh_days * 10;
-	DAY_CNT = 0;
 
 	// shift days by one, so that position 0 is free
 	dh_dShift();
@@ -76,10 +77,6 @@ void Storage::dh_store(Temp* temp) {
 }
 
 uint8_t Storage::dh_readDays() {
-	if (EEPROM.read(EIDX_INIT_BYTE) != INIT_BYTE) {
-		dh_clear();
-		return 0;
-	}
 	uint8_t size = EEPROM.read(EIDX_DAYS);
 
 #if LOG

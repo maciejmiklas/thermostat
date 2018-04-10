@@ -47,7 +47,8 @@ uint8_t ServiceSuspender::listenerId() {
 }
 
 inline void ServiceSuspender::cycle() {
-	if (suspendStart != 0 && util_ms() - suspendStart >= SUSPEND_SERVICE_MS) {
+
+	if (suspendStart != 0 && util_ms() - suspendStart >= DISP_SHOW_INFO_MS) {
 #if LOG
 		log(F("SU RS"));
 #endif

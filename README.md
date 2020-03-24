@@ -63,19 +63,6 @@ const static uint32_t RHC_RELAY_MIN_SWITCH_MS = 3600000;
 
 *RHC_RELAY_MIN_SWITCH_MS* defines hysteresis, it's the minimum frequency for particular relay to change it's state. Once its on, it will remain on for alt least this period of time, ignoring temperature changes. This is quiet useful it you are controlling electric motors, since each switch has negative impact on live time.
 
-### PID Controller
-This is advanced topic. Implementing such controller is simple task, finding right amplitude settings is a different story. 
-
-In order to use PID controller you have to change *initRelayHysteresisController(.....)* to *initRelayPiDController(....)* and you need to find right settings for it. As usual you will find them in *Config.h* 
-
-I've implemented simple simulator in Java, so that it's possible to visualize the results. It can be found in folder: *pidsimulator*. 
-
-Below you can see simulations for two controllers PID a P. PID is not perfectly stable because I did not apply any sophisticated algorithm to find right values.
-<img src="/doc/img/controller_PID.png" width="640px"/>
-<img src="/doc/img/controller_P.png" width="640px"/>
-
-On both plots required temperature is set to 30 (blue). Current temperature indicates read line. Relay has two states ON and OFF. When it's enabled temperature drops by 1.5, when it's disabled it rises by 0.5.
-
 # Software Design
 
 ## Message Bus
